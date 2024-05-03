@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Sword extends Item{
 
     // Example of a class that extends Item
-    
+
     private static final Logger logger = LogManager.getLogger(Sword.class);
     /**
      * Initializes a new Sword with the given id, name, and weight

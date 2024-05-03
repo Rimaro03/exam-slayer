@@ -24,7 +24,7 @@ public class Player {
      * @param name The name of this Player
      */
     public Player(AtomicInteger id, String name, int health) {
-        this.id = id.get();
+        this.id = id.getAndAdd(1);
         this.name = name;
         this.gameObject = new GameObject(id.getAndAdd(1), name);
         addComponent(new PlayerPosition(gameObject, id.getAndAdd(1), "Position", new Vec2(0, 0)));
