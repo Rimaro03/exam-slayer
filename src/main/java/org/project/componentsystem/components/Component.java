@@ -1,7 +1,9 @@
-package org.project.componentsystem;
+package org.project.componentsystem.components;
 
-import lombok.Setter;
 import lombok.Getter;
+import lombok.Setter;
+import org.project.componentsystem.GameObject;
+
 @Setter
 @Getter
 public abstract class Component {
