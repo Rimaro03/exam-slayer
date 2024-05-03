@@ -5,13 +5,13 @@ import lombok.Setter;
 import org.project.componentsystem.components.Component;
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Getter @Setter
 public class GameObject {
     private int id;
     private String name;
     private ArrayList<Component> components;
+
     /**
      * Initializes a new GameObject with the given id and name
      * @param id The unique identifier for this GameObject

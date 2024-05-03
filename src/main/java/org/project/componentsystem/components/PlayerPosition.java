@@ -2,15 +2,14 @@ package org.project.componentsystem.components;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
 import org.project.utils.Vec2;
 
-@Getter @Setter
+@Getter @Setter @Log4j2
 public class PlayerPosition extends Component{
     private Vec2 position;
-    private static final Logger logger = LogManager.getLogger(PlayerStats.class);
     /**
      * Initializes a new PlayerPosition with the given GameObject, id, name, and enabled status
      * @param gameObject The reference to the GameObject that this PlayerPosition is attached to
@@ -38,11 +37,11 @@ public class PlayerPosition extends Component{
 
     @Override
     public void start() {
-        logger.info("Position component started");
+        log.info("Position component started");
     }
 
     @Override
     public void update() {
-        logger.info("Position component updated");
+        log.info("Position component updated");
     }
 }

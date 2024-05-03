@@ -1,16 +1,16 @@
 package org.project.componentsystem.items;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import lombok.extern.log4j.Log4j2;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 
+@Log4j2
 public class Sword extends Item{
 
     // Example of a class that extends Item
 
-    private static final Logger logger = LogManager.getLogger(Sword.class);
     /**
      * Initializes a new Sword with the given id, name, and weight
      * @param id The unique identifier for this Sword
@@ -26,6 +26,6 @@ public class Sword extends Item{
      */
     @Override
     public void use() {
-        logger.info("Sword used");
+        log.info("Sword used");
     }
 }
