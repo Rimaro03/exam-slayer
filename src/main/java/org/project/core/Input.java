@@ -52,7 +52,6 @@ public class Input {
         @Override
         public void mousePressed(MouseEvent e) {
             buttons[e.getButton() - 1] = true;
-            System.out.println(e.getButton());
         }
 
         @Override

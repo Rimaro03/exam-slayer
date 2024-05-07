@@ -1,8 +1,8 @@
 package org.project.componentsystem;
 
 import org.project.componentsystem.components.Component;
+import org.project.componentsystem.components.KeyboardController;
 import org.project.componentsystem.components.PlayerStats;
-import org.project.utils.Vec2;
 
 public class GameObjectFactory {
     public static GameObject createGameObject(String name) {
@@ -13,7 +13,8 @@ public class GameObjectFactory {
         GameObject player = createGameObject(name);
         return createGameObject(
                 player,
-                new PlayerStats(player, "PlayerStats", 100, 10, 5, 5)
+                new PlayerStats(player, "PlayerStats", 100, 10, 5, 5),
+                new KeyboardController(player, "KeyboardController")
         );
     }
     private static GameObject createGameObject(GameObject obj, Component... components) {

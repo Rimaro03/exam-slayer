@@ -4,7 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.GameObjectFactory;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class RoomTest {
 

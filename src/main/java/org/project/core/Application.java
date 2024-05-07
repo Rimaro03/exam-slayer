@@ -5,7 +5,7 @@ import org.project.core.rendering.DrawCall;
 import org.project.core.rendering.Renderer;
 import org.project.utils.Vec2;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
 
@@ -39,14 +39,14 @@ public class Application extends JFrame {
         int windowStartY = (screenSize.height - window.getHeight()) / 2;
         setLocation(windowStartX, windowStartY);
         setVisible(true);
+
     }
     private void runInternal(){
         // GAME INITIALIZATION HERE!
         while(true){
             long startTime = System.currentTimeMillis();
-
-            // GAME LOGIC HERE!
-
+            Schene.getInstance().update();
+          
             window.update();
 
             long delta = System.currentTimeMillis() - startTime;

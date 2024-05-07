@@ -46,4 +46,10 @@ public class Room {
             log.info(entity);
         }
     }
+
+    public void update() {
+        for (GameObject entity : entities) {
+            entity.update();
+        }
+    }
 }
