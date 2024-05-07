@@ -3,40 +3,54 @@ package org.project.componentsystem;
 import lombok.Getter;
 import lombok.Setter;
 import org.project.componentsystem.components.Component;
+import org.project.utils.Vec2;
 
 import java.util.ArrayList;
 
 @Getter @Setter
 public class GameObject {
-    private int id;
     private String name;
     private ArrayList<Component> components;
+    private Vec2 position;
 
     /**
      * Initializes a new GameObject with the given id and name
-     * @param id The unique identifier for this GameObject
      * @param name The name of this GameObject
      */
-    public GameObject(int id, String name) {
-        this.id = id;
+    public GameObject(String name) {
         this.name = name;
         this.components = new ArrayList<>();
+        this.position = new Vec2(0, 0);
+    }
+
+    /**
+     * Initializes a new GameObject with the given id, name, and position
+     * @param name The name of this GameObject
+     * @param position The position of this GameObject
+     */
+    public GameObject(String name, Vec2 position) {
+        this.name = name;
+        this.components = new ArrayList<>();
+        this.position = position;
     }
 
     /**
      * Adds a new Component to this GameObject
      * @param component The Component to add
+     * @return This GameObject
      */
-    public void addComponent(Component component) {
+    public GameObject addComponent(Component component) {
         components.add(component);
+        return this;
     }
 
     /**
      * Removes a Component from this GameObject
      * @param component The Component to remove
      */
-    public void removeComponent(Component component) {
+    public GameObject removeComponent(Component component) {
         components.remove(component);
+        return this;
     }
 
     /**
@@ -69,5 +83,14 @@ public class GameObject {
         for (Component component : components) {
             component.update();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "GameObject{" +
+                "name='" + name + '\'' +
+                ", components=" + components +
+                ", position=" + position +
+                "}";
     }
 }

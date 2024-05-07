@@ -1,9 +1,7 @@
-package org.project.componentsystem.items;
+package org.project.items;
 
 
 import lombok.extern.log4j.Log4j2;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 
 @Log4j2

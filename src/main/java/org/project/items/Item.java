@@ -1,4 +1,4 @@
-package org.project.componentsystem.items;
+package org.project.items;
 
 import lombok.Getter;
 import lombok.Setter;
