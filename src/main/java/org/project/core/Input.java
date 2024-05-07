@@ -13,12 +13,18 @@ public class Input {
     private Input(){
         keyInput = new KeyInput();
         mouseInput = new MouseInput();
+
+        Application.getWindow().addKeyListener(keyInput);
+        Application.getWindow().addMouseListener(mouseInput);
     }
 
     public static void init(){
         instance = new Input();
-        Application.getWindow().addKeyListener(instance.keyInput);
-        Application.getWindow().addMouseListener(instance.mouseInput);
+
+    }
+    public static Input getInstance(){
+        if(instance == null){ instance = new Input(); }
+        return instance;
     }
     public static boolean isKeyPressed(int keycode){ return instance.keyInput.keysPressed.contains(keycode); }
     public static boolean isMouseButtonPressed(int button) { return instance.mouseInput.buttons[button]; }

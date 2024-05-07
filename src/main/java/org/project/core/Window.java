@@ -23,12 +23,13 @@ public class Window extends JPanel implements WindowStateListener {
         setFocusable(true);
         requestFocusInWindow();
         setBackground(Color.BLACK);
+
+        Application.getInstance().addWindowStateListener(this);
     }
 
     public void update() { repaint(); }
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
-
         Renderer.present(g);
     }
 
@@ -36,6 +37,5 @@ public class Window extends JPanel implements WindowStateListener {
     public void windowStateChanged(WindowEvent e) {
         width = e.getWindow().getWidth();
         height = e.getWindow().getHeight();
-        System.out.println("Window size updated");
     }
 }
