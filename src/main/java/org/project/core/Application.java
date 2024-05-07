@@ -5,15 +5,18 @@ import lombok.Getter;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * This abstract class permits to test various application type during development.
- */
+
 public class Application extends JFrame {
     @Getter
     private static Application instance;
     private Window window;
 
     private Application() { }
+
+
+
+    /* ---------------- SINGLETON METHODS ----------------- */
+
     public static Window getWindow(){ return getInstance().window; }
     public static void init() {
         instance = new Application();
@@ -21,28 +24,20 @@ public class Application extends JFrame {
     }
     public static void run() { getInstance().runInternal(); }
 
+
+
+    /* --------------- INTERNAL METHODS ------------- */
+
     private void initInternal(){
         window = new Window(800, 600);
-
-        add(window);
-        pack();
-        setTitle("Exam Slayer");
-        setResizable(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int windowStartX = (screenSize.width - window.getWidth()) / 2;
-        int windowStartY = (screenSize.height - window.getHeight()) / 2;
-        setLocation(windowStartX, windowStartY);
-        setVisible(true);
-
+        setup();
     }
     private void runInternal(){
         // GAME INITIALIZATION HERE!
         while(true){
             long startTime = System.currentTimeMillis();
+
             Scheme.getInstance().update();
-          
             window.update();
 
             long delta = System.currentTimeMillis() - startTime;
@@ -53,4 +48,18 @@ public class Application extends JFrame {
             catch (Exception ignore) { }
         }
     }
+    private void setup(){
+        add(window);
+        pack();
+        setTitle("Exam Slayer");
+        setResizable(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocation(windowCenteredX(), windowCenteredY());
+        setVisible(true);
+    }
+
+
+    /* ----------------- HELPER FUNCTIONS ---------------*/
+    private int windowCenteredX() { return Toolkit.getDefaultToolkit().getScreenSize().width - window.getWidth() / 2; }
+    private int windowCenteredY() { return Toolkit.getDefaultToolkit().getScreenSize().height - window.getWidth() / 2; }
 }

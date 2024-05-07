@@ -8,17 +8,31 @@ import java.awt.event.WindowStateListener;
 import java.awt.image.BufferedImage;
 
 public class Renderer implements WindowStateListener {
+    private static final int VERTICAL_RESOLUTION = 256;
+
     private static Renderer instance;
+
     private BufferedImage buffer;
+
     private Renderer() {
-        buffer = new BufferedImage(Application.getWindow().getWidth(), Application.getWindow().getHeight(), BufferedImage.TYPE_INT_ARGB);
+        buffer = new BufferedImage(
+                VERTICAL_RESOLUTION * Application.getWindow().getWidth() / Application.getWindow().getHeight(),
+                VERTICAL_RESOLUTION,
+                BufferedImage.TYPE_INT_ARGB
+        );
 
         Application.getInstance().addWindowStateListener(this);
     }
+
+
+
+    /* --------------- SINGLETON METHODS --------------- */
+
     public static Renderer getInstance() {
         if(instance == null){ instance = new Renderer(); }
         return instance;
     }
+
     /** Clears the buffer with the given color */
     public static void clear(Color color){ getInstance().clearInternal(color);}
     /** Draws an image */
@@ -27,17 +41,15 @@ public class Renderer implements WindowStateListener {
     public static void fillRect(Rectangle rect, Color color){ getInstance().fillRectInternal(rect, color); }
     /** Applies the buffer to the screen. */
     public static void present(Graphics g) { getInstance().presentInternal(g); }
-    private static int worldToScreenX(float x){
-        return (int) ((x * Application.getWindow().getHeight() / Application.getWindow().getWidth() / Camera.main.verticalAmplitude + 1.f) * 0.5f * Application.getWindow().getWidth());
-    }
-    private static int worldToScreenY(float y){
-        return (int) ((y / Camera.main.verticalAmplitude + 1.f) * 0.5f * Application.getWindow().getHeight());
-    }
+
+
+
+    /* -------------- INTERNAL METHODS ----------------- */
 
     private void clearInternal(Color color){
         Graphics g = buffer.getGraphics();
         g.setColor(color);
-        g.fillRect(0, 0, instance.buffer.getWidth(), instance.buffer.getHeight());
+        g.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
     }
     private void drawInternal(DrawCall drawCall){
         Graphics g = buffer.getGraphics();
@@ -70,11 +82,27 @@ public class Renderer implements WindowStateListener {
         );
         clear(Color.GRAY);
     }
+
+
+
+    /* -------------- HELPER METHODS ----------------- */
+
+    private int worldToScreenX(float x){
+        return (int) ((x * buffer.getHeight() / buffer.getWidth() / Camera.main.verticalAmplitude + 1.f) * 0.5f * buffer.getWidth());
+    }
+    private int worldToScreenY(float y) {
+        return (int) ((y / Camera.main.verticalAmplitude + 1.f) * 0.5f * buffer.getHeight());
+    }
+
+
+
+    /* -------------------WINDOW STATE LISTENER ----------------*/
+
     @Override
     public void windowStateChanged(WindowEvent e) {
         buffer = new BufferedImage(
-                e.getWindow().getWidth(),
-                e.getWindow().getHeight(),
+                VERTICAL_RESOLUTION * e.getWindow().getWidth() / e.getWindow().getHeight(),
+                VERTICAL_RESOLUTION,
                 BufferedImage.TYPE_INT_ARGB
         );
     }

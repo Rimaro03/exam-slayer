@@ -17,20 +17,24 @@ public class Window extends JPanel implements WindowStateListener {
     public Window(int width, int height) {
         this.width = width;
         this.height = height;
+        setup();
 
+        Application.getInstance().addWindowStateListener(this);
+    }
+
+    /** Updates the window and draws the frame. */
+    public void update() { repaint(); }
+    protected void paintComponent(Graphics g){
+        super.paintComponent(g);
+        Renderer.present(g);
+    }
+
+    private void setup(){
         setPreferredSize(new Dimension(width, height));
         setVisible(true);
         setFocusable(true);
         requestFocusInWindow();
         setBackground(Color.BLACK);
-
-        Application.getInstance().addWindowStateListener(this);
-    }
-
-    public void update() { repaint(); }
-    protected void paintComponent(Graphics g){
-        super.paintComponent(g);
-        Renderer.present(g);
     }
 
     @Override
