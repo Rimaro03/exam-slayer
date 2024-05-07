@@ -11,7 +11,6 @@ public class KeyboardController extends Component {
 
     @Override
     public void update() {
-        Input.getInstance();
         if(Input.isKeyPressed(Input.KEY_W)) {
             super.getGameObject().setPosition(super.getGameObject().getPosition().add(new Vec2(0, -3)));
         }

@@ -9,23 +9,23 @@ import org.project.utils.Vec2;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Schene {
+public class Scheme {
 
-    private static Schene instance;
+    private static Scheme instance;
     private final ArrayList<Room> rooms = new ArrayList<>();
     private final GameObject player;
 
-    private Schene() {
+    private Scheme() {
         instance = this;
         player = GameObjectFactory.createPlayer("PlayerName");
     }
 
     /**
-     * Get the instance of the Schene.
-     * @return the instance of the Schene.
+     * Get the instance of the Scheme.
+     * @return the instance of the Scheme.
      */
-    public static Schene getInstance() {
-        if(instance == null){ instance = new Schene(); }
+    public static Scheme getInstance() {
+        if(instance == null){ instance = new Scheme(); }
         return instance;
     }
     public void update() {
