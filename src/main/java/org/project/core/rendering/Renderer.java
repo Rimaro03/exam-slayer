@@ -53,7 +53,12 @@ public class Renderer implements WindowStateListener {
     private void fillRectInternal(Rectangle rect, Color color) {
         Graphics g = buffer.getGraphics();
         g.setColor(color);
-        g.fillRect(rect.x, rect.y, rect.width, rect.height);
+        g.fillRect(
+                worldToScreenX(rect.x) - rect.width / 2,
+                worldToScreenY(rect.y) - rect.height / 2,
+                rect.width,
+                rect.height
+        );
     }
     private void presentInternal(Graphics g){
         g.drawImage(buffer,
