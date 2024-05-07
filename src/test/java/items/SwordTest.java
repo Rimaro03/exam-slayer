@@ -1,6 +1,7 @@
-package org.project.componentsystem.items;
+package items;
 
 import org.junit.jupiter.api.Test;
+import org.project.items.Sword;
 
 import static org.junit.jupiter.api.Assertions.*;
 

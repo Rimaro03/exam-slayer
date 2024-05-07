@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter @Setter @ToString
+@Getter @Setter
 public class Vec2 {
     private int x;
     private int y;
@@ -107,4 +107,8 @@ public class Vec2 {
         return x == other.x && y == other.y;
     }
 
+    @Override
+    public String toString() {
+        return "(" + x + ", " + y + ")";
+    }
 }
