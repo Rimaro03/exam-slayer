@@ -1,14 +1,11 @@
 package org.project.core.rendering;
 
-import lombok.Getter;
 import org.project.core.Application;
 
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
 import java.awt.image.BufferedImage;
-import java.util.PriorityQueue;
-import java.util.Random;
 
 public class Renderer implements WindowStateListener {
     private static Renderer instance;

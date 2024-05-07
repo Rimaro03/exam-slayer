@@ -3,7 +3,7 @@ package org.project.core;
 import lombok.Getter;
 import org.project.core.rendering.Renderer;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -37,12 +37,14 @@ public class Application extends JFrame {
         int windowStartY = (screenSize.height - window.getHeight()) / 2;
         setLocation(windowStartX, windowStartY);
         setVisible(true);
+
     }
     private void runInternal(){
         while(true){
             long startTime = System.currentTimeMillis();
 
-            Renderer.fillRect(new Rectangle(20, 20, 50, 50), Color.BLUE);
+//            Renderer.fillRect(new Rectangle(20, 20, 50, 50), Color.BLUE);
+            Schene.getInstance().update();
             window.update();
 
             long delta = System.currentTimeMillis() - startTime;

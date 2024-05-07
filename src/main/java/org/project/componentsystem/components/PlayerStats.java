@@ -3,7 +3,6 @@ package org.project.componentsystem.components;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-
 import org.project.componentsystem.GameObject;
 import org.project.items.Item;
 
@@ -47,11 +46,7 @@ public class PlayerStats extends Component {
     }
 
     @Override
-    public void start() {
-        log.info("Stats component started");
-    }
+    public void start() { }
     @Override
-    public void update() {
-        log.info("Stats component updated");
-    }
+    public void update() { }
 }

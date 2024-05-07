@@ -3,7 +3,7 @@ package org.project.core;
 import lombok.Getter;
 import org.project.core.rendering.Renderer;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
@@ -11,8 +11,8 @@ import java.awt.event.WindowStateListener;
 /**
  * Represent the application window.
  */
+@Getter
 public class Window extends JPanel implements WindowStateListener {
-    @Getter
     private int width, height;
     public Window(int width, int height) {
         this.width = width;
