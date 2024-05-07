@@ -13,12 +13,11 @@ public class Sword extends Item{
 
     /**
      * Initializes a new Sword with the given id, name, and weight
-     * @param id The unique identifier for this Sword
      * @param name The name of this Sword
      * @param weight The weight of this Sword
      */
-    public Sword(AtomicInteger id, String name, int weight) {
-        super(id.getAndAdd(1), name, weight);
+    public Sword(String name, int weight) {
+        super(name, weight);
     }
 
     /**
