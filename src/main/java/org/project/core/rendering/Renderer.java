@@ -28,10 +28,10 @@ public class Renderer implements WindowStateListener {
     /** Applies the buffer to the screen. */
     public static void present(Graphics g) { getInstance().presentInternal(g); }
     private static int worldToScreenX(float x){
-        return (int) ((x * Application.getWindow().getWidth() / (Camera.main.verticalAmplitude * Camera.main.verticalAmplitude) + 1) * 0.5f * Application.getWindow().getWidth());
+        return (int) ((x * Application.getWindow().getHeight() / Application.getWindow().getWidth() / Camera.main.verticalAmplitude + 1.f) * 0.5f * Application.getWindow().getWidth());
     }
     private static int worldToScreenY(float y){
-        return (int) ((y / Camera.main.verticalAmplitude + 1) * 0.5f * Application.getWindow().getHeight());
+        return (int) ((y / Camera.main.verticalAmplitude + 1.f) * 0.5f * Application.getWindow().getHeight());
     }
 
     private void clearInternal(Color color){
@@ -48,6 +48,7 @@ public class Renderer implements WindowStateListener {
                 worldToScreenY(drawCall.position.getY()) - drawCall.image.getHeight(null) / 2,
                 null
         );
+        System.out.println(worldToScreenX(drawCall.position.getX()) - drawCall.image.getWidth(null) / 2);
     }
     private void fillRectInternal(Rectangle rect, Color color) {
         Graphics g = buffer.getGraphics();

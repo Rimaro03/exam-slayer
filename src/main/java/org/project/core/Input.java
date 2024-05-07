@@ -26,8 +26,8 @@ public class Input {
         if(instance == null){ instance = new Input(); }
         return instance;
     }
-    public static boolean isKeyPressed(int keycode){ return instance.keyInput.keysPressed.contains(keycode); }
-    public static boolean isMouseButtonPressed(int button) { return instance.mouseInput.buttons[button]; }
+    public static boolean isKeyPressed(int keycode){ return getInstance().keyInput.keysPressed.contains(keycode); }
+    public static boolean isMouseButtonPressed(int button) { return getInstance().mouseInput.buttons[button]; }
     private static class KeyInput implements KeyListener {
         private final ArrayList<Integer> keysPressed;
         private KeyInput(){ keysPressed = new ArrayList<>(); }
