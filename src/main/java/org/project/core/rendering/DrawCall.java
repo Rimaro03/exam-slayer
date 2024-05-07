@@ -1,15 +1,13 @@
 package org.project.core.rendering;
 
-public class DrawCall {
-    public final int priority;
-    //public final SpriteData spriteData;
-    public DrawCall(int priority/*, SpriteData spriteData*/){
-        this.priority = priority;
-        //this.spriteData = spriteData;
-    }
+import org.project.utils.Vec2;
+import java.awt.Image;
 
-    public static class Comparator implements java.util.Comparator<DrawCall> {
-        @Override
-        public int compare(DrawCall o1, DrawCall o2) { return o1.priority - o2.priority; }
+public class DrawCall {
+    public final Image image;
+    public final Vec2 position;
+    public DrawCall(Image image, Vec2 position){
+        this.image = image;
+        this.position = position;
     }
 }

@@ -1,10 +1,13 @@
 package org.project.core;
 
 import lombok.Getter;
+import org.project.core.rendering.DrawCall;
 import org.project.core.rendering.Renderer;
+import org.project.utils.Vec2;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Random;
 
 /**
  * This abstract class permits to test various application type during development.
@@ -16,8 +19,7 @@ public class Application extends JFrame {
 
     private Application() { }
     public static Window getWindow(){ return getInstance().window; }
-    public static void init()
-    {
+    public static void init() {
         instance = new Application();
         instance.initInternal();
     }
@@ -40,11 +42,11 @@ public class Application extends JFrame {
 
     }
     private void runInternal(){
+        // GAME INITIALIZATION HERE!
         while(true){
             long startTime = System.currentTimeMillis();
-
-//            Renderer.fillRect(new Rectangle(20, 20, 50, 50), Color.BLUE);
             Schene.getInstance().update();
+          
             window.update();
 
             long delta = System.currentTimeMillis() - startTime;
