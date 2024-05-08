@@ -60,6 +60,6 @@ public class Application extends JFrame {
 
 
     /* ----------------- HELPER FUNCTIONS ---------------*/
-    private int windowCenteredX() { return Toolkit.getDefaultToolkit().getScreenSize().width - window.getWidth() / 2; }
-    private int windowCenteredY() { return Toolkit.getDefaultToolkit().getScreenSize().height - window.getWidth() / 2; }
+    private int windowCenteredX() { return (Toolkit.getDefaultToolkit().getScreenSize().width - window.getWidth()) / 2; }
+    private int windowCenteredY() { return (Toolkit.getDefaultToolkit().getScreenSize().height - window.getWidth()) / 2; }
 }
