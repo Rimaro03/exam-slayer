@@ -28,9 +28,15 @@ public class Scheme {
         if(instance == null){ instance = new Scheme(); }
         return instance;
     }
+    public void start(){
+        player.start();
+        for(Room room : rooms) {
+            room.update();
+        }
+    }
     public void update() {
         Vec2 playerPosition = player.getPosition();
-        Renderer.fillRect(new Rectangle(playerPosition.getX(), playerPosition.getY(), 50, 50), Color.BLUE);
+        //Renderer.fillRect(new Rectangle(playerPosition.getX(), playerPosition.getY(), 50, 50), Color.BLUE);
         player.update();
 
         for(Room room : rooms) {

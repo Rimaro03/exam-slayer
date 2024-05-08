@@ -34,6 +34,7 @@ public class Application extends JFrame {
     }
     private void runInternal(){
         // GAME INITIALIZATION HERE!
+        Scheme.getInstance().start();
         while(true){
             long startTime = System.currentTimeMillis();
 

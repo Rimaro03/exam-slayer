@@ -1,5 +1,6 @@
 package org.project.componentsystem;
 
+import org.project.componentsystem.components.AnimatedSpriteRenderer;
 import org.project.componentsystem.components.Component;
 import org.project.componentsystem.components.KeyboardController;
 import org.project.componentsystem.components.PlayerStats;
@@ -13,8 +14,9 @@ public class GameObjectFactory {
         GameObject player = createGameObject(name);
         return createGameObject(
                 player,
-                new PlayerStats(player, "PlayerStats", 100, 10, 5, 5),
-                new KeyboardController(player, "KeyboardController")
+                new PlayerStats(player, 100, 10, 5, 5),
+                new KeyboardController(player, "KeyboardController"),
+                new AnimatedSpriteRenderer(player, "resources/textures/characters/MainCharacter.png", 32, 32)
         );
     }
     private static GameObject createGameObject(GameObject obj, Component... components) {
