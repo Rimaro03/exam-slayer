@@ -16,28 +16,26 @@ public class PlayerStats extends Component {
     /**
      * Initializes a new PlayerStats with the given GameObject, id, name
      * @param gameObject The reference to the GameObject that this PlayerStats is attached to
-     * @param name The name of this PlayerStats
      * @param health The health of this PlayerStats
      * @param attack The attack of this PlayerStats
      * @param defense The defense of this PlayerStats
      * @param speed The speed of this PlayerStats
      */
-    public PlayerStats(GameObject gameObject, String name, int health, int attack, int defense, int speed) {
-        this(gameObject, name, true, health, attack, defense, speed);
+    public PlayerStats(GameObject gameObject, int health, int attack, int defense, int speed) {
+        this(gameObject, true, health, attack, defense, speed);
     }
 
     /**
      * Initializes a new PlayerStats with the given GameObject, id, name, and enabled status
      * @param gameObject The reference to the GameObject that this PlayerStats is attached to
-     * @param name The name of this PlayerStats
      * @param enabled Whether this PlayerStats is enabled or not
      * @param health The health of this PlayerStats
      * @param attack The attack of this PlayerStats
      * @param defense The defense of this PlayerStats
      * @param speed The speed of this PlayerStats
      */
-    public PlayerStats(GameObject gameObject, String name, boolean enabled, int health, int attack, int defense, int speed) {
-        super(gameObject, name, enabled);
+    public PlayerStats(GameObject gameObject, boolean enabled, int health, int attack, int defense, int speed) {
+        super(gameObject, enabled);
         this.stats = new Stats();
         this.stats.setHealth(health);
         this.stats.setAttack(attack);

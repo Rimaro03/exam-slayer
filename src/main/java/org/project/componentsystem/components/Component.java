@@ -8,27 +8,23 @@ import org.project.componentsystem.GameObject;
 public abstract class Component {
     private GameObject gameObject;
     private boolean enabled;
-    private String name;
 
     /**
      * Initializes a new Component with the given GameObject, id, name, and enabled status
      * @param gameObject The reference to the GameObject that this Component is attached to
-     * @param name The name of this Component
      * @param enabled Whether this Component is enabled or not
      */
-    public Component(GameObject gameObject, String name, boolean enabled) {
+    public Component(GameObject gameObject, boolean enabled) {
         this.gameObject = gameObject;
-        this.name = name;
         this.enabled = enabled;
     }
 
     /**
      * Initializes a new Component with the given GameObject, id, and name
      * @param gameObject The reference to the GameObject that this Component is attached to
-     * @param name The name of this Component
      */
-    public Component(GameObject gameObject, String name) {
-        this(gameObject, name, true);
+    public Component(GameObject gameObject) {
+        this(gameObject, true);
     }
 
     /**
@@ -47,7 +43,6 @@ public abstract class Component {
     public String toString() {
         return "Component{" +
                 "enabled=" + enabled +
-                ", name='" + name + '\'' +
                 '}';
     }
 }

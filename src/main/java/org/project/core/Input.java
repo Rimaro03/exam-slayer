@@ -18,16 +18,16 @@ public class Input {
         Application.getWindow().addMouseListener(mouseInput);
     }
 
-    public static void init(){
-        instance = new Input();
-
-    }
+    /* ---------------- SINGLETON METHODS ------------------- */
     public static Input getInstance(){
         if(instance == null){ instance = new Input(); }
         return instance;
     }
     public static boolean isKeyPressed(int keycode){ return getInstance().keyInput.keysPressed.contains(keycode); }
     public static boolean isMouseButtonPressed(int button) { return getInstance().mouseInput.buttons[button]; }
+
+
+    /* ---------------- INTERNAL LISTENER CLASSES ------------------*/
     private static class KeyInput implements KeyListener {
         private final ArrayList<Integer> keysPressed;
         private KeyInput(){ keysPressed = new ArrayList<>(); }
@@ -64,6 +64,8 @@ public class Input {
         public void mouseExited(MouseEvent e) { }
     }
 
+
+    /* -------------- INPUT KEY AND MOUSE BUTTONS CONSTANTS ---------------*/
 
     /** Constant for the left mouse button */
     public static final int MOUSE_BUTTON_LEFT = 0;
