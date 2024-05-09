@@ -5,15 +5,15 @@ import lombok.Setter;
 
 @Getter @Setter
 public class Vec2 {
-    private int x;
-    private int y;
+    private float x;
+    private float y;
 
     /**
      * Initializes a new Vec2 with the given x and y values
      * @param x The x value
      * @param y The y value
      */
-    public Vec2(int x, int y) {
+    public Vec2(float x, float y) {
         this.x = x;
         this.y = y;
     }
@@ -41,7 +41,7 @@ public class Vec2 {
      * @param scalar The scalar to multiply by
      * @return A new Vec2 that is the product of this Vec2 and the scalar
      */
-    public Vec2 multiply(int scalar) {
+    public Vec2 multiply(float scalar) {
         return new Vec2(x * scalar, y * scalar);
     }
 
@@ -50,7 +50,7 @@ public class Vec2 {
      * @param scalar The scalar to divide by
      * @return A new Vec2 that is the quotient of this Vec2 and the scalar
      */
-    public Vec2 divide(int scalar) {
+    public Vec2 divide(float scalar) {
         return new Vec2(x / scalar, y / scalar);
     }
 
@@ -59,7 +59,7 @@ public class Vec2 {
      * @param other The other Vec2 to calculate the dot product with
      * @return The dot product of this Vec2 and the other Vec2
      */
-    public int dot(Vec2 other) {
+    public float dot(Vec2 other) {
         return x * other.x + y * other.y;
     }
 
@@ -67,17 +67,15 @@ public class Vec2 {
      * Calculates the magnitude of this Vec2
      * @return The magnitude of this Vec2
      */
-    public int magnitude() {
-        return (int) Math.sqrt(x * x + y * y);
-    }
+    public float magnitude() { return (float) Math.sqrt(x * x + y * y); }
 
     /**
      * Normalizes this Vec2
      * @return A new Vec2 that is the normalized version of this Vec2
      */
-    public Vec2 normalize() {
-        int mag = magnitude();
-        return new Vec2(x / mag, y / mag);
+    public Vec2 normalized() {
+        float mag = magnitude();
+        return mag != 0 ? new Vec2(x / mag, y / mag) : new Vec2(0, 0);
     }
 
     /**
@@ -85,7 +83,7 @@ public class Vec2 {
      * @param other The other Vec2 to calculate the distance to
      * @return The distance between this Vec2 and the other Vec2
      */
-    public int distance(Vec2 other) {
+    public float distance(Vec2 other) {
         return subtract(other).magnitude();
     }
 

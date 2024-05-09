@@ -60,7 +60,6 @@ public class CircleCollider extends AbstractCircleCollider{
 
     /**
      * Runs when the Component is first created
-     * This method is meant to be overridden by subclasses
      */
     @Override
     public void start() {
@@ -69,7 +68,6 @@ public class CircleCollider extends AbstractCircleCollider{
 
     /**
      * Runs every frame
-     * This method is meant to be overridden by subclasses
      */
     @Override
     public void update() {
@@ -77,7 +75,7 @@ public class CircleCollider extends AbstractCircleCollider{
     }
 
     /**
-     * Destory the component
+     * Destroy the component
      */
     @Override
     public void destory() {

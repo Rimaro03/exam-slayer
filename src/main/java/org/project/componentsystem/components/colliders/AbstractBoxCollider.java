@@ -49,10 +49,10 @@ public abstract class AbstractBoxCollider extends Collider{
     public boolean collidesWith(Collider other) {
         if(other instanceof AbstractBoxCollider){
             AbstractBoxCollider otherBox = (AbstractBoxCollider) other;
-            int thisX = this.getGameObject().getPosition().getX();
-            int thisY = this.getGameObject().getPosition().getY();
-            int otherX = otherBox.getGameObject().getPosition().getX();
-            int otherY = otherBox.getGameObject().getPosition().getY();
+            float thisX = this.getGameObject().getPosition().getX();
+            float thisY = this.getGameObject().getPosition().getY();
+            float otherX = otherBox.getGameObject().getPosition().getX();
+            float otherY = otherBox.getGameObject().getPosition().getY();
 
             return thisX < otherX + otherBox.getSize().getX() &&
                     thisX + this.getSize().getX() > otherX &&

@@ -43,7 +43,7 @@ public class Application extends JFrame {
 
             long delta = System.currentTimeMillis() - startTime;
             try{
-                long sleepTime = 20 - delta;
+                long sleepTime = Time.TIME_STEP_IN_MILLIS - delta;
                 if(sleepTime > 0) { Thread.sleep(sleepTime); }
             }
             catch (Exception ignore) { }

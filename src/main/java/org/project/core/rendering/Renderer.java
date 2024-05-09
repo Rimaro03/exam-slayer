@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 
 public class Renderer implements WindowStateListener {
     private static final int VERTICAL_RESOLUTION = 256;
+    private static final int PIXEL_PER_UNIT_SPACE = 8;
 
     private static Renderer instance;
 
@@ -39,7 +40,7 @@ public class Renderer implements WindowStateListener {
     /** Draws an image */
     public static void draw(BufferedImage sprite, Vec2 position){ getInstance().drawInternal(sprite, position); }
     /*** Draw a raw rectangle */
-    public static void drawRect(Rectangle rect, Color color){ getInstance().drawRectInternal(rect, color); }
+    public static void drawRect(Vec2 position, Vec2 scale, Color color){ getInstance().drawRectInternal(position, scale, color); }
     /*** Draw a raw circle **/
     public static void drawCircle(Vec2 position, float radius, Color color) { getInstance().drawCircleInternal(position, radius, color);}
     /** Draws a pixel */
@@ -66,24 +67,24 @@ public class Renderer implements WindowStateListener {
                 null
         );
     }
-    private void drawRectInternal(Rectangle rect, Color color) {
+    private void drawRectInternal(Vec2 position, Vec2 scale, Color color) {
         Graphics g = buffer.getGraphics();
         g.setColor(color);
         g.drawRect(
-                worldToScreenX(rect.x) - rect.width / 2,
-                worldToScreenY(rect.y) - rect.height / 2,
-                rect.width,
-                rect.height
+                worldToScreenX(position.getX() - scale.getX() / 2),
+                worldToScreenY(position.getY() - scale.getY() / 2),
+                worldToScreenWidth(scale.getX()),
+                worldToScreenHeight(scale.getY())
         );
     }
     private void drawCircleInternal(Vec2 position, float radius, Color color) {
         Graphics g = buffer.getGraphics();
         g.setColor(color);
         g.drawOval(
-                worldToScreenX(position.getX()) - (int)radius,
-                worldToScreenY(position.getY()) - (int)radius,
-                (int)radius * 2 ,
-                (int)radius * 2
+                worldToScreenX(position.getX() - radius),
+                worldToScreenY(position.getY() - radius),
+                worldToScreenWidth(radius * 2),
+                worldToScreenHeight(radius * 2)
         );
     }
 
@@ -109,15 +110,18 @@ public class Renderer implements WindowStateListener {
     }
 
     /* -------------- HELPER METHODS ----------------- */
-
-    private int worldToScreenX(float x){
-        return (int) ((x * buffer.getHeight() / buffer.getWidth() / VERTICAL_RESOLUTION + 1.f) * 0.5f * buffer.getWidth());
+    private int worldToScreenX(float x) {
+        return (int)(x * PIXEL_PER_UNIT_SPACE + buffer.getWidth() * 0.5f);
     }
     private int worldToScreenY(float y) {
-        return (int) ((y / VERTICAL_RESOLUTION + 1.f) * 0.5f * buffer.getHeight());
+        return (int)(y * PIXEL_PER_UNIT_SPACE + buffer.getHeight() * 0.5f);
     }
-
-
+    private int worldToScreenWidth(float width) {
+        return (int)(width * PIXEL_PER_UNIT_SPACE);
+    }
+    private int worldToScreenHeight(float height) {
+        return (int)(height * PIXEL_PER_UNIT_SPACE);
+    }
 
     /* -------------------WINDOW STATE LISTENER ----------------*/
 

@@ -39,7 +39,6 @@ public class BoxCollider extends AbstractBoxCollider{
 
     /**
      * Runs when the Component is first created
-     * This method is meant to be overridden by subclasses
      */
     @Override
     public void start() {
@@ -48,7 +47,6 @@ public class BoxCollider extends AbstractBoxCollider{
 
     /**
      * Runs every frame
-     * This method is meant to be overridden by subclasses
      */
     @Override
     public void update() {
@@ -56,7 +54,7 @@ public class BoxCollider extends AbstractBoxCollider{
     }
 
     /**
-     * Destory the component
+     * Destroy the component
      */
     @Override
     public void destory() {
@@ -64,11 +62,10 @@ public class BoxCollider extends AbstractBoxCollider{
     }
 
     public void draw(){
-        Renderer.drawRect(new Rectangle(
-                getGameObject().getPosition().getX(),
-                getGameObject().getPosition().getY(),
-                getSize().getX(),
-                getSize().getY()
-        ), Color.RED);
+        Renderer.drawRect(
+                getGameObject().getPosition(),
+                getSize(),
+                Color.RED
+        );
     }
 }

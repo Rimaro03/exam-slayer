@@ -23,10 +23,10 @@ public class Scheme {
     private Scheme() {
         player = GameObjectFactory.createPlayer("PlayerName");
         player2 = GameObjectFactory.createPlayer("PlayerName2");
-        player2.setPosition(new Vec2(100, 100));
+        player2.setPosition(new Vec2(5, 5));
         player2.removeComponent(player2.getComponent(KeyboardController.class));
         ((CircleCollider) player2.getComponent(CircleCollider.class)).setMovable(false);
-        ((CircleCollider) player2.getComponent(CircleCollider.class)).setRadius(30);
+        ((CircleCollider) player2.getComponent(CircleCollider.class)).setRadius(2);
     }
 
     /**
