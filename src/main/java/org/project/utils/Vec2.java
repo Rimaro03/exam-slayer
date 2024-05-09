@@ -97,11 +97,29 @@ public class Vec2 {
 
     /**
      * Checks if this Vec2 is equal to another Vec2
-     * @param other The other Vec2 to compare to
+     * @param o The other Vec2 to compare to
      * @return True if the two Vets are equal, false otherwise
      */
-    public boolean equals(Vec2 other) {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vec2 other = (Vec2) o;
         return x == other.x && y == other.y;
+    }
+
+    /**
+     * Clamps a Vec2 between a minimum and maximum value
+     * @param value The Vec2 to clamp
+     * @param min The minimum value
+     * @param max The maximum value
+     * @return A new Vec2 that is the clamped version of the input Vec2
+     */
+    public static Vec2 clamp(Vec2 value, Vec2 min, Vec2 max) {
+        return new Vec2(
+                Math.max(min.getX(), Math.min(max.getX(), value.getX())),
+                Math.max(min.getY(), Math.min(max.getY(), value.getY()))
+        );
     }
 
     @Override

@@ -11,14 +11,14 @@ class GameObjectTest {
     @Test
     void addComponent() {
         GameObject gameObject = new GameObject("Test");
-        gameObject.addComponent(new PlayerStats(gameObject, "PlayerStats", 100, 10, 5, 5));
+        gameObject.addComponent(new PlayerStats(gameObject, 100, 10, 5, 5));
         assertNotNull(gameObject.getComponent(PlayerStats.class));
     }
 
     @Test
     void removeComponent() {
         GameObject gameObject = new GameObject("Test");
-        PlayerStats playerStats = new PlayerStats(gameObject, "PlayerStats", 100, 10, 5, 5);
+        PlayerStats playerStats = new PlayerStats(gameObject, 100, 10, 5, 5);
         gameObject.addComponent(playerStats);
         gameObject.removeComponent(playerStats);
         assertNull(gameObject.getComponent(PlayerStats.class));
@@ -27,7 +27,7 @@ class GameObjectTest {
     @Test
     void getComponent() {
         GameObject gameObject = new GameObject("Test");
-        PlayerStats playerStats = new PlayerStats(gameObject, "PlayerStats", 100, 10, 5, 5);
+        PlayerStats playerStats = new PlayerStats(gameObject, 100, 10, 5, 5);
         gameObject.addComponent(playerStats);
         assertEquals(playerStats, gameObject.getComponent(PlayerStats.class));
     }
@@ -41,7 +41,7 @@ class GameObjectTest {
     @Test
     void getComponents() {
         GameObject gameObject = new GameObject("Test");
-        PlayerStats playerStats = new PlayerStats(gameObject, "PlayerStats", 100, 10, 5, 5);
+        PlayerStats playerStats = new PlayerStats(gameObject, 100, 10, 5, 5);
         gameObject.addComponent(playerStats);
         assertEquals(1, gameObject.getComponents().size());
     }

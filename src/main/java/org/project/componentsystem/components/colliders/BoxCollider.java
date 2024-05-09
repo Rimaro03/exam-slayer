@@ -34,7 +34,40 @@ public class BoxCollider extends AbstractBoxCollider{
 
     @Override
     public void onCollide(Collider other) {
-        System.out.println("Collided with " + other.getGameObject().getName());
+        if(other instanceof BoxCollider){
+            BoxCollider otherBox = (BoxCollider) other;
+            Vec2 overlap = getOverlap(otherBox);
+            if(overlap != null){
+                float repel = 0.3f;
+                boolean thisMovable = this.isMovable();
+                boolean otherMovable = otherBox.isMovable();
+                if (thisMovable && otherMovable) {
+                    getGameObject().setPosition(
+                            getGameObject().getPosition().add(
+                                    overlap.multiply(0.1f)
+                            )
+                    );
+
+                    other.getGameObject().setPosition(
+                            other.getGameObject().getPosition().subtract(
+                                    overlap.multiply(repel)
+                            )
+                    );
+                } else if (thisMovable) {
+                    getGameObject().setPosition(
+                            getGameObject().getPosition().add(
+                                    overlap.multiply(repel)
+                            )
+                    );
+                } else if (otherMovable) {
+                    other.getGameObject().setPosition(
+                            other.getGameObject().getPosition().subtract(
+                                    overlap.multiply(repel)
+                            )
+                    );
+                }
+            }
+        }
     }
 
     /**

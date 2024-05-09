@@ -37,25 +37,40 @@ public class CircleCollider extends AbstractCircleCollider{
     @Override
     public void onCollide(Collider other) {
         if(other instanceof CircleCollider){
-           /* CircleCollider otherCircle = (CircleCollider) other;
-            float repelForce = 0.09f;
-            float distance = (float) Math.sqrt(
-                    Math.pow(this.getGameObject().getPosition().getX() - otherCircle.getGameObject().getPosition().getX(), 2) +
-                    Math.pow(this.getGameObject().getPosition().getY() - otherCircle.getGameObject().getPosition().getY(), 2)
-            );
-            float xDistance = this.getGameObject().getPosition().getX() - otherCircle.getGameObject().getPosition().getX();
-            float yDistance = this.getGameObject().getPosition().getY() - otherCircle.getGameObject().getPosition().getY();
-            float xMove = (float) (Math.cos(Math.atan2(yDistance, xDistance)) * (this.getRadius() + otherCircle.getRadius() - distance));
-            float yMove = (float) Math.sin(Math.atan2(yDistance, xDistance)) * (this.getRadius() + otherCircle.getRadius() - distance);
-            if(this.isMovable()){
-                this.getGameObject().getPosition().setX((int) (this.getGameObject().getPosition().getX() + xMove / (1 / repelForce)));
-                this.getGameObject().getPosition().setY((int) (this.getGameObject().getPosition().getY() + yMove / (1 / repelForce)));
+            CircleCollider otherCircle = (CircleCollider) other;
+            float distance = this.getGameObject().getPosition().distance(otherCircle.getGameObject().getPosition());
+            float overlap = getRadius() + otherCircle.getRadius() - distance;
+            if(overlap > 0){
+                boolean thisMovable = this.isMovable();
+                boolean otherMovable = otherCircle.isMovable();
+                if (thisMovable && otherMovable) {
+                    getGameObject().setPosition(
+                            getGameObject().getPosition().add(
+                                    this.getGameObject().getPosition().subtract(other.getGameObject().getPosition()).normalized().multiply(overlap * 0.5f)
+                            )
+                    );
+
+                    other.getGameObject().setPosition(
+                            other.getGameObject().getPosition().add(
+                                    other.getGameObject().getPosition().subtract(getGameObject().getPosition()).normalized().multiply(overlap * 0.5f)
+                            )
+                    );
+                } else if (thisMovable) {
+                    getGameObject().setPosition(
+                            getGameObject().getPosition().add(
+                                    this.getGameObject().getPosition().subtract(other.getGameObject().getPosition()).normalized().multiply(overlap)
+                            )
+                    );
+                } else if (otherMovable) {
+                    other.getGameObject().setPosition(
+                            other.getGameObject().getPosition().add(
+                                    other.getGameObject().getPosition().subtract(getGameObject().getPosition()).normalized().multiply(overlap)
+                            )
+                    );
+                }
             }
-            if(otherCircle.isMovable()){
-                otherCircle.getGameObject().getPosition().setX((int) (otherCircle.getGameObject().getPosition().getX() - xMove / (1 / repelForce)));
-                otherCircle.getGameObject().getPosition().setY((int) (otherCircle.getGameObject().getPosition().getY() - yMove / (1 / repelForce)));
-            } */
         }
+
     }
 
     /**

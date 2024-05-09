@@ -3,6 +3,7 @@ package org.project.componentsystem.components.colliders;
 import lombok.Getter;
 import lombok.Setter;
 import org.project.componentsystem.GameObject;
+import org.project.utils.Vec2;
 
 @Getter @Setter
 public abstract class AbstractCircleCollider extends Collider {
@@ -39,8 +40,20 @@ public abstract class AbstractCircleCollider extends Collider {
         if (other instanceof AbstractCircleCollider) {
             AbstractCircleCollider otherCircle = (AbstractCircleCollider) other;
             float distance = this.getGameObject().getPosition().distance(otherCircle.getGameObject().getPosition());
-            System.out.println(distance < getRadius() + otherCircle.getRadius());
+
             return distance < getRadius() + otherCircle.getRadius();
+        }
+        if (other instanceof AbstractBoxCollider) {
+            AbstractBoxCollider otherBox = (AbstractBoxCollider) other;
+            Vec2 circlePos = this.getGameObject().getPosition();
+            Vec2 boxPos = otherBox.getGameObject().getPosition();
+            Vec2 halfSize = otherBox.getSize().divide(2);
+            Vec2 distance = circlePos.subtract(boxPos);
+            Vec2 clamp = Vec2.clamp(distance, new Vec2(-halfSize.getX(), -halfSize.getY()), halfSize);
+            Vec2 closest = boxPos.add(clamp);
+            distance = closest.subtract(circlePos);
+
+            return distance.magnitude() < this.getRadius();
         }
         return false;
     }

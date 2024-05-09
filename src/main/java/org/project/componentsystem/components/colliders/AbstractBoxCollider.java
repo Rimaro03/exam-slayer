@@ -6,7 +6,7 @@ import org.project.componentsystem.GameObject;
 import org.project.utils.Vec2;
 
 @Getter @Setter
-public abstract class AbstractBoxCollider extends Collider{
+public abstract class AbstractBoxCollider extends Collider {
     private boolean movable;
     private Vec2 size; // (width, height)
 
@@ -59,6 +59,35 @@ public abstract class AbstractBoxCollider extends Collider{
                     thisY < otherY + otherBox.getSize().getY() &&
                     thisY + this.getSize().getY() > otherY;
         }
+        else if (other instanceof AbstractCircleCollider) {
+            AbstractCircleCollider otherCircle = (AbstractCircleCollider) other;
+            Vec2 circlePos = otherCircle.getGameObject().getPosition();
+            Vec2 boxPos = this.getGameObject().getPosition();
+
+            Vec2 halfSize = this.getSize().divide(2);
+            Vec2 distance = circlePos.subtract(boxPos);
+            Vec2 clamp = Vec2.clamp(distance, new Vec2(-halfSize.getX(), -halfSize.getY()), halfSize);
+            Vec2 closest = boxPos.add(clamp);
+            distance = closest.subtract(circlePos);
+            return distance.magnitude() < otherCircle.getRadius();
+        }
         return false;
+    }
+
+    /**
+     * Gets the overlap between this box collider and another box collider
+     *
+     * @param other The other box collider to check overlap with
+     * @return The overlap between the two colliders
+     */
+    public Vec2 getOverlap(BoxCollider other) {
+        Vec2 thisCenter = this.getGameObject().getPosition().add(this.getSize().divide(2));
+        Vec2 otherCenter = other.getGameObject().getPosition().add(other.getSize().divide(2));
+
+        float overlapX = Math.abs(thisCenter.getX() - otherCenter.getX()) - (this.getSize().getX() / 2 + other.getSize().getX() / 2);
+        float overlapY = Math.abs(thisCenter.getY() - otherCenter.getY()) - (this.getSize().getY() / 2 + other.getSize().getY() / 2);
+
+        if (overlapX < 0 && overlapY < 0) return new Vec2(overlapX, overlapY);
+        else return null;
     }
 }

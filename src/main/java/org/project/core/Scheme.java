@@ -25,8 +25,9 @@ public class Scheme {
         player2 = GameObjectFactory.createPlayer("PlayerName2");
         player2.setPosition(new Vec2(5, 5));
         player2.removeComponent(player2.getComponent(KeyboardController.class));
-        ((CircleCollider) player2.getComponent(CircleCollider.class)).setMovable(false);
-        ((CircleCollider) player2.getComponent(CircleCollider.class)).setRadius(2);
+//        player2.removeComponent(player2.getComponent(BoxCollider.class));
+//        player2.addComponent(new CircleCollider(player2, 2, true));
+        ((BoxCollider) player2.getComponent(BoxCollider.class)).setMovable(true);
     }
 
     /**
