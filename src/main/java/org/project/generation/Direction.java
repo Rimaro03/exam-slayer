@@ -1,5 +1,8 @@
-package org.project.generation.wavecollapse;
+package org.project.generation;
 
+/** This contains functionalities to work with directions coded as :
+ * 0 = UP, 1 = RIGHT, 2 = DOWN, 3 = LEFT
+ * */
 public class Direction {
     /** Returns the opposite direction. */
     public static int opposite(int direction){ return (direction + 2) % 4; }

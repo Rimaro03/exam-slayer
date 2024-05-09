@@ -1,30 +1,28 @@
-package org.project.generation.wavecollapse;
+package org.project.generation;
 
 import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Random;
 
+@Getter
 public class Tile {
-    private final int DOOR_COUNT = 4;
-    @Getter
+    private static final int START_ENTROPY = 1 << 4; // 2^4 = 16 possible states
     private final ArrayList<State> possibleStates;
-    @Getter
     private boolean collapsed;
-    @Getter
     private final int x, y;
+
     public Tile(int x, int y){
         this.x = x;
         this.y = y;
         collapsed = false;
 
-        int startEntropy = 1 << DOOR_COUNT;
-        possibleStates = new ArrayList<>(startEntropy); // 2^4 possible states
-        for(byte i = 0; i < startEntropy; i++){
+        possibleStates = new ArrayList<>(START_ENTROPY);
+        for(byte i = 0; i < START_ENTROPY; i++){
             possibleStates.add(new State(i));
         }
     }
-    public void removeState(State state){ possibleStates.removeIf(new StateComparator(state)); }
+    public void removeState(State state){ possibleStates.remove(state); }
     public int entropy(){ return possibleStates.size(); }
 
     /**
@@ -46,7 +44,10 @@ public class Tile {
         possibleStates.add(chosen);
     }
     /** Returns the state at the front of the list of possible states. */
-    public State getState() { return possibleStates.get(0); }
+    public State getState() {
+        if(!collapsed) { throw new IllegalStateException("Tile not collapsed!"); }
+        return possibleStates.get(0);
+    }
     public void collapse(State state){
         collapsed = true;
         possibleStates.clear();

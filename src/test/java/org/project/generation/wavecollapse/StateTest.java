@@ -1,8 +1,8 @@
 package org.project.generation.wavecollapse;
 
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.project.generation.Direction;
+import org.project.generation.State;
 
 class StateTest {
 
@@ -11,10 +11,10 @@ class StateTest {
         State state1 = new State((byte)0b0001);
         State state2 = new State((byte)0b0010);
         State state3 = new State((byte)0b0011);
-        assert(state1.checkBit(0));
-        assert(state2.checkBit(1));
-        assert(state3.checkBit(0));
-        assert(state3.checkBit(1));
+        assert(state1.hasDoor(0));
+        assert(state2.hasDoor(1));
+        assert(state3.hasDoor(0));
+        assert(state3.hasDoor(1));
     }
 
     @Test

@@ -25,6 +25,7 @@ public class AnimatedSpriteRenderer extends Component {
         } catch (IOException e) {
             log.error("Failed to load sprite sheet: " + spriteSheetPath);
         }
+        currentFrame = spriteSheet.getSubimage(0, 0, frameWidth, frameHeight);
     }
 
     public void setSheetState(int x, int y) {

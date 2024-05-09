@@ -1,8 +1,7 @@
 package org.project.generation.wavecollapse;
 
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.project.generation.Direction;
 
 class DirectionTest {
 
@@ -16,17 +15,17 @@ class DirectionTest {
 
     @Test
     void x() {
-        assert(Direction.x(0, Direction.UP, 1) == 0);
-        assert(Direction.x(0, Direction.RIGHT, 1) == 1);
-        assert(Direction.x(0, Direction.DOWN, 1) == 0);
-        assert(Direction.x(0, Direction.LEFT, 1) == -1);
+        assert(Direction.x(0, Direction.UP) == 0);
+        assert(Direction.x(0, Direction.RIGHT) == 1);
+        assert(Direction.x(0, Direction.DOWN) == 0);
+        assert(Direction.x(0, Direction.LEFT) == -1);
     }
 
     @Test
     void y() {
-        assert(Direction.y(0, Direction.UP, 1) == 1);
-        assert(Direction.y(0, Direction.RIGHT, 1) == 0);
-        assert(Direction.y(0, Direction.DOWN, 1) == -1);
-        assert(Direction.y(0, Direction.LEFT, 1) == 0);
+        assert(Direction.y(0, Direction.UP) == 1);
+        assert(Direction.y(0, Direction.RIGHT) == 0);
+        assert(Direction.y(0, Direction.DOWN) == -1);
+        assert(Direction.y(0, Direction.LEFT) == 0);
     }
 }

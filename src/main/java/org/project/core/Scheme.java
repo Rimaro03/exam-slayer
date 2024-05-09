@@ -28,9 +28,6 @@ public class Scheme {
     }
     public void start(){
         player.start();
-        for(Room room : rooms) {
-            room.update();
-        }
     }
     public void update() {
         Vec2 playerPosition = player.getPosition();

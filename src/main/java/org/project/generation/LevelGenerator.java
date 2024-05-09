@@ -3,7 +3,6 @@ package org.project.generation;
 import java.util.*;
 
 import lombok.extern.log4j.Log4j2;
-import org.project.generation.wavecollapse.*;
 
 @Log4j2
 public class LevelGenerator {
@@ -16,7 +15,6 @@ public class LevelGenerator {
         Room[][] rooms = new Room[mapSize][mapSize];
         Tile[][] tiles = new Tile[mapSize][mapSize];
         Random rand = new Random();
-        Tile chosenTile;
 
         int startX = 1 + rand.nextInt(mapSize - 2);
         int startY = 1 + rand.nextInt(mapSize - 2);
@@ -25,7 +23,7 @@ public class LevelGenerator {
             initializeTiles(tiles, mapSize);
             collapseBoundaries(tiles, mapSize);
 
-            chosenTile = tiles[startY][startX];
+            Tile chosenTile = tiles[startY][startX];
             while(chosenTile != null) {
                 chosenTile.collapse();
                 propagateWave(tiles, chosenTile.getX(), chosenTile.getY(), mapSize);
@@ -35,15 +33,16 @@ public class LevelGenerator {
             floodFill(tiles, rooms, startX, startY, mapSize);
 
         } catch (GenerationFailedException e) { // there are low cases where the generation can fail
-            log.warn("Generation failed [" + e.getMessage() + "], retrying...");
+            log.warn("Generation failed [{}], retrying...", e.getMessage());
             return build(mapSize);
         }
 
-        return new Level(rooms, startX, startY);
+        return new Level(rooms[startY][startX]);
     }
 
     /* -------------- WAVE COLLAPSE FUNCTIONS ---------------*/
 
+    /** Initialize all the tiles to max entropy tiles (max number of possible states). */
     private static void initializeTiles(Tile[][] tiles, int mapSize){
         for(int x = 0; x < mapSize; x++){
             for(int y = 0; y < mapSize; y++){
@@ -51,6 +50,7 @@ public class LevelGenerator {
             }
         }
     }
+    /** Collapse the boundaries of the map to avoid the generation of rooms that are not connected to the map. */
     private static void collapseBoundaries(Tile[][] tiles, int mapSize){
         State noDoors = new State((byte)0);
         for (int x = 0; x < mapSize; x++) {
@@ -68,7 +68,6 @@ public class LevelGenerator {
             propagateWave(tiles, mapSize - 1, y, mapSize);
         }
     }
-
 
     /** Creates only the connected rooms to the tile at (x, y).*/
     private static void floodFill(Tile[][] tiles, Room[][] rooms, int x, int y, int mapSize) throws GenerationFailedException {
@@ -88,7 +87,7 @@ public class LevelGenerator {
                 int otherY = Direction.y(current.getY(), direction);
                 if(otherX < 0 || otherX >= mapSize || otherY < 0 || otherY >= mapSize) { continue; }
                 Tile other = tiles[otherY][otherX];
-                if(!current.getState().checkBit(direction) || visited.contains(other)) { continue; }
+                if(!current.getState().hasDoor(direction) || visited.contains(other)) { continue; }
 
                 tileQueue.add(other);
             }
@@ -106,12 +105,14 @@ public class LevelGenerator {
                 Room current = rooms[i][j];
                 if(current == null) { continue; }
                 for (int direction = 0; direction < 4; direction++) {
-                    if(!tiles[i][j].getState().checkBit(direction)) { continue; }
+                    if(!tiles[i][j].getState().hasDoor(direction)) { continue; }
                     current.setAdjacentRoom(direction, rooms[Direction.y(i, direction)][Direction.x(j, direction)]);
                 }
             }
         }
     }
+
+    /** Returns the tile that has less possible states to collapse to. */
     private static Tile getTileWithLowestEntropy(Tile[][] tiles, Random rand){
         ArrayList<Tile> candidates = new ArrayList<>();
         int lowestEntropy = Integer.MAX_VALUE;
@@ -129,6 +130,10 @@ public class LevelGenerator {
         if(candidates.isEmpty()){ return null; }
         return candidates.get(rand.nextInt(candidates.size()));
     }
+
+    /** From the tile at (x, y) this method propagate (like a wave) the changes applied to (x, y),
+     * updating all neighbours tile until the changes are not anymore influential and then the wave stops.
+     */
     private static void propagateWave(Tile[][] tiles, int x, int y, int mapSize){
         Queue<TilePair> queue = new LinkedList<>();
 
@@ -154,7 +159,10 @@ public class LevelGenerator {
                         break;
                     }
                 }
-                if(noMatch){ pair.tileB.removeState(stateB); }
+                if(noMatch){
+                    pair.tileB.removeState(stateB);
+                    hasChanged = true;
+                }
                 else { i++; }
             }
 

@@ -41,6 +41,7 @@ public class GameObject {
      */
     public GameObject addComponent(Component component) {
         components.add(component);
+        component.start();
         return this;
     }
 

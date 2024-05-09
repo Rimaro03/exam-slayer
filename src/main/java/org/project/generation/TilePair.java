@@ -1,4 +1,4 @@
-package org.project.generation.wavecollapse;
+package org.project.generation;
 
 public class TilePair {
     public final Tile tileA;

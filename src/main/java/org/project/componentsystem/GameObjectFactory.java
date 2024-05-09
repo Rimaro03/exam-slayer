@@ -15,8 +15,8 @@ public class GameObjectFactory {
         return createGameObject(
                 player,
                 new PlayerStats(player, 100, 10, 5, 5),
-                new KeyboardController(player, "KeyboardController"),
-                new AnimatedSpriteRenderer(player, "resources/textures/characters/MainCharacter.png", 32, 32)
+                new AnimatedSpriteRenderer(player, "resources/textures/characters/MainCharacter.png", 32, 32),
+                new KeyboardController(player, "KeyboardController")
         );
     }
     private static GameObject createGameObject(GameObject obj, Component... components) {

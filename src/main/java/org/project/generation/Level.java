@@ -1,6 +1,7 @@
 package org.project.generation;
 
 import lombok.Getter;
+import org.project.componentsystem.GameObjectFactory;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -8,15 +9,19 @@ import java.util.Queue;
 import java.util.Set;
 
 public class Level {
+    //private Room[][] rooms;
     @Getter
-    private final Room[][] map;
     private Room currentRoom;
-    public Level(Room[][] map, int startX, int startY){
-        this.map = map;
-        currentRoom = map[startY][startX];
+    public Level(Room startRoom){
+        currentRoom = startRoom;
     }
+    /*public Level(Room[][] rooms, int startX, int startY){
+        this.rooms = rooms;
+        currentRoom = rooms[startY][startX];
+        init();
+    }*/
 
-    public void move(int direction){
+    private void changeRoom(int direction){
         Room next = currentRoom.getAdjacentRoom(direction);
         if(next != null){
             currentRoom = next;
@@ -25,16 +30,9 @@ public class Level {
         }
     }
     public void init(){
-
-
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[i].length; j++) {
-                System.out.print(map[i][j] == null ? " " : map[i][j].toString());
-            }
-            System.out.println();
-        }
+        currentRoom.addGameObject(GameObjectFactory.createPlayer("Player"));
     }
     public void update(){
-
+        currentRoom.updateGameObjects();
     }
 }
