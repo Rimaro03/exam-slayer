@@ -3,7 +3,6 @@ package org.project;
 import org.junit.jupiter.api.Test;
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.GameObjectFactory;
-import org.project.generation.Room;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

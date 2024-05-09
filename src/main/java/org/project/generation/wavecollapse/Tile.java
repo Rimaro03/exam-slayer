@@ -45,7 +45,8 @@ public class Tile {
         possibleStates.clear();
         possibleStates.add(chosen);
     }
-    public State look() { return possibleStates.get(0); }
+    /** Returns the state at the front of the list of possible states. */
+    public State getState() { return possibleStates.get(0); }
     public void collapse(State state){
         collapsed = true;
         possibleStates.clear();

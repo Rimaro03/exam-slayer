@@ -1,94 +1,74 @@
 package org.project.generation;
 
 import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
+import org.project.generation.wavecollapse.Direction;
+import org.project.generation.wavecollapse.InvalidDirectionException;
 
 import java.util.ArrayList;
 
-@Getter @Setter @Log4j2
 public class Room {
-    private ArrayList<GameObject> gameObjects = new ArrayList<>();
-    private boolean doorUp;
-    private boolean doorDown;
-    private boolean doorLeft;
-    private boolean doorRight;
-
-    public Room(boolean doorUp, boolean doorDown, boolean doorLeft, boolean doorRight) {
-        this.doorUp = doorUp;
-        this.doorDown = doorDown;
-        this.doorLeft = doorLeft;
-        this.doorRight = doorRight;
+    private final ArrayList<GameObject> gameObjects;
+    private final Room[] adjacentRooms;
+    @Getter
+    private int x, y;
+    public Room(int x, int y) {
+        gameObjects = new ArrayList<>();
+        adjacentRooms = new Room[4];
+        this.x = x;
+        this.y = y;
     }
-
-    /**
-     * Add an entity to the room
-     * @param entity the entity to add
-     */
-    public void addEntity(GameObject entity) {
-        gameObjects.add(entity);
+    public void setAdjacentRoom(int direction, Room room) {
+        if(direction < 0 || direction >= 4) { throw new InvalidDirectionException(); }
+        adjacentRooms[direction] = room;
     }
-
-    /**
-     * Remove an entity from the room
-     * @param entity the entity to remove
-     */
-    public void removeEntity(GameObject entity) {
-        gameObjects.remove(entity);
+    public Room getAdjacentRoom(int direction) {
+        if(direction < 0 || direction >= 4) { throw new InvalidDirectionException(); }
+        return adjacentRooms[direction];
     }
-
-    /**
-     * Print all entities in the room
-     */
-    public void printEntities() {
-        for (GameObject gameObject : gameObjects) {
-            log.info(gameObject);
-        }
+    public void addGameObject(GameObject gameObject) {
+        gameObjects.add(gameObject);
     }
-
-    public void init(){
-        for (GameObject gameObject : gameObjects) {
-            gameObject.start();
-        }
+    public void removeGameObject(GameObject gameObject) {
+        gameObjects.remove(gameObject);
     }
-    public void update() {
+    public void updateGameObjects() {
         for (GameObject gameObject : gameObjects) {
             gameObject.update();
         }
     }
 
     public String toString(){
-        if(doorUp && doorDown && doorLeft && doorRight){
+        if(adjacentRooms[0] != null && adjacentRooms[2] != null && adjacentRooms[3] != null && adjacentRooms[1] != null){
             return "┼";
-        } else if(doorUp && doorDown && doorLeft){
+        } else if(adjacentRooms[0] != null && adjacentRooms[2] != null && adjacentRooms[3] != null){
             return "┤";
-        } else if(doorUp && doorDown && doorRight){
+        } else if(adjacentRooms[0] != null && adjacentRooms[2] != null && adjacentRooms[1] != null){
             return "├";
-        } else if(doorUp && doorLeft && doorRight){
+        } else if(adjacentRooms[0] != null && adjacentRooms[3] != null && adjacentRooms[1] != null){
             return "┬";
-        } else if(doorDown && doorLeft && doorRight){
+        } else if(adjacentRooms[2] != null && adjacentRooms[3] != null && adjacentRooms[1] != null){
             return "┴";
-        } else if(doorUp && doorRight){
+        } else if(adjacentRooms[0] != null && adjacentRooms[1] != null){
             return "┌";
-        } else if(doorUp && doorLeft){
+        } else if(adjacentRooms[0] != null && adjacentRooms[3] != null){
             return "┐";
-        } else if(doorDown && doorRight){
+        } else if(adjacentRooms[2] != null && adjacentRooms[1] != null){
             return "└";
-        } else if(doorDown && doorLeft){
+        } else if(adjacentRooms[2] != null && adjacentRooms[3] != null){
             return "┘";
         }
-        else if(doorUp && doorDown){
+        else if(adjacentRooms[0] != null && adjacentRooms[2] != null){
             return "│";
-        } else if(doorLeft && doorRight){
+        } else if(adjacentRooms[3] != null && adjacentRooms[1] != null){
             return "─";
-        } else if(doorUp){
+        } else if(adjacentRooms[0] != null){
             return "│";
-        } else if(doorDown){
+        } else if(adjacentRooms[2] != null){
             return "│";
-        } else if(doorLeft){
+        } else if(adjacentRooms[3] != null){
             return "─";
-        } else if(doorRight){
+        } else if(adjacentRooms[1] != null) {
             return "─";
         } else {
             return " ";

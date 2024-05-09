@@ -11,11 +11,10 @@ public class LevelGenerator {
      * This method uses the wave collapse algorithm to generate a new level.
      */
     public static Level build(int mapSize){
-        log.info("Generating level with size: " + mapSize);
         if(mapSize < 3){ throw new IllegalArgumentException("Map size must be at least 3 : [mapSize=" + mapSize + "]"); }
 
-        Tile[][] tiles = new Tile[mapSize][mapSize];
         Room[][] rooms = new Room[mapSize][mapSize];
+        Tile[][] tiles = new Tile[mapSize][mapSize];
         Random rand = new Random();
         Tile chosenTile;
 
@@ -29,19 +28,18 @@ public class LevelGenerator {
             chosenTile = tiles[startY][startX];
             while(chosenTile != null) {
                 chosenTile.collapse();
-                propagateWave(tiles, chosenTile.getX(), chosenTile.getY());
+                propagateWave(tiles, chosenTile.getX(), chosenTile.getY(), mapSize);
 
                 chosenTile = getTileWithLowestEntropy(tiles, rand);
             }
-            floodFill(tiles, startX, startY, mapSize);
+            floodFill(tiles, rooms, startX, startY, mapSize);
 
         } catch (GenerationFailedException e) { // there are low cases where the generation can fail
             log.warn("Generation failed [" + e.getMessage() + "], retrying...");
             return build(mapSize);
         }
 
-        convertTilesToRooms(tiles, rooms, mapSize);
-        return new Level(rooms);
+        return new Level(rooms, startX, startY);
     }
 
     /* -------------- WAVE COLLAPSE FUNCTIONS ---------------*/
@@ -59,64 +57,60 @@ public class LevelGenerator {
             tiles[0][x].collapse(noDoors);
             tiles[mapSize - 1][x].collapse(noDoors);
 
-            propagateWave(tiles, x, 0);
-            propagateWave(tiles, x, mapSize - 1);
+            propagateWave(tiles, x, 0, mapSize);
+            propagateWave(tiles, x, mapSize - 1, mapSize);
         }
         for (int y = 0; y < mapSize; y++) {
             tiles[y][0].collapse(noDoors);
             tiles[y][mapSize - 1].collapse(noDoors);
 
-            propagateWave(tiles, 0, y);
-            propagateWave(tiles, mapSize - 1, y);
+            propagateWave(tiles, 0, y, mapSize);
+            propagateWave(tiles, mapSize - 1, y, mapSize);
         }
     }
 
 
-    private static void floodFill(Tile[][] tiles, int x, int y, int mapSize) throws GenerationFailedException {
-        Queue<Tile> queue = new LinkedList<>();
+    /** Creates only the connected rooms to the tile at (x, y).*/
+    private static void floodFill(Tile[][] tiles, Room[][] rooms, int x, int y, int mapSize) throws GenerationFailedException {
+        Queue<Tile> tileQueue = new ArrayDeque<>();
         Set<Tile> visited = new HashSet<>();
-        queue.add(tiles[y][x]);
 
-        // bfs to find all connected tiles
-        while (!queue.isEmpty()){
-            Tile tile = queue.poll();
-            visited.add(tile);
+        tileQueue.add(tiles[y][x]);
+
+        //BFS to find all connected tiles and fill the room queue
+        while(!tileQueue.isEmpty()){
+            Tile current = tileQueue.poll();
+
+            visited.add(current);
 
             for (int direction = 0; direction < 4; direction++) {
-                int otherX = Direction.x(tile.getX(), direction, 1);
-                int otherY = Direction.y(tile.getY(), direction, 1);
-
+                int otherX = Direction.x(current.getX(), direction);
+                int otherY = Direction.y(current.getY(), direction);
                 if(otherX < 0 || otherX >= mapSize || otherY < 0 || otherY >= mapSize) { continue; }
-                if(!tile.look().checkBit(direction) || visited.contains(tiles[otherY][otherX])) { continue; }
+                Tile other = tiles[otherY][otherX];
+                if(!current.getState().checkBit(direction) || visited.contains(other)) { continue; }
 
-                queue.add(tiles[otherY][otherX]);
+                tileQueue.add(other);
             }
         }
-        // check if the map has enough connected tiles
-        if(visited.size() < mapSize * mapSize / 2){ throw new GenerationFailedException("Low room density, rooms counted = " + visited.size()); }
+        if(visited.size() < mapSize * mapSize / 4){ throw new GenerationFailedException("Not enough connected tiles : " + visited.size()); }
+        else { log.info("Map generated with " + visited.size() + " rooms");}
+        //create only one room for each connected tile
+        for(Tile tile : visited){
+            rooms[tile.getY()][tile.getX()] = new Room(tile.getX(), tile.getY());
+        }
 
-        // visited now contains all connected tiles to the starting tile
-        // collapse all other tiles to an empty room (no doors)
-        for (int i = 0; i < mapSize; i++) {
-            for (int j = 0; j < mapSize; j++) {
-                if(!visited.contains(tiles[i][j])) { tiles[i][j].collapse(State.noDoor); }
+        //connect the rooms
+        for (int i = 1; i < mapSize - 1; i++) {
+            for (int j = 1; j < mapSize - 1; j++) {
+                Room current = rooms[i][j];
+                if(current == null) { continue; }
+                for (int direction = 0; direction < 4; direction++) {
+                    if(!tiles[i][j].getState().checkBit(direction)) { continue; }
+                    current.setAdjacentRoom(direction, rooms[Direction.y(i, direction)][Direction.x(j, direction)]);
+                }
             }
         }
-    }
-    private static void convertTilesToRooms(Tile[][] tiles, Room[][] rooms, int mapSize) {
-        for(int x = 0; x < mapSize; x++){
-            for(int y = 0; y < mapSize; y++){
-                rooms[y][x] = getRoomFromState(tiles[y][x].look());
-            }
-        }
-    }
-    private static Room getRoomFromState(State state){
-        boolean up = state.checkBit(Direction.UP);
-        boolean right = state.checkBit(Direction.RIGHT);
-        boolean down = state.checkBit(Direction.DOWN);
-        boolean left = state.checkBit(Direction.LEFT);
-
-        return new Room(up, down, left, right);
     }
     private static Tile getTileWithLowestEntropy(Tile[][] tiles, Random rand){
         ArrayList<Tile> candidates = new ArrayList<>();
@@ -135,13 +129,14 @@ public class LevelGenerator {
         if(candidates.isEmpty()){ return null; }
         return candidates.get(rand.nextInt(candidates.size()));
     }
-    private static void propagateWave(Tile[][] tiles, int x, int y){
+    private static void propagateWave(Tile[][] tiles, int x, int y, int mapSize){
         Queue<TilePair> queue = new LinkedList<>();
 
+        // insert all neighbors of the tile at (x, y) into the queue
         for (int direction = 0; direction < 4; direction++) {
-            int otherX = Direction.x(x, direction, 1);
-            int otherY = Direction.y(y, direction, 1);
-            if(otherX < 0 || otherX >= tiles.length || otherY < 0 || otherY >= tiles.length) { continue; }
+            int otherX = Direction.x(x, direction);
+            int otherY = Direction.y(y, direction);
+            if(otherX < 0 || otherX >= mapSize || otherY < 0 || otherY >= mapSize) { continue; }
             queue.add(new TilePair(tiles[y][x], tiles[otherY][otherX], direction));
         }
 
@@ -163,10 +158,13 @@ public class LevelGenerator {
                 else { i++; }
             }
 
+            // if the tileB has not changed the wave has interrupted his propagation
+            // in that direction
             if(!hasChanged) { continue; }
+            
             for (int direction = 0; direction < 4; direction++) {
-                int otherX = Direction.x(pair.tileB.getX(), direction, 1);
-                int otherY = Direction.y(pair.tileB.getY(), direction, 1);
+                int otherX = Direction.x(pair.tileB.getX(), direction);
+                int otherY = Direction.y(pair.tileB.getY(), direction);
                 if(otherX < 0 || otherX >= tiles.length || otherY < 0 || otherY >= tiles.length) { continue; }
                 queue.add(new TilePair(tiles[pair.tileB.getY()][pair.tileB.getX()], tiles[otherY][otherX], direction));
             }

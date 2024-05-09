@@ -1,6 +1,6 @@
 package org.project.core;
 
-import org.project.generation.Room;
+import org.project.Room;
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.GameObjectFactory;
 import org.project.utils.Vec2;
