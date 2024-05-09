@@ -8,7 +8,7 @@ import org.project.componentsystem.GameObject;
 public class EntityStats extends Component {
     private Stats stats;
     /**
-     * Initializes a new EntityStats with the given GameObject, id, name
+     * Initializes a new EntityStats with the given GameObject and stats
      * @param gameObject The reference to the GameObject that this EntityStats is attached to
      * @param health The health of this EntityStats
      * @param attack The attack of this EntityStats
@@ -20,7 +20,7 @@ public class EntityStats extends Component {
     }
 
     /**
-     * Initializes a new EntityStats with the given GameObject, id, name, and enabled status
+             * Initializes a new EntityStats with the given GameObject, enabled status, and stats
      * @param gameObject The reference to the GameObject that this EntityStats is attached to
      * @param enabled Whether this EntityStats is enabled or not
      * @param health The health of this EntityStats
@@ -42,4 +42,10 @@ public class EntityStats extends Component {
 
     @Override
     public void update() { }
+
+    /**
+     * Destory the component
+     */
+    @Override
+    public void destory() { }
 }

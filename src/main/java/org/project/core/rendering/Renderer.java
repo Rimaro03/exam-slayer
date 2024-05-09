@@ -38,8 +38,12 @@ public class Renderer implements WindowStateListener {
     public static void clear(Color color){ getInstance().clearInternal(color);}
     /** Draws an image */
     public static void draw(BufferedImage sprite, Vec2 position){ getInstance().drawInternal(sprite, position); }
-    /*** This is a test function and will be removed. */
-    public static void fillRect(Rectangle rect, Color color){ getInstance().fillRectInternal(rect, color); }
+    /*** Draw a raw rectangle */
+    public static void drawRect(Rectangle rect, Color color){ getInstance().drawRectInternal(rect, color); }
+    /*** Draw a raw circle **/
+    public static void drawCircle(Vec2 position, float radius, Color color) { getInstance().drawCircleInternal(position, radius, color);}
+    /** Draws a pixel */
+    public static void drawPixel(Vec2 position, Color color){ getInstance().drawPixelInternal(position, color); }
     /** Applies the buffer to the screen. */
     public static void present(Graphics g) { getInstance().presentInternal(g); }
 
@@ -62,14 +66,35 @@ public class Renderer implements WindowStateListener {
                 null
         );
     }
-    private void fillRectInternal(Rectangle rect, Color color) {
+    private void drawRectInternal(Rectangle rect, Color color) {
         Graphics g = buffer.getGraphics();
         g.setColor(color);
-        g.fillRect(
+        g.drawRect(
                 worldToScreenX(rect.x) - rect.width / 2,
                 worldToScreenY(rect.y) - rect.height / 2,
                 rect.width,
                 rect.height
+        );
+    }
+    private void drawCircleInternal(Vec2 position, float radius, Color color) {
+        Graphics g = buffer.getGraphics();
+        g.setColor(color);
+        g.drawOval(
+                worldToScreenX(position.getX()) - (int)radius,
+                worldToScreenY(position.getY()) - (int)radius,
+                (int)radius * 2 ,
+                (int)radius * 2
+        );
+    }
+
+    private void drawPixelInternal(Vec2 position, Color color){
+        Graphics g = buffer.getGraphics();
+        g.setColor(color);
+        g.drawOval(
+                worldToScreenX(position.getX()),
+                worldToScreenY(position.getY()),
+                1,
+                1
         );
     }
     private void presentInternal(Graphics g){
@@ -83,15 +108,13 @@ public class Renderer implements WindowStateListener {
         clear(Color.GRAY);
     }
 
-
-
     /* -------------- HELPER METHODS ----------------- */
 
     private int worldToScreenX(float x){
-        return (int) ((x * buffer.getHeight() / buffer.getWidth() / Camera.main.verticalAmplitude + 1.f) * 0.5f * buffer.getWidth());
+        return (int) ((x * buffer.getHeight() / buffer.getWidth() / VERTICAL_RESOLUTION + 1.f) * 0.5f * buffer.getWidth());
     }
     private int worldToScreenY(float y) {
-        return (int) ((y / Camera.main.verticalAmplitude + 1.f) * 0.5f * buffer.getHeight());
+        return (int) ((y / VERTICAL_RESOLUTION + 1.f) * 0.5f * buffer.getHeight());
     }
 
 
