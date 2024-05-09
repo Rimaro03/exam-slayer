@@ -1,12 +1,10 @@
 package org.project.core;
 
-import org.project.Room;
+import org.project.generation.Room;
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.GameObjectFactory;
-import org.project.core.rendering.Renderer;
 import org.project.utils.Vec2;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public class Scheme {
