@@ -1,8 +1,6 @@
 package org.project.core;
 
 import lombok.Getter;
-import org.project.generation.Level;
-import org.project.generation.LevelGenerator;
 
 import javax.swing.*;
 import java.awt.*;

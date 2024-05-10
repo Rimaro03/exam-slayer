@@ -2,7 +2,6 @@ package org.project.generation;
 
 import lombok.Getter;
 import org.project.componentsystem.GameObject;
-import org.project.core.Game;
 
 import java.util.ArrayList;
 

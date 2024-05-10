@@ -1,8 +1,8 @@
 package org.project.generation;
 
-import java.util.*;
-
 import lombok.extern.log4j.Log4j2;
+
+import java.util.*;
 
 @Log4j2
 public class LevelGenerator {

@@ -8,7 +8,6 @@ import org.project.componentsystem.Physics;
 import org.project.core.rendering.Renderer;
 import org.project.utils.Vec2;
 
-import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.awt.*;
 
 @Log4j2 @Getter @Setter
@@ -73,13 +72,39 @@ public class CircleCollider extends AbstractCircleCollider{
         }
         if(other instanceof BoxCollider){
             BoxCollider otherBox = (BoxCollider) other;
-            float repel = 0.06f;
-            float xDistance = this.getGameObject().getPosition().getX() - otherBox.getGameObject().getPosition().getX();
-            float yDistance = this.getGameObject().getPosition().getY() - otherBox.getGameObject().getPosition().getY();
-            float xMove = (float) (Math.cos(Math.atan2(yDistance, xDistance)) * (this.getRadius() + otherBox.getSize().getX() - Math.abs(xDistance)));
-            float yMove = (float) Math.sin(Math.atan2(yDistance, xDistance)) * (this.getRadius() + otherBox.getSize().getY() - Math.abs(yDistance));
+            Vec2 distance = collisionDistance(this, otherBox);
+            float overlap = this.getRadius() - distance.magnitude();
+            if(overlap > 0){
+                boolean thisMovable = this.isMovable();
+                boolean otherMovable = otherBox.isMovable();
+                if (thisMovable && otherMovable) {
+                    getGameObject().setPosition(
+                            getGameObject().getPosition().add(
+                                    distance.normalized().multiply(-overlap * 0.5f)
+                            )
+                    );
 
-            BoxCollider.repulsion(this, otherBox, xMove, yMove, repel);
+                    otherBox.getGameObject().setPosition(
+                            otherBox.getGameObject().getPosition().add(
+                                    distance.normalized().multiply(overlap * 0.5f)
+                            )
+                    );
+                }
+                else if (thisMovable) {
+                    getGameObject().setPosition(
+                            getGameObject().getPosition().add(
+                                    distance.normalized().multiply(-overlap)
+                            )
+                    );
+                }
+                else if (otherMovable) {
+                    otherBox.getGameObject().setPosition(
+                            otherBox.getGameObject().getPosition().add(
+                                    distance.normalized().multiply(-overlap)
+                            )
+                    );
+                }
+            }
         }
     }
 

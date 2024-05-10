@@ -19,7 +19,7 @@ public class GameObjectFactory {
                 new PlayerStats(player, 100, 10, 5, 5),
                 new AnimatedSpriteRenderer(player, "resources/textures/characters/MainCharacter.png", 32, 32),
                 new PlayerController(player),
-                new CircleCollider(player, 4, true)
+                new CircleCollider(player, 2, true)
         );
     }
     private static GameObject createGameObject(GameObject obj, Component... components) {

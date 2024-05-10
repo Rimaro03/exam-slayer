@@ -1,6 +1,7 @@
 package org.project.core;
 
 import lombok.Getter;
+import org.project.componentsystem.Physics;
 import org.project.generation.Level;
 import org.project.generation.LevelGenerator;
 

@@ -3,12 +3,16 @@ package org.project.generation;
 import lombok.Getter;
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.GameObjectFactory;
+import org.project.componentsystem.Physics;
 import org.project.core.Input;
 import org.project.core.rendering.Renderer;
 import org.project.utils.Vec2;
 
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.HashSet;
+import java.util.Queue;
+import java.util.Set;
 
 @Getter
 public class Level {
@@ -38,7 +42,7 @@ public class Level {
     }
     public void update(){
         currentRoom.updateGameObjects();
-
+        Physics.update();
         debugMap();
     }
 
