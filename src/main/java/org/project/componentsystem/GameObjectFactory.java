@@ -21,7 +21,7 @@ public class GameObjectFactory {
                 new PlayerStats(player, 100, 10, 5, 5),
                 new AnimatedSpriteRenderer(player, "resources/textures/characters/MainCharacter.png", 32, 32),
                 new KeyboardController(player),
-                new BoxCollider(player, new Vec2(5, 10), false)
+                new CircleCollider(player, 4, true)
         );
     }
     private static GameObject createGameObject(GameObject obj, Component... components) {

@@ -1,26 +1,34 @@
 package org.project.componentsystem.components.colliders;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.components.Component;
 
+@Getter @Setter
 public abstract class Collider extends Component {
+    private boolean movable;
     /**
-     * Initializes a new Component with the given GameObject and enabled status
+     * Initializes a new Component with the given GameObject, enabled status and movable status
      *
      * @param gameObject The reference to the GameObject that this Component is attached to
      * @param enabled    Whether this Component is enabled or not
+     * @param movable    Whether the collider is movable by others or not
      */
-    public Collider(GameObject gameObject, boolean enabled) {
+    public Collider(GameObject gameObject, boolean enabled, boolean movable) {
         super(gameObject, enabled);
+        this.movable = movable;
     }
 
     /**
-     * Initializes a new Component with the given GameObject
+     * Initializes a new Component with the given GameObject and movable status
      *
      * @param gameObject The reference to the GameObject that this Component is attached to
+     * @param movable    Whether the collider is movable by others or not
      */
-    public Collider(GameObject gameObject) {
+    public Collider(GameObject gameObject, boolean movable) {
         super(gameObject);
+        this.movable = movable;
     }
 
     public abstract boolean collidesWith(Collider other);

@@ -36,37 +36,12 @@ public class BoxCollider extends AbstractBoxCollider{
     public void onCollide(Collider other) {
         if(other instanceof BoxCollider){
             BoxCollider otherBox = (BoxCollider) other;
-            Vec2 overlap = getOverlap(otherBox);
-            if(overlap != null){
-                float repel = 0.3f;
-                boolean thisMovable = this.isMovable();
-                boolean otherMovable = otherBox.isMovable();
-                if (thisMovable && otherMovable) {
-                    getGameObject().setPosition(
-                            getGameObject().getPosition().add(
-                                    overlap.multiply(0.1f)
-                            )
-                    );
-
-                    other.getGameObject().setPosition(
-                            other.getGameObject().getPosition().subtract(
-                                    overlap.multiply(repel)
-                            )
-                    );
-                } else if (thisMovable) {
-                    getGameObject().setPosition(
-                            getGameObject().getPosition().add(
-                                    overlap.multiply(repel)
-                            )
-                    );
-                } else if (otherMovable) {
-                    other.getGameObject().setPosition(
-                            other.getGameObject().getPosition().subtract(
-                                    overlap.multiply(repel)
-                            )
-                    );
-                }
-            }
+            float repel = 0.06f;
+            float xDistance = this.getGameObject().getPosition().getX() - otherBox.getGameObject().getPosition().getX();
+            float yDistance = this.getGameObject().getPosition().getY() - otherBox.getGameObject().getPosition().getY();
+            float xMove = (float) (Math.cos(Math.atan2(yDistance, xDistance)) * (this.getSize().getX() + otherBox.getSize().getX() - Math.abs(xDistance)));
+            float yMove = (float) Math.sin(Math.atan2(yDistance, xDistance)) * (this.getSize().getY() + otherBox.getSize().getY() - Math.abs(yDistance));
+            BoxCollider.repulsion(this, otherBox, xMove, yMove, repel);
         }
     }
 
@@ -100,5 +75,31 @@ public class BoxCollider extends AbstractBoxCollider{
                 getSize(),
                 Color.RED
         );
+    }
+
+    /**
+     * Repels two colliders from each other (A box and an any type collider)
+     *
+     * @param collider1 The first collider
+     * @param collider2 The second collider
+     * @param xMove     The amount to move in the x direction
+     * @param yMove     The amount to move in the y direction
+     * @param repel     The amount to repel by
+     */
+    public static void repulsion(Collider collider1, Collider collider2, float xMove, float yMove, float repel){
+        if(collider1.isMovable()){
+                collider1.getGameObject().setPosition(
+                        collider1.getGameObject().getPosition().add(
+                                new Vec2(xMove / (1 / repel), yMove / (1 / repel))
+                        )
+                );
+            }
+        if(collider2.isMovable()){
+            collider2.getGameObject().setPosition(
+                    collider2.getGameObject().getPosition().add(
+                            new Vec2(-xMove / (1 / repel), -yMove / (1 / repel))
+                    )
+            );
+        }
     }
 }

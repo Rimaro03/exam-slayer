@@ -27,7 +27,10 @@ public class Scheme {
         player2.removeComponent(player2.getComponent(KeyboardController.class));
 //        player2.removeComponent(player2.getComponent(BoxCollider.class));
 //        player2.addComponent(new CircleCollider(player2, 2, true));
+        player2.removeComponent(player2.getComponent(CircleCollider.class));
+        player2.addComponent(new BoxCollider(player2, new Vec2(2, 2), true));
         ((BoxCollider) player2.getComponent(BoxCollider.class)).setMovable(true);
+        ((BoxCollider) player2.getComponent(BoxCollider.class)).setSize(new Vec2(2, 2));
     }
 
     /**

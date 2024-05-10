@@ -6,6 +6,7 @@ import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.Physics;
 import org.project.core.rendering.Renderer;
+import org.project.utils.Vec2;
 
 import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.awt.*;
@@ -70,7 +71,16 @@ public class CircleCollider extends AbstractCircleCollider{
                 }
             }
         }
+        if(other instanceof BoxCollider){
+            BoxCollider otherBox = (BoxCollider) other;
+            float repel = 0.06f;
+            float xDistance = this.getGameObject().getPosition().getX() - otherBox.getGameObject().getPosition().getX();
+            float yDistance = this.getGameObject().getPosition().getY() - otherBox.getGameObject().getPosition().getY();
+            float xMove = (float) (Math.cos(Math.atan2(yDistance, xDistance)) * (this.getRadius() + otherBox.getSize().getX() - Math.abs(xDistance)));
+            float yMove = (float) Math.sin(Math.atan2(yDistance, xDistance)) * (this.getRadius() + otherBox.getSize().getY() - Math.abs(yDistance));
 
+            BoxCollider.repulsion(this, otherBox, xMove, yMove, repel);
+        }
     }
 
     /**
@@ -98,7 +108,6 @@ public class CircleCollider extends AbstractCircleCollider{
     }
 
     public void draw() {
-        Renderer.drawPixel(getGameObject().getPosition(), Color.pink);
         Renderer.drawCircle(getGameObject().getPosition(), getRadius(), Color.red);
     }
 }

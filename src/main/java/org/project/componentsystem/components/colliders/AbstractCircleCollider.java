@@ -8,7 +8,6 @@ import org.project.utils.Vec2;
 @Getter @Setter
 public abstract class AbstractCircleCollider extends Collider {
     private float radius;
-    private boolean movable;
     /**
      * Initializes a new Component with the given GameObject, enabled status, radius and movable status
      *
@@ -18,9 +17,8 @@ public abstract class AbstractCircleCollider extends Collider {
      * @param movable    Whether the object is movable or not
      */
     public AbstractCircleCollider(GameObject gameObject, boolean enabled, float radius, boolean movable) {
-        super(gameObject, enabled);
+        super(gameObject, enabled, movable);
         this.radius = radius;
-        this.movable = movable;
     }
 
     /**
@@ -31,9 +29,8 @@ public abstract class AbstractCircleCollider extends Collider {
      * @param movable    Whether the object is movable or not
      */
     public AbstractCircleCollider(GameObject gameObject, float radius, boolean movable) {
-        super(gameObject);
+        super(gameObject, movable);
         this.radius = radius;
-        this.movable = movable;
     }
 
     public boolean collidesWith(Collider other) {
