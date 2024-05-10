@@ -10,7 +10,7 @@ public class Sword extends Item{
     // Example of a class that extends Item
 
     /**
-     * Initializes a new Sword with the given id, name, and weight
+     * Initializes a new Sword with the given name and weight
      * @param name The name of this Sword
      * @param weight The weight of this Sword
      */

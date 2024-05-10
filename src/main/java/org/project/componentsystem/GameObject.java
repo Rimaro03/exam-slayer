@@ -2,19 +2,20 @@ package org.project.componentsystem;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.components.Component;
 import org.project.utils.Vec2;
 
 import java.util.ArrayList;
 
-@Getter @Setter
+@Getter @Setter @Log4j2
 public class GameObject {
     private String name;
     private ArrayList<Component> components;
     private Vec2 position;
 
     /**
-     * Initializes a new GameObject with the given id and name
+     * Initializes a new GameObject with the given name
      * @param name The name of this GameObject
      */
     public GameObject(String name) {
@@ -24,7 +25,7 @@ public class GameObject {
     }
 
     /**
-     * Initializes a new GameObject with the given id, name, and position
+     * Initializes a new GameObject with the given name and position
      * @param name The name of this GameObject
      * @param position The position of this GameObject
      */
@@ -40,7 +41,11 @@ public class GameObject {
      * @return This GameObject
      */
     public GameObject addComponent(Component component) {
-        components.add(component);
+        if (!components.contains(component)) {
+            log.info("Starting {} component", component.toString());
+            component.start();
+            components.add(component);
+        }
         return this;
     }
 
@@ -49,7 +54,10 @@ public class GameObject {
      * @param component The Component to remove
      */
     public GameObject removeComponent(Component component) {
-        components.remove(component);
+        if (components.contains(component)){
+            component.destory();
+            components.remove(component);
+        }
         return this;
     }
 
