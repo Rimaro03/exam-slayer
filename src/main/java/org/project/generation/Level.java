@@ -8,10 +8,14 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 
+@Getter
 public class Level {
     //private Room[][] rooms;
-    @Getter
     private Room currentRoom;
+
+    /** This constructor get as input the start room of the map,
+     * all other room are supposed to be linked to each other forming a graph of rooms.
+     */
     public Level(Room startRoom){
         currentRoom = startRoom;
     }
