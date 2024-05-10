@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 @Getter @Setter @Log4j2
 public class Room {
-    private ArrayList<GameObject> entities = new ArrayList<>();
+    private ArrayList<GameObject> gameObjects = new ArrayList<>();
     private boolean doorUp;
     private boolean doorDown;
     private boolean doorLeft;
@@ -27,7 +27,7 @@ public class Room {
      * @param entity the entity to add
      */
     public void addEntity(GameObject entity) {
-        entities.add(entity);
+        gameObjects.add(entity);
     }
 
     /**
@@ -35,21 +35,26 @@ public class Room {
      * @param entity the entity to remove
      */
     public void removeEntity(GameObject entity) {
-        entities.remove(entity);
+        gameObjects.remove(entity);
     }
 
     /**
      * Print all entities in the room
      */
     public void printEntities() {
-        for (GameObject entity : entities) {
-            log.info(entity);
+        for (GameObject gameObject : gameObjects) {
+            log.info(gameObject);
         }
     }
 
+    public void init(){
+        for (GameObject gameObject : gameObjects) {
+            gameObject.start();
+        }
+    }
     public void update() {
-        for (GameObject entity : entities) {
-            entity.update();
+        for (GameObject gameObject : gameObjects) {
+            gameObject.update();
         }
     }
 }

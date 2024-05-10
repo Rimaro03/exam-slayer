@@ -1,6 +1,8 @@
 package org.project.core;
 
 import lombok.Getter;
+import org.project.generation.Level;
+import org.project.generation.LevelGenerator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,12 +36,15 @@ public class Application extends JFrame {
     }
     private void runInternal(){
         // GAME INITIALIZATION HERE!
-        Scheme.getInstance().start();
+        //Scheme.getInstance().start();
+        Level level = LevelGenerator.build(10);
+        level.init();
         while(true){
             long startTime = System.currentTimeMillis();
 
-            Scheme.getInstance().update();
+            //Scheme.getInstance().update();
             window.update();
+            level.update();
 
             long delta = System.currentTimeMillis() - startTime;
             try{
