@@ -19,19 +19,30 @@ public class AnimatedSpriteRenderer extends Component {
         super(gameObject);
         this.frameWidth = frameWidth;
         this.frameHeight = frameHeight;
-
         try {
             spriteSheet = ImageIO.read(new File(spriteSheetPath));
+            this.currentFrame = spriteSheet.getSubimage(0, 0, frameWidth, frameHeight);
         } catch (IOException e) {
-            log.error("Failed to load sprite sheet: " + spriteSheetPath);
+            log.error("Failed to load sprite sheet: {}", spriteSheetPath);
         }
         currentFrame = spriteSheet.getSubimage(0, 0, frameWidth, frameHeight);
     }
 
+
     public void setSheetState(int x, int y) {
         currentFrame = spriteSheet.getSubimage(x * frameWidth, y * frameHeight, frameWidth, frameHeight);
     }
+
+    public void start() {}
     public void update(){
         Renderer.draw(currentFrame, getGameObject().getPosition());
+    }
+
+    /**
+     * Destory the component
+     */
+    @Override
+    public void destory() {
+
     }
 }

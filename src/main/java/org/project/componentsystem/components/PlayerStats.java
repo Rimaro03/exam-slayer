@@ -14,7 +14,7 @@ public class PlayerStats extends Component {
     private HashMap<Item, Integer> inventory;
 
     /**
-     * Initializes a new PlayerStats with the given GameObject, id, name
+     * Initializes a new PlayerStats with the given GameObject
      * @param gameObject The reference to the GameObject that this PlayerStats is attached to
      * @param health The health of this PlayerStats
      * @param attack The attack of this PlayerStats
@@ -26,7 +26,7 @@ public class PlayerStats extends Component {
     }
 
     /**
-     * Initializes a new PlayerStats with the given GameObject, id, name, and enabled status
+     * Initializes a new PlayerStats with the given GameObject and enabled status
      * @param gameObject The reference to the GameObject that this PlayerStats is attached to
      * @param enabled Whether this PlayerStats is enabled or not
      * @param health The health of this PlayerStats
@@ -47,4 +47,12 @@ public class PlayerStats extends Component {
     public void start() { }
     @Override
     public void update() { }
+
+    /**
+     * Destory the component
+     */
+    @Override
+    public void destory() {
+
+    }
 }

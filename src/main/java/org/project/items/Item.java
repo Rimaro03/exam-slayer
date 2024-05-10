@@ -9,7 +9,7 @@ public abstract class Item {
     private int weight;
 
     /**
-     * Initializes a new Item with the given id, name, and weight
+     * Initializes a new Item with the given name and weight
      * @param name The name of this Item
      * @param weight The weight of this Item
      */

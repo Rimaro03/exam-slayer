@@ -10,7 +10,7 @@ public abstract class Component {
     private boolean enabled;
 
     /**
-     * Initializes a new Component with the given GameObject, id, name, and enabled status
+     * Initializes a new Component with the given GameObject and enabled status
      * @param gameObject The reference to the GameObject that this Component is attached to
      * @param enabled Whether this Component is enabled or not
      */
@@ -20,7 +20,7 @@ public abstract class Component {
     }
 
     /**
-     * Initializes a new Component with the given GameObject, id, and name
+     * Initializes a new Component with the given GameObject
      * @param gameObject The reference to the GameObject that this Component is attached to
      */
     public Component(GameObject gameObject) {
@@ -31,18 +31,24 @@ public abstract class Component {
      * Runs when the Component is first created
      * This method is meant to be overridden by subclasses
      */
-    public void start() {}
+    public abstract void start();
 
     /**
      * Runs every frame
      * This method is meant to be overridden by subclasses
      */
-    public void update() {}
+    public abstract void update();
+
+    /**
+     *  Destory the component
+     */
+    public abstract void destory();
 
     @Override
     public String toString() {
         return "Component{" +
                 "enabled=" + enabled +
+                ", name=" + this.getClass().getSimpleName() +
                 '}';
     }
 }
