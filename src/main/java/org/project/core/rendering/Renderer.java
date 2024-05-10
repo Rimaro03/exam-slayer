@@ -72,7 +72,7 @@ public class Renderer implements WindowStateListener {
         g.setColor(color);
         g.drawRect(
                 worldToScreenX(position.getX() - scale.getX() / 2),
-                worldToScreenY(position.getY() - scale.getY() / 2),
+                worldToScreenY(position.getY() + scale.getY() / 2),
                 worldToScreenWidth(scale.getX()),
                 worldToScreenHeight(scale.getY())
         );
@@ -82,7 +82,7 @@ public class Renderer implements WindowStateListener {
         g.setColor(color);
         g.drawOval(
                 worldToScreenX(position.getX() - radius),
-                worldToScreenY(position.getY() - radius),
+                worldToScreenY(position.getY() + radius),
                 worldToScreenWidth(radius * 2),
                 worldToScreenHeight(radius * 2)
         );
@@ -114,7 +114,7 @@ public class Renderer implements WindowStateListener {
         return (int)(x * PIXEL_PER_UNIT_SPACE + buffer.getWidth() * 0.5f);
     }
     private int worldToScreenY(float y) {
-        return (int)(y * PIXEL_PER_UNIT_SPACE + buffer.getHeight() * 0.5f);
+        return (int)(buffer.getHeight() * 0.5f - y * PIXEL_PER_UNIT_SPACE);
     }
     private int worldToScreenWidth(float width) {
         return (int)(width * PIXEL_PER_UNIT_SPACE);

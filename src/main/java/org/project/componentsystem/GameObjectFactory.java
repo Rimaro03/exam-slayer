@@ -2,11 +2,9 @@ package org.project.componentsystem;
 
 import org.project.componentsystem.components.AnimatedSpriteRenderer;
 import org.project.componentsystem.components.Component;
-import org.project.componentsystem.components.KeyboardController;
+import org.project.componentsystem.components.PlayerController;
 import org.project.componentsystem.components.PlayerStats;
-import org.project.componentsystem.components.colliders.BoxCollider;
 import org.project.componentsystem.components.colliders.CircleCollider;
-import org.project.utils.Vec2;
 
 public class GameObjectFactory {
     public static GameObject createGameObject(String name) {
@@ -20,7 +18,7 @@ public class GameObjectFactory {
                 player,
                 new PlayerStats(player, 100, 10, 5, 5),
                 new AnimatedSpriteRenderer(player, "resources/textures/characters/MainCharacter.png", 32, 32),
-                new KeyboardController(player),
+                new PlayerController(player),
                 new CircleCollider(player, 4, true)
         );
     }

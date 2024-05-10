@@ -7,11 +7,11 @@ import org.project.core.Time;
 import org.project.utils.Vec2;
 
 @Log4j2
-public class KeyboardController extends Component {
+public class PlayerController extends Component {
     AnimatedSpriteRenderer spriteRenderer;
     float animationSpeed = 10.f;
-    float playerSpeed = 10.f;
-    public KeyboardController(GameObject gameObject) {
+    float playerSpeed = 15.f;
+    public PlayerController(GameObject gameObject) {
         super(gameObject);
     }
 
@@ -36,17 +36,17 @@ public class KeyboardController extends Component {
 
             spriteRenderer.setSheetState(animationStep, 1);
         }
-        if(Input.isKeyPressed(Input.KEY_S)) {
+        if(Input.isKeyPressed(Input.KEY_W)) {
             delta = delta.add(new Vec2(0, 1));
             isMoving = true;
 
-            spriteRenderer.setSheetState(animationStep, 0);
+            spriteRenderer.setSheetState(animationStep, 2);
         }
-        if(Input.isKeyPressed(Input.KEY_W)) {
+        if(Input.isKeyPressed(Input.KEY_S)) {
             delta = delta.add(new Vec2(0, -1));
             isMoving = true;
 
-            spriteRenderer.setSheetState(animationStep, 2);
+            spriteRenderer.setSheetState(animationStep, 0);
         }
 
         getGameObject().setPosition(
