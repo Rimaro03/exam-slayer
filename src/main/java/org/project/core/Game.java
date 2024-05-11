@@ -13,6 +13,7 @@ public class Game {
         currentLevel = LevelGenerator.build(10);
     }
     public static Game loadNewGame(){
+        // To-do : The game will ask the user to select : load a saved game or start a new game
         currentGame = new Game();
         return currentGame;
     }

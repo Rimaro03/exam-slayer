@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 
 public class Renderer implements WindowStateListener {
     private static final int VERTICAL_RESOLUTION = 256;
-    private static final int PIXEL_PER_UNIT_SPACE = 8;
+    private static final int PIXEL_PER_UNIT_SPACE = 16;
 
     private static Renderer instance;
 
