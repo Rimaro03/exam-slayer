@@ -72,7 +72,7 @@ public class CircleCollider extends AbstractCircleCollider{
         }
         if(other instanceof BoxCollider){
             BoxCollider otherBox = (BoxCollider) other;
-            if(!otherBox.isInside()) circleBoxCollision(otherBox, this);
+            if(otherBox.isInside()) circleBoxCollision(otherBox, this);
         }
     }
 

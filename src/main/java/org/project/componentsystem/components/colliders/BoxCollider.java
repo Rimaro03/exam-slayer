@@ -38,25 +38,39 @@ public class BoxCollider extends AbstractBoxCollider{
         if(other instanceof BoxCollider){
             BoxCollider otherBox = (BoxCollider) other;
             if(this.isInside() && otherBox.isInside()) {
+                System.out.println("Both are inside");
                 float repel = 0.06f;
                 float xDistance = this.getGameObject().getPosition().getX() - otherBox.getGameObject().getPosition().getX();
                 float yDistance = this.getGameObject().getPosition().getY() - otherBox.getGameObject().getPosition().getY();
                 float xMove = (float) (Math.cos(Math.atan2(yDistance, xDistance)) * (this.getSize().getX() + otherBox.getSize().getX() - Math.abs(xDistance)));
                 float yMove = (float) Math.sin(Math.atan2(yDistance, xDistance)) * (this.getSize().getY() + otherBox.getSize().getY() - Math.abs(yDistance));
                 BoxCollider.repulsion(this, otherBox, xMove, yMove, repel);
+                return;
             }
-            float x = otherBox.getGameObject().getPosition().getX();
-            float y = otherBox.getGameObject().getPosition().getY();
-            float x1 = this.getGameObject().getPosition().getX() - this.getSize().getX() / 2;
-            float y1 = this.getGameObject().getPosition().getY() - this.getSize().getY() / 2;
+            if(otherBox.isMovable()) {
+                float x = otherBox.getGameObject().getPosition().getX();
+                float y = otherBox.getGameObject().getPosition().getY();
+                float x1 = this.getGameObject().getPosition().getX() - this.getSize().getX() / 2;
+                float y1 = this.getGameObject().getPosition().getY() - this.getSize().getY() / 2;
 
-            x = Math.max(x1 + otherBox.getSize().getX() / 2, Math.min(x1 + this.getSize().getX() - otherBox.getSize().getX() / 2, x));
-            y = Math.max(y1 + otherBox.getSize().getY() / 2, Math.min(y1 + this.getSize().getY() - otherBox.getSize().getY() / 2, y));
-            otherBox.getGameObject().setPosition(new Vec2(x, y));
+                x = Math.max(x1 + otherBox.getSize().getX() / 2, Math.min(x1 + this.getSize().getX() - otherBox.getSize().getX() / 2, x));
+                y = Math.max(y1 + otherBox.getSize().getY() / 2, Math.min(y1 + this.getSize().getY() - otherBox.getSize().getY() / 2, y));
+                otherBox.getGameObject().setPosition(new Vec2(x, y));
+            }
+            if(this.isMovable()) {
+                float x = this.getGameObject().getPosition().getX();
+                float y = this.getGameObject().getPosition().getY();
+                float x1 = otherBox.getGameObject().getPosition().getX() - otherBox.getSize().getX() / 2;
+                float y1 = otherBox.getGameObject().getPosition().getY() - otherBox.getSize().getY() / 2;
+
+                x = Math.max(x1 + this.getSize().getX() / 2, Math.min(x1 + otherBox.getSize().getX() - this.getSize().getX() / 2, x));
+                y = Math.max(y1 + this.getSize().getY() / 2, Math.min(y1 + otherBox.getSize().getY() - this.getSize().getY() / 2, y));
+                this.getGameObject().setPosition(new Vec2(x, y));
+            }
         }
         if (other instanceof CircleCollider) {
             CircleCollider otherCircle = (CircleCollider) other;
-            if(!this.isInside()) {
+            if(this.isInside()) {
                 CircleCollider.circleBoxCollision(this, otherCircle);
                 return;
             }
