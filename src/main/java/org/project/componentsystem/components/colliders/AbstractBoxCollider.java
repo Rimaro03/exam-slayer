@@ -8,30 +8,35 @@ import org.project.utils.Vec2;
 @Getter @Setter
 public abstract class AbstractBoxCollider extends Collider {
     private Vec2 size; // (width, height)
+    private boolean inside;
 
     /**
-     * Initializes a new Component with the given GameObject and enabled status
+     * Initializes a new Component with the given GameObject, enabled status, size, movable status and inside status
      *
      * @param gameObject The reference to the GameObject that this Component is attached to
      * @param enabled    Whether this Component is enabled or not
      * @param size       The size of the box (width, height)
      * @param movable    Whether the collider is movable by others or not
+     * @param inside Whether the collider is inside the box or not
      */
-    public AbstractBoxCollider(GameObject gameObject, boolean enabled, Vec2 size, boolean movable) {
+    public AbstractBoxCollider(GameObject gameObject, boolean enabled, Vec2 size, boolean movable, boolean inside) {
         super(gameObject, enabled, movable);
         this.size = size;
+        this.inside = inside;
     }
 
     /**
-     * Initializes a new Component with the given GameObjec, size and movable status
+     * Initializes a new Component with the given GameObjec, size, movable status and inside status
      *
      * @param gameObject The reference to the GameObject that this Component is attached to
      * @param size       The size of the box collider (width, height)
      * @param movable    Whether the collider is movable by others or not
+     * @param inside Whether the collider is inside the box or not
      */
-    public AbstractBoxCollider(GameObject gameObject, Vec2 size, boolean movable) {
+    public AbstractBoxCollider(GameObject gameObject, Vec2 size, boolean movable, boolean inside) {
         super(gameObject, movable);
         this.size = size;
+        this.inside = inside;
     }
 
     public abstract void onCollide(Collider other);
@@ -57,23 +62,44 @@ public abstract class AbstractBoxCollider extends Collider {
             float otherHalfWidth = otherBox.getSize().getX() / 2;
             float otherHalfHeight = otherBox.getSize().getY() / 2;
 
-            if (Math.abs(thisX - otherX) > (thisHalfWidth + otherHalfWidth)) {
-                return false;
+            if(isInside() && otherBox.isInside()) {
+                if (Math.abs(thisX - otherX) > (thisHalfWidth + otherHalfWidth)) {
+                    return false;
+                }
+                return !(Math.abs(thisY - otherY) > (thisHalfHeight + otherHalfHeight));
             }
 
-            return !(Math.abs(thisY - otherY) > (thisHalfHeight + otherHalfHeight));
+            if(!isInside() && otherBox.isInside()) {
+                return otherX + otherHalfWidth > thisX + thisHalfWidth ||
+                        otherX - otherHalfWidth < thisX - thisHalfWidth ||
+                        otherY + otherHalfHeight > thisY + thisHalfHeight ||
+                        otherY - otherHalfHeight < thisY - thisHalfHeight;
+            }
+
+            if(isInside()) {
+                return thisX + thisHalfWidth > otherX + otherHalfWidth ||
+                        thisX - thisHalfWidth < otherX - otherHalfWidth ||
+                        thisY + thisHalfHeight > otherY + otherHalfHeight ||
+                        thisY - thisHalfHeight < otherY - otherHalfHeight;
+            }
+            return true;
         }
         else if (other instanceof AbstractCircleCollider) {
             AbstractCircleCollider otherCircle = (AbstractCircleCollider) other;
-            Vec2 circlePos = otherCircle.getGameObject().getPosition();
-            Vec2 boxPos = this.getGameObject().getPosition();
+            if(isInside()) {
+                Vec2 distance = CircleCollider.collisionDistance(otherCircle, this);
+                return distance.magnitude() < otherCircle.getRadius();
+            }
 
-            Vec2 halfSize = this.getSize().divide(2);
-            Vec2 distance = circlePos.subtract(boxPos);
-            Vec2 clamp = Vec2.clamp(distance, new Vec2(-halfSize.getX(), -halfSize.getY()), halfSize);
-            Vec2 closest = boxPos.add(clamp);
-            distance = closest.subtract(circlePos);
-            return distance.magnitude() < otherCircle.getRadius();
+            float x = otherCircle.getGameObject().getPosition().getX();
+            float y = otherCircle.getGameObject().getPosition().getY();
+            float r = otherCircle.getRadius();
+            float x1 = this.getGameObject().getPosition().getX() - this.getSize().getX() / 2;
+            float x2 = this.getGameObject().getPosition().getX() + this.getSize().getX() / 2;
+            float y1 = this.getGameObject().getPosition().getY() - this.getSize().getY() / 2;
+            float y2 = this.getGameObject().getPosition().getY() + this.getSize().getY() / 2;
+
+            return x - r < x1 || x + r > x2 || y - r < y1 || y + r > y2;
         }
         return false;
     }
