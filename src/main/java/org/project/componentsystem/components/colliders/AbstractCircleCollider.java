@@ -42,13 +42,7 @@ public abstract class AbstractCircleCollider extends Collider {
         }
         if (other instanceof AbstractBoxCollider) {
             AbstractBoxCollider otherBox = (AbstractBoxCollider) other;
-            Vec2 circlePos = this.getGameObject().getPosition();
-            Vec2 boxPos = otherBox.getGameObject().getPosition();
-            Vec2 halfSize = otherBox.getSize().divide(2);
-            Vec2 distance = circlePos.subtract(boxPos);
-            Vec2 clamp = Vec2.clamp(distance, new Vec2(-halfSize.getX(), -halfSize.getY()), halfSize);
-            Vec2 closest = boxPos.add(clamp);
-            distance = closest.subtract(circlePos);
+            Vec2 distance = collisionDistance(this, otherBox);
 
             return distance.magnitude() < this.getRadius();
         }
@@ -56,4 +50,15 @@ public abstract class AbstractCircleCollider extends Collider {
     }
 
     public abstract void onCollide(Collider other);
+
+
+    protected static Vec2 collisionDistance(AbstractCircleCollider circle, AbstractBoxCollider box) {
+        Vec2 circlePos = circle.getGameObject().getPosition();
+        Vec2 boxPos = box.getGameObject().getPosition();
+        Vec2 halfSize = box.getSize().divide(2);
+        Vec2 distance = circlePos.subtract(boxPos);
+        Vec2 clamp = Vec2.clamp(distance, new Vec2(-halfSize.getX(), -halfSize.getY()), halfSize);
+        Vec2 closest = boxPos.add(clamp);
+        return closest.subtract(circlePos);
+    }
 }

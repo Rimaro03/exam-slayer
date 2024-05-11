@@ -26,6 +26,14 @@ public class Room {
         return adjacentRooms[direction];
     }
 
+    public GameObject getGameObject(String name) {
+        for (GameObject gameObject : gameObjects) {
+            if (gameObject.getName().equals(name)) {
+                return gameObject;
+            }
+        }
+        return null;
+    }
     public void addGameObject(GameObject gameObject) {
         gameObjects.add(gameObject);
     }

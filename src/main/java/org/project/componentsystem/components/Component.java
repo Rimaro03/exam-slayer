@@ -3,6 +3,7 @@ package org.project.componentsystem.components;
 import lombok.Getter;
 import lombok.Setter;
 import org.project.componentsystem.GameObject;
+import org.project.utils.Vec2;
 
 @Setter @Getter
 public abstract class Component {
@@ -17,6 +18,9 @@ public abstract class Component {
     public Component(GameObject gameObject, boolean enabled) {
         this.gameObject = gameObject;
         this.enabled = enabled;
+    }
+    public Vec2 getPosition() {
+        return gameObject.getPosition();
     }
 
     /**
