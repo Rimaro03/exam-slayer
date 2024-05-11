@@ -72,39 +72,7 @@ public class CircleCollider extends AbstractCircleCollider{
         }
         if(other instanceof BoxCollider){
             BoxCollider otherBox = (BoxCollider) other;
-            Vec2 distance = collisionDistance(this, otherBox);
-            float overlap = this.getRadius() - distance.magnitude();
-            if(overlap > 0){
-                boolean thisMovable = this.isMovable();
-                boolean otherMovable = otherBox.isMovable();
-                if (thisMovable && otherMovable) {
-                    getGameObject().setPosition(
-                            getGameObject().getPosition().add(
-                                    distance.normalized().multiply(-overlap * 0.5f)
-                            )
-                    );
-
-                    otherBox.getGameObject().setPosition(
-                            otherBox.getGameObject().getPosition().add(
-                                    distance.normalized().multiply(overlap * 0.5f)
-                            )
-                    );
-                }
-                else if (thisMovable) {
-                    getGameObject().setPosition(
-                            getGameObject().getPosition().add(
-                                    distance.normalized().multiply(-overlap)
-                            )
-                    );
-                }
-                else if (otherMovable) {
-                    otherBox.getGameObject().setPosition(
-                            otherBox.getGameObject().getPosition().add(
-                                    distance.normalized().multiply(-overlap)
-                            )
-                    );
-                }
-            }
+            if(!otherBox.isInside()) circleBoxCollision(otherBox, this);
         }
     }
 
@@ -134,5 +102,42 @@ public class CircleCollider extends AbstractCircleCollider{
 
     public void draw() {
         Renderer.drawCircle(getGameObject().getPosition(), getRadius(), Color.red);
+    }
+
+
+    public static void circleBoxCollision(AbstractBoxCollider box, AbstractCircleCollider circle){
+        Vec2 distance = collisionDistance(circle, box);
+        float overlap = circle.getRadius() - distance.magnitude();
+        if(overlap > 0){
+            boolean thisMovable = circle.isMovable();
+            boolean otherMovable = box.isMovable();
+            if (thisMovable && otherMovable) {
+                circle.getGameObject().setPosition(
+                       circle.getGameObject().getPosition().add(
+                                distance.normalized().multiply(-overlap * 0.5f)
+                        )
+                );
+
+                box.getGameObject().setPosition(
+                        box.getGameObject().getPosition().add(
+                                distance.normalized().multiply(overlap * 0.5f)
+                        )
+                );
+            }
+            else if (thisMovable) {
+                circle.getGameObject().setPosition(
+                        circle.getGameObject().getPosition().add(
+                                distance.normalized().multiply(-overlap)
+                        )
+                );
+            }
+            else if (otherMovable) {
+                box.getGameObject().setPosition(
+                        box.getGameObject().getPosition().add(
+                                distance.normalized().multiply(-overlap)
+                        )
+                );
+            }
+        }
     }
 }

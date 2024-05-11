@@ -42,9 +42,19 @@ public abstract class AbstractCircleCollider extends Collider {
         }
         if (other instanceof AbstractBoxCollider) {
             AbstractBoxCollider otherBox = (AbstractBoxCollider) other;
-            Vec2 distance = collisionDistance(this, otherBox);
+            if (otherBox.isInside()) {
+               Vec2 distance = collisionDistance(this, otherBox);
+                return distance.magnitude() < this.getRadius();
+            }
+            float x = this.getGameObject().getPosition().getX();
+            float y = this.getGameObject().getPosition().getY();
+            float r = this.getRadius();
+            float x1 = otherBox.getGameObject().getPosition().getX() - otherBox.getSize().getX() / 2;
+            float x2 = otherBox.getGameObject().getPosition().getX() + otherBox.getSize().getX() / 2;
+            float y1 = otherBox.getGameObject().getPosition().getY() - otherBox.getSize().getY() / 2;
+            float y2 = otherBox.getGameObject().getPosition().getY() + otherBox.getSize().getY() / 2;
 
-            return distance.magnitude() < this.getRadius();
+            return x - r < x1 || x + r > x2 || y - r < y1 || y + r > y2;
         }
         return false;
     }
