@@ -35,39 +35,18 @@ public class Level {
         if(next != null){
             GameObject player = currentRoom.getGameObject("Player");
             currentRoom.removeGameObject(player);
-            next.addGameObject(player);
-            int index = 0;
-            for(GameObject go : currentRoom.getGameObjects()){
-                Collider collider = (Collider) go.getComponent(Collider.class);
-                if(collider != null) {
-                    index++;
-                    Physics.removeCollider(collider);
-                }
-            }
-            log.info("Removed {} colliders", index);
+            currentRoom.setEnabled(false);
             currentRoom = next;
 
-            if(!currentRoom.isInitialized()) {
-                currentRoom.init();
-            }
-            else {
-                index = 0;
-                for(GameObject go : currentRoom.getGameObjects()){
-                    Collider collider = (Collider) go.getComponent(Collider.class);
-                    if(collider != null) {
-                        index++;
-                        Physics.addCollider(collider);
-                    }
-                }
-                log.info("Added {} colliders", index);
-            }
+            currentRoom.setEnabled(true);
+            currentRoom.addGameObject(player);
         } else {
             throw new RuntimeException("No room in that direction");
         }
     }
     public void init(){
         currentRoom.addGameObject(GameObjectFactory.createPlayer("Player"));
-        currentRoom.init();
+        currentRoom.setEnabled(true);
     }
     public void update(){
         currentRoom.updateGameObjects();

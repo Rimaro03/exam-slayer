@@ -45,4 +45,14 @@ public class AnimatedSpriteRenderer extends Component {
     public void destory() {
 
     }
+
+    @Override
+    public void onEnable() {
+
+    }
+
+    @Override
+    public void onDisable() {
+
+    }
 }
