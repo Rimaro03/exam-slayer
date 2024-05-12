@@ -5,9 +5,12 @@ import lombok.Setter;
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.components.Component;
 
+import java.util.ArrayList;
+
 @Getter @Setter
 public abstract class Collider extends Component {
     private boolean movable;
+    private ArrayList<Collider> ignoreColliders = new ArrayList<>();
     /**
      * Initializes a new Component with the given GameObject, enabled status and movable status
      *

@@ -3,13 +3,15 @@ package org.project.generation;
 import lombok.Getter;
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.GameObjectFactory;
+import org.project.componentsystem.components.colliders.BoxCollider;
+import org.project.componentsystem.components.colliders.Collider;
 import org.project.utils.Vec2;
 
 import java.util.ArrayList;
 
 public class Room {
     public static final float SIZE = 15.75f;
-    private final ArrayList<GameObject> gameObjects;
+    @Getter private final ArrayList<GameObject> gameObjects;
     private final Room[] adjacentRooms;
     @Getter
     private boolean initialized;
@@ -55,13 +57,14 @@ public class Room {
             throw new RuntimeException("Room already initialized");
 
         // Create room collider-sprite game object
-        gameObjects.add(GameObjectFactory.createRoomGameObject());
+        GameObject roomGameObject = GameObjectFactory.createRoomGameObject();
+        gameObjects.add(roomGameObject);
 
         // Create room door collider game objects
         for (int direction = 0; direction < 4; direction++) {
             if(adjacentRooms[direction] == null) { continue; }
 
-            GameObject door = GameObjectFactory.createDoorGameObject();
+            GameObject door = GameObjectFactory.createDoorGameObject(direction, (Collider) roomGameObject.getComponent(BoxCollider.class));
             door.setPosition(door.getPosition().add(new Vec2(Direction.x(0, direction) * (SIZE * .5f + .9f), Direction.y(0, direction) * (SIZE * 0.5f + .9f))));
             gameObjects.add(door);
         }
