@@ -1,9 +1,12 @@
 package org.project.generation;
 
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.GameObjectFactory;
 import org.project.componentsystem.Physics;
+import org.project.componentsystem.components.colliders.BoxCollider;
+import org.project.componentsystem.components.colliders.Collider;
 import org.project.core.Debug;
 import org.project.core.Input;
 import org.project.core.rendering.Renderer;
@@ -15,7 +18,7 @@ import java.util.HashSet;
 import java.util.Queue;
 import java.util.Set;
 
-@Getter
+@Getter @Log4j2
 public class Level {
     private Room currentRoom;
 
@@ -26,16 +29,38 @@ public class Level {
         currentRoom = startRoom;
     }
 
-    private void changeRoom(int direction){
+    public void changeRoom(int direction){
         Room next = currentRoom.getAdjacentRoom(direction);
 
         if(next != null){
             GameObject player = currentRoom.getGameObject("Player");
             currentRoom.removeGameObject(player);
             next.addGameObject(player);
+            int index = 0;
+            for(GameObject go : currentRoom.getGameObjects()){
+                Collider collider = (Collider) go.getComponent(Collider.class);
+                if(collider != null) {
+                    index++;
+                    Physics.removeCollider(collider);
+                }
+            }
+            log.info("Removed {} colliders", index);
             currentRoom = next;
 
-            if(!currentRoom.isInitialized()) { currentRoom.init(); }
+            if(!currentRoom.isInitialized()) {
+                currentRoom.init();
+            }
+            else {
+                index = 0;
+                for(GameObject go : currentRoom.getGameObjects()){
+                    Collider collider = (Collider) go.getComponent(Collider.class);
+                    if(collider != null) {
+                        index++;
+                        Physics.addCollider(collider);
+                    }
+                }
+                log.info("Added {} colliders", index);
+            }
         } else {
             throw new RuntimeException("No room in that direction");
         }
@@ -47,6 +72,7 @@ public class Level {
     public void update(){
         currentRoom.updateGameObjects();
         Physics.update();
+        debugMap();
     }
 
     private void debugMap(){

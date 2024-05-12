@@ -34,6 +34,7 @@ public abstract class AbstractCircleCollider extends Collider {
     }
 
     public boolean collidesWith(Collider other) {
+        if(this.getIgnoreColliders().contains(other)) return false;
         if (other instanceof AbstractCircleCollider) {
             AbstractCircleCollider otherCircle = (AbstractCircleCollider) other;
             float distance = this.getGameObject().getPosition().distance(otherCircle.getGameObject().getPosition());

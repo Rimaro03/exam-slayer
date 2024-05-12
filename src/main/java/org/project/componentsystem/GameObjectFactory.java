@@ -5,6 +5,8 @@ import org.project.componentsystem.components.Component;
 import org.project.componentsystem.components.PlayerController;
 import org.project.componentsystem.components.PlayerStats;
 import org.project.componentsystem.components.colliders.BoxCollider;
+import org.project.componentsystem.components.colliders.Collider;
+import org.project.componentsystem.components.colliders.DoorCollider;
 import org.project.generation.Room;
 import org.project.utils.Vec2;
 
@@ -33,13 +35,12 @@ public class GameObjectFactory {
                 /* To-do: add sprite renderer. */
         );
     }
-    public static GameObject createDoorGameObject(){
+    public static GameObject createDoorGameObject(int direction, Collider roomCollider){
         GameObject door = createGameObject("Door");
-
-        return createGameObject(
-                door,
-                new BoxCollider(door, new Vec2(2, 2), false, true)
-        );
+        DoorCollider doorCollider = new DoorCollider(door, new Vec2(2, 2), false, true, direction);
+        doorCollider.getIgnoreColliders().add(roomCollider);
+        roomCollider.getIgnoreColliders().add(doorCollider);
+        return createGameObject(door, doorCollider);
     }
     private static GameObject createGameObject(GameObject obj, Component... components) {
         for (Component component : components) {

@@ -49,6 +49,7 @@ public abstract class AbstractBoxCollider extends Collider {
      * @return Whether the two colliders collide or not
      */
     public boolean collidesWith(Collider other) {
+        if(this.getIgnoreColliders().contains(other)) return false;
         if(other instanceof AbstractBoxCollider){
             AbstractBoxCollider otherBox = (AbstractBoxCollider) other;
 
@@ -103,7 +104,5 @@ public abstract class AbstractBoxCollider extends Collider {
         }
         return false;
     }
-
-
 
 }
