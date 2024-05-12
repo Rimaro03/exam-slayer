@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.GameObjectFactory;
 import org.project.componentsystem.Physics;
+import org.project.core.Debug;
 import org.project.core.Input;
 import org.project.core.rendering.Renderer;
 import org.project.utils.Vec2;
@@ -33,17 +34,19 @@ public class Level {
             currentRoom.removeGameObject(player);
             next.addGameObject(player);
             currentRoom = next;
+
+            if(!currentRoom.isInitialized()) { currentRoom.init(); }
         } else {
             throw new RuntimeException("No room in that direction");
         }
     }
     public void init(){
         currentRoom.addGameObject(GameObjectFactory.createPlayer("Player"));
+        currentRoom.init();
     }
     public void update(){
         currentRoom.updateGameObjects();
         Physics.update();
-        debugMap();
     }
 
     private void debugMap(){

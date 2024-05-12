@@ -39,8 +39,8 @@ public class Application extends JFrame {
         while(true){
             long startTime = System.currentTimeMillis();
 
-            window.update();
             game.update();
+            window.update();
 
             long delta = System.currentTimeMillis() - startTime;
             try{

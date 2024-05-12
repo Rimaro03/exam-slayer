@@ -2,12 +2,13 @@ package org.project.componentsystem.components.colliders;
 
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.Physics;
+import org.project.core.Debug;
 import org.project.core.rendering.Renderer;
 import org.project.utils.Vec2;
 
 import java.awt.*;
 
-public class BoxCollider extends AbstractBoxCollider{
+public class BoxCollider extends AbstractBoxCollider {
     
     /**
      * Initializes a new Component with the given GameObject, enabled status, size and movable status
@@ -38,7 +39,6 @@ public class BoxCollider extends AbstractBoxCollider{
         if(other instanceof BoxCollider){
             BoxCollider otherBox = (BoxCollider) other;
             if(this.isInside() && otherBox.isInside()) {
-                System.out.println("Both are inside");
                 float repel = 0.06f;
                 float xDistance = this.getGameObject().getPosition().getX() - otherBox.getGameObject().getPosition().getX();
                 float yDistance = this.getGameObject().getPosition().getY() - otherBox.getGameObject().getPosition().getY();
@@ -113,11 +113,12 @@ public class BoxCollider extends AbstractBoxCollider{
     }
 
     public void draw(){
-        Renderer.drawRect(
+        if(Debug.ENABLED)
+            Renderer.drawRect(
                 getGameObject().getPosition(),
                 getSize(),
                 Color.RED
-        );
+            );
     }
 
     /**
