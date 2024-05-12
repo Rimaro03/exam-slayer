@@ -82,7 +82,7 @@ public class CircleCollider extends AbstractCircleCollider{
      */
     @Override
     public void start() {
-        Physics.addCollider(this);
+
     }
 
     /**
@@ -98,6 +98,16 @@ public class CircleCollider extends AbstractCircleCollider{
      */
     @Override
     public void destory() {
+
+    }
+
+    @Override
+    public void onEnable() {
+        Physics.addCollider(this);
+    }
+
+    @Override
+    public void onDisable() {
         Physics.removeCollider(this);
     }
 

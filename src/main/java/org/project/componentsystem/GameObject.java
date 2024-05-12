@@ -13,6 +13,7 @@ public class GameObject {
     private String name;
     private ArrayList<Component> components;
     private Vec2 position;
+    private boolean enabled;
 
     /**
      * Initializes a new GameObject with the given name
@@ -22,6 +23,7 @@ public class GameObject {
         this.name = name;
         this.components = new ArrayList<>();
         this.position = new Vec2(0, 0);
+        this.enabled = true;
     }
 
     /**
@@ -33,32 +35,37 @@ public class GameObject {
         this.name = name;
         this.components = new ArrayList<>();
         this.position = position;
+        this.enabled = true;
     }
+    public void setEnabled(boolean enabled) {
+        if(this.enabled == enabled) { return; } // don't do anything if the state is the same
 
+        this.enabled = enabled;
+
+        for (Component component : components)
+            component.setEnabled(enabled);
+    }
     /**
      * Adds a new Component to this GameObject
      * @param component The Component to add
-     * @return This GameObject
      */
-    public GameObject addComponent(Component component) {
+    public void addComponent(Component component) {
         if (!components.contains(component)) {
             log.info("Starting {} component", component.toString());
             component.start();
             components.add(component);
         }
-        return this;
     }
 
     /**
      * Removes a Component from this GameObject
      * @param component The Component to remove
      */
-    public GameObject removeComponent(Component component) {
+    public void removeComponent(Component component) {
         if (components.contains(component)){
             component.destory();
             components.remove(component);
         }
-        return this;
     }
 
     /**

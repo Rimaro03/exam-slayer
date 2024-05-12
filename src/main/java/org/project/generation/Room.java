@@ -11,7 +11,8 @@ import java.util.ArrayList;
 
 public class Room {
     public static final float SIZE = 15.75f;
-    @Getter private final ArrayList<GameObject> gameObjects;
+    @Getter
+    private final ArrayList<GameObject> gameObjects;
     private final Room[] adjacentRooms;
     @Getter
     private boolean initialized;
@@ -49,10 +50,19 @@ public class Room {
         gameObjects.remove(gameObject);
     }
 
+
+    public void setEnabled(boolean enabled){
+        if(!initialized)
+            init();
+
+        for(GameObject go : gameObjects){
+            go.setEnabled(enabled);
+        }
+    }
     /**
      * Initializes the room by creating the setting up the room game objects.
      */
-    public void init(){
+    private void init(){
         if(initialized)
             throw new RuntimeException("Room already initialized");
 

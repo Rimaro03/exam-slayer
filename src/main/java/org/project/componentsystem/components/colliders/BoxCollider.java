@@ -93,7 +93,7 @@ public class BoxCollider extends AbstractBoxCollider {
      */
     @Override
     public void start() {
-        Physics.addCollider(this);
+
     }
 
     /**
@@ -109,8 +109,14 @@ public class BoxCollider extends AbstractBoxCollider {
      */
     @Override
     public void destory() {
-        Physics.removeCollider(this);
+
     }
+
+    @Override
+    public void onEnable() { Physics.addCollider(this); }
+
+    @Override
+    public void onDisable() {Physics.removeCollider(this); }
 
     public void draw(){
         if(Debug.ENABLED)

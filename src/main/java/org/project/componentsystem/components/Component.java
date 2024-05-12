@@ -23,12 +23,20 @@ public abstract class Component {
         return gameObject.getPosition();
     }
 
+    public void setEnabled(boolean enabled) {
+        if(this.enabled == enabled) { return; } // don't do anything if the state is the same
+        this.enabled = enabled;
+
+        if(enabled) { onEnable(); }
+        else { onDisable(); }
+    }
     /**
      * Initializes a new Component with the given GameObject
      * @param gameObject The reference to the GameObject that this Component is attached to
      */
     public Component(GameObject gameObject) {
         this(gameObject, true);
+        onEnable();
     }
 
     /**
@@ -47,6 +55,18 @@ public abstract class Component {
      *  Destory the component
      */
     public abstract void destory();
+
+    /**
+     * Runs when the Component is enabled
+     * This method is meant to be overridden by subclasses
+     */
+    public abstract void onEnable();
+
+    /**
+     * Runs when the Component is disabled
+     * This method is meant to be overridden by subclasses
+     */
+    public abstract void onDisable();
 
     @Override
     public String toString() {

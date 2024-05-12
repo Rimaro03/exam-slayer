@@ -5,14 +5,14 @@ import org.project.componentsystem.Physics;
 import org.project.core.Debug;
 import org.project.core.Game;
 import org.project.core.rendering.Renderer;
+import org.project.generation.Direction;
 import org.project.generation.Room;
 import org.project.utils.Vec2;
 
 import java.awt.*;
 
 public class DoorCollider extends AbstractBoxCollider{
-    private int direction;
-
+    private final int direction;
     /**
      * Initializes a new Component with the given GameObject, enabled status, size, movable status, inside status and direction
      *
@@ -47,9 +47,7 @@ public class DoorCollider extends AbstractBoxCollider{
      * This method is meant to be overridden by subclasses
      */
     @Override
-    public void start() {
-        Physics.addCollider(this);
-    }
+    public void start() { }
 
     /**
      * Runs every frame
@@ -64,7 +62,17 @@ public class DoorCollider extends AbstractBoxCollider{
      * Destory the component
      */
     @Override
-    public void destory() { Physics.removeCollider(this); }
+    public void destory() {  }
+
+    @Override
+    public void onEnable() {
+        Physics.addCollider(this);
+    }
+
+    @Override
+    public void onDisable() {
+        Physics.removeCollider(this);
+    }
 
     /**
      * Runs when the collider collides with another collider
@@ -75,7 +83,10 @@ public class DoorCollider extends AbstractBoxCollider{
         // Change room if the player collides with the door collider
         Game.getCurrentLevel().getCurrentRoom().getGameObjects().forEach(go -> {
             if(go.getName().equals("Player")){
-                go.setPosition(new Vec2(0, 0));
+                go.setPosition(new Vec2(
+                        Direction.x(0, direction) * (2 - Room.SIZE / 2),
+                        Direction.y(0, direction) * (2 - Room.SIZE / 2))
+                );
             }
         });
         Game.getCurrentLevel().changeRoom(direction);

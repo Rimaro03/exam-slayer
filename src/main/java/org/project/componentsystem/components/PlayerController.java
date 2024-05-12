@@ -63,4 +63,14 @@ public class PlayerController extends Component {
      */
     @Override
     public void destory() { }
+
+    @Override
+    public void onEnable() {
+
+    }
+
+    @Override
+    public void onDisable() {
+
+    }
 }

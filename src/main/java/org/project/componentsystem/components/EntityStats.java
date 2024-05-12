@@ -48,4 +48,14 @@ public class EntityStats extends Component {
      */
     @Override
     public void destory() { }
+
+    @Override
+    public void onEnable() {
+
+    }
+
+    @Override
+    public void onDisable() {
+
+    }
 }
