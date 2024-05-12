@@ -68,14 +68,14 @@ public class Room {
 
         // Create room collider-sprite game object
         GameObject roomGameObject = GameObjectFactory.createRoomGameObject();
-        gameObjects.add(roomGameObject);
+        gameObjects.add(0, roomGameObject);
 
         // Create room door collider game objects
         for (int direction = 0; direction < 4; direction++) {
             if(adjacentRooms[direction] == null) { continue; }
 
             GameObject door = GameObjectFactory.createDoorGameObject(direction, (Collider) roomGameObject.getComponent(BoxCollider.class));
-            door.setPosition(door.getPosition().add(new Vec2(Direction.x(0, direction) * (SIZE * .5f + .9f), Direction.y(0, direction) * (SIZE * 0.5f + .9f))));
+            door.setPosition(door.getPosition().add(new Vec2(Direction.x(0, direction) * (SIZE * .5f - 0.2f), Direction.y(0, direction) * (SIZE * 0.5f))));
             gameObjects.add(door);
         }
 

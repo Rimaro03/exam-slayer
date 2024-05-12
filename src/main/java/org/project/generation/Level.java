@@ -51,7 +51,7 @@ public class Level {
     public void update(){
         currentRoom.updateGameObjects();
         Physics.update();
-        debugMap();
+//        if(Debug.ENABLED) { debugMap(); }
     }
 
     private void debugMap(){

@@ -45,6 +45,10 @@ public class Renderer implements WindowStateListener {
     public static void drawCircle(Vec2 position, float radius, Color color) { getInstance().drawCircleInternal(position, radius, color);}
     /** Draws a pixel */
     public static void drawPixel(Vec2 position, Color color){ getInstance().drawPixelInternal(position, color); }
+
+    /** Write text */
+    public static void writeText(String text, Vec2 position, Color color) { getInstance().drawTextInternal(text, position, color); }
+
     /** Applies the buffer to the screen. */
     public static void present(Graphics g) { getInstance().presentInternal(g); }
 
@@ -98,6 +102,13 @@ public class Renderer implements WindowStateListener {
                 1
         );
     }
+
+    private void drawTextInternal(String text, Vec2 position, Color color) {
+        Graphics g = buffer.getGraphics();
+        g.setColor(color);
+        g.drawString(text, worldToScreenX(position.getX()), worldToScreenY(position.getY()));
+    }
+
     private void presentInternal(Graphics g){
         g.drawImage(buffer,
                 0,

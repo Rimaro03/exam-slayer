@@ -4,7 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
+import org.project.core.Application;
+import org.project.core.Window;
+import org.project.core.rendering.Renderer;
 import org.project.items.Item;
+import org.project.utils.Vec2;
 
 import java.util.HashMap;
 
@@ -12,6 +16,7 @@ import java.util.HashMap;
 public class PlayerStats extends Component {
     private Stats stats;
     private HashMap<Item, Integer> inventory;
+    private Vec2 position = new Vec2(0, Application.getInstance().getY());
 
     /**
      * Initializes a new PlayerStats with the given GameObject
@@ -46,7 +51,9 @@ public class PlayerStats extends Component {
     @Override
     public void start() { }
     @Override
-    public void update() { }
+    public void update() {
+        Renderer.writeText("Health: " + stats.getHealth(), position, null);
+    }
 
     /**
      * Destory the component

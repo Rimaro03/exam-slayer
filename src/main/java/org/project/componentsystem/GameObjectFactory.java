@@ -23,7 +23,7 @@ public class GameObjectFactory {
                 new PlayerStats(player, 100, 10, 5, 5),
                 new AnimatedSpriteRenderer(player, "resources/textures/characters/MainCharacter.png", 32, 32),
                 new PlayerController(player),
-                new BoxCollider(player, new Vec2(2, 2), true, true)
+                new BoxCollider(player, new Vec2(1.2f, 2), true, true)
         );
     }
     public static GameObject createRoomGameObject(){
@@ -31,8 +31,8 @@ public class GameObjectFactory {
 
         return createGameObject(
                 room,
-                new BoxCollider(room, new Vec2(Room.SIZE, Room.SIZE), false, false)
-                /* To-do: add sprite renderer. */
+                new AnimatedSpriteRenderer(room, "resources/textures/map/map.png", 256, 256),
+                new BoxCollider(room, new Vec2(Room.SIZE - 2.4f, Room.SIZE - 2), false, false)
         );
     }
     public static GameObject createDoorGameObject(int direction, Collider roomCollider){
