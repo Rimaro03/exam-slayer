@@ -26,12 +26,12 @@ public class GameObjectFactory {
                 new BoxCollider(player, new Vec2(1.2f, 2), true, true)
         );
     }
-    public static GameObject createRoomGameObject(){
+    public static GameObject createRoomGameObject(int type){
         GameObject room = createGameObject("Room");
 
         return createGameObject(
                 room,
-                new AnimatedSpriteRenderer(room, "resources/textures/map/map.png", 256, 256),
+                new AnimatedSpriteRenderer(room, "resources/textures/map/map_" + type + ".png", 256, 256),
                 new BoxCollider(room, new Vec2(Room.SIZE - 2.4f, Room.SIZE - 2), false, false)
         );
     }

@@ -84,8 +84,8 @@ public class DoorCollider extends AbstractBoxCollider{
         Game.getCurrentLevel().getCurrentRoom().getGameObjects().forEach(go -> {
             if(go.getName().equals("Player")){
                 go.setPosition(new Vec2(
-                        Direction.x(0, direction) * (2 - Room.SIZE / 2),
-                        Direction.y(0, direction) * (2 - Room.SIZE / 2))
+                        Direction.x(0, direction) * (2.5f - Room.SIZE / 2),
+                        Direction.y(0, direction) * (2.5f - Room.SIZE / 2))
                 );
             }
         });

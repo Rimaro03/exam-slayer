@@ -66,8 +66,13 @@ public class Room {
         if(initialized)
             throw new RuntimeException("Room already initialized");
 
+        int type = 0;
+        for (int i = 0; i < 4; i++) {
+            if(adjacentRooms[i] != null)
+                type +=  1 << i;
+        }
         // Create room collider-sprite game object
-        GameObject roomGameObject = GameObjectFactory.createRoomGameObject();
+        GameObject roomGameObject = GameObjectFactory.createRoomGameObject(type);
         gameObjects.add(0, roomGameObject);
 
         // Create room door collider game objects
