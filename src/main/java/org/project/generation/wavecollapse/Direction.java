@@ -1,4 +1,4 @@
-package org.project.generation;
+package org.project.generation.wavecollapse;
 
 /** This contains functionalities to work with directions coded as :
  * 0 = UP, 1 = RIGHT, 2 = DOWN, 3 = LEFT

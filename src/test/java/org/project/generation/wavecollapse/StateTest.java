@@ -1,8 +1,6 @@
 package org.project.generation.wavecollapse;
 
 import org.junit.jupiter.api.Test;
-import org.project.generation.Direction;
-import org.project.generation.State;
 
 class StateTest {
 

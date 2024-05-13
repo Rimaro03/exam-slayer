@@ -1,11 +1,16 @@
 package org.project.generation;
 
+
 import lombok.Getter;
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.GameObjectFactory;
 import org.project.componentsystem.components.colliders.BoxCollider;
 import org.project.componentsystem.components.colliders.Collider;
+import org.project.generation.wavecollapse.Direction;
+import org.project.generation.wavecollapse.InvalidDirectionException;
+import org.project.generation.wavecollapse.QuantumRoom;
 import org.project.utils.Vec2;
+import java.util.Set;
 
 import java.util.ArrayList;
 
@@ -24,6 +29,7 @@ public class Room {
         initialized = false;
         this.x = x;
         this.y = y;
+
     }
 
     public void setAdjacentRoom(int direction, Room room) {
@@ -33,6 +39,14 @@ public class Room {
     public Room getAdjacentRoom(int direction) {
         if(direction < 0 || direction >= 4) { throw new InvalidDirectionException(); }
         return adjacentRooms[direction];
+    }
+    public int getType(){
+        int type = 0;
+        for (int i = 0; i < 4; i++) {
+            if(adjacentRooms[i] != null)
+                type +=  1 << i;
+        }
+        return type;
     }
 
     public GameObject getGameObject(String name) {
@@ -66,13 +80,8 @@ public class Room {
         if(initialized)
             throw new RuntimeException("Room already initialized");
 
-        int type = 0;
-        for (int i = 0; i < 4; i++) {
-            if(adjacentRooms[i] != null)
-                type +=  1 << i;
-        }
         // Create room collider-sprite game object
-        GameObject roomGameObject = GameObjectFactory.createRoomGameObject(type);
+        GameObject roomGameObject = GameObjectFactory.createRoomGameObject(getType());
         gameObjects.add(0, roomGameObject);
 
         // Create room door collider game objects
@@ -97,37 +106,37 @@ public class Room {
 
     public String toString(){
         if(adjacentRooms[0] != null && adjacentRooms[2] != null && adjacentRooms[3] != null && adjacentRooms[1] != null){
-            return "┼";
+            return "┼─";
         } else if(adjacentRooms[0] != null && adjacentRooms[2] != null && adjacentRooms[3] != null){
-            return "┤";
+            return "┤ ";
         } else if(adjacentRooms[0] != null && adjacentRooms[2] != null && adjacentRooms[1] != null){
-            return "├";
+            return "├─";
         } else if(adjacentRooms[0] != null && adjacentRooms[3] != null && adjacentRooms[1] != null){
-            return "┬";
+            return "┬─";
         } else if(adjacentRooms[2] != null && adjacentRooms[3] != null && adjacentRooms[1] != null){
-            return "┴";
+            return "┴─";
         } else if(adjacentRooms[0] != null && adjacentRooms[1] != null){
-            return "┌";
+            return "┌─";
         } else if(adjacentRooms[0] != null && adjacentRooms[3] != null){
-            return "┐";
+            return "┐ ";
         } else if(adjacentRooms[2] != null && adjacentRooms[1] != null){
-            return "└";
+            return "└─";
         } else if(adjacentRooms[2] != null && adjacentRooms[3] != null){
-            return "┘";
+            return "┘ ";
         } else if(adjacentRooms[0] != null && adjacentRooms[2] != null){
-            return "│";
+            return "│ ";
         } else if(adjacentRooms[3] != null && adjacentRooms[1] != null){
-            return "─";
+            return "──";
         } else if(adjacentRooms[0] != null){
-            return "│";
+            return "│ ";
         } else if(adjacentRooms[2] != null){
-            return "│";
+            return "│ ";
         } else if(adjacentRooms[3] != null){
-            return "─";
+            return "──";
         } else if(adjacentRooms[1] != null) {
-            return "─";
+            return "──";
         } else {
-            return " ";
+            return "  ";
         }
     }
 }

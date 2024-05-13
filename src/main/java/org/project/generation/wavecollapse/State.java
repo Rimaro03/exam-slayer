@@ -1,4 +1,4 @@
-package org.project.generation;
+package org.project.generation.wavecollapse;
 
 import lombok.Getter;
 
@@ -9,7 +9,9 @@ import lombok.Getter;
  * */
 @Getter
 public class State {
-    public static final State noDoor = new State((byte)0);
+    public static final State NO_DOOR = new State((byte)0b0000);
+    public static final State ALL_DOORS = new State((byte)0b1111);
+
     private final byte value;
 
     public State(byte value){

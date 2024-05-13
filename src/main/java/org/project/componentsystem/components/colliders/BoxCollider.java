@@ -1,7 +1,7 @@
 package org.project.componentsystem.components.colliders;
 
 import org.project.componentsystem.GameObject;
-import org.project.componentsystem.Physics;
+import org.project.core.Physics;
 import org.project.core.Debug;
 import org.project.core.rendering.Renderer;
 import org.project.utils.Vec2;

@@ -1,7 +1,6 @@
-package org.project.componentsystem;
+package org.project.core;
 
 import lombok.Getter;
-import lombok.SneakyThrows;
 import org.project.componentsystem.components.colliders.Collider;
 
 import java.util.ArrayList;

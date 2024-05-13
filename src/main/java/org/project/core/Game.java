@@ -2,7 +2,7 @@ package org.project.core;
 
 import lombok.Getter;
 import org.project.generation.Level;
-import org.project.generation.LevelGenerator;
+import org.project.generation.wavecollapse.LevelGenerator;
 
 @Getter
 public class Game {
@@ -10,7 +10,7 @@ public class Game {
     private final Level currentLevel;
 
     private Game(){
-        currentLevel = LevelGenerator.build(10);
+        currentLevel = new LevelGenerator(10, 324).build();
     }
     public static Game loadNewGame(){
         // To-do : The game will ask the user to select : load a saved game or start a new game

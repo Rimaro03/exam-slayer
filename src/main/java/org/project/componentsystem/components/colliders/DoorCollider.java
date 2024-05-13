@@ -1,11 +1,11 @@
 package org.project.componentsystem.components.colliders;
 
 import org.project.componentsystem.GameObject;
-import org.project.componentsystem.Physics;
+import org.project.core.Physics;
 import org.project.core.Debug;
 import org.project.core.Game;
 import org.project.core.rendering.Renderer;
-import org.project.generation.Direction;
+import org.project.generation.wavecollapse.Direction;
 import org.project.generation.Room;
 import org.project.utils.Vec2;
 

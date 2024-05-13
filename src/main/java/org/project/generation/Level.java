@@ -4,10 +4,7 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.GameObjectFactory;
-import org.project.componentsystem.Physics;
-import org.project.componentsystem.components.colliders.BoxCollider;
-import org.project.componentsystem.components.colliders.Collider;
-import org.project.core.Debug;
+import org.project.core.Physics;
 import org.project.core.Input;
 import org.project.core.rendering.Renderer;
 import org.project.utils.Vec2;
@@ -20,6 +17,7 @@ import java.util.Set;
 
 @Getter @Log4j2
 public class Level {
+    public static final int BOSS_ROOM_COUNT = 3;
     private Room currentRoom;
 
     /** This constructor get as input the start room of the map,

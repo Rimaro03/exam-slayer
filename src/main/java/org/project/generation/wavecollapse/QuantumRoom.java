@@ -1,4 +1,4 @@
-package org.project.generation;
+package org.project.generation.wavecollapse;
 
 import lombok.Getter;
 
@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.util.Random;
 
 @Getter
-public class Tile {
+public class QuantumRoom {
     private static final int START_ENTROPY = 1 << 4; // 2^4 = 16 possible states
     private final ArrayList<State> possibleStates;
     private boolean collapsed;
     private final int x, y;
 
-    public Tile(int x, int y){
+    public QuantumRoom(int x, int y){
         this.x = x;
         this.y = y;
         collapsed = false;
@@ -34,10 +34,10 @@ public class Tile {
      * bit 3 = right door,
      * if has been returned -1 then the tile is in an invalid state.
      */
-    public void collapse() throws GenerationFailedException {
+    public void collapse(Random rand) throws GenerationFailedException {
         if(entropy() == 0){ throw new GenerationFailedException("Zero entropy!"); }
 
-        int state = new Random().nextInt(possibleStates.size());
+        int state = rand.nextInt(possibleStates.size());
         collapsed = true;
         State chosen = possibleStates.get(state);
         possibleStates.clear();
