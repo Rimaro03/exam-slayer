@@ -6,7 +6,6 @@ import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
 import org.project.core.rendering.Renderer;
 import org.project.items.Item;
-import org.project.utils.Vec2;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -48,9 +47,10 @@ public class PlayerStats extends Component {
 
     @Override
     public void start() { }
+
     @Override
     public void update() {
-        Renderer.drawText(50, 50, "Health: " + stats.getHealth(), Color.WHITE, 2);
+        Renderer.addTextToRenderQueue(50, 50, "Health: " + stats.getHealth(), Color.WHITE);
     }
 
     /**

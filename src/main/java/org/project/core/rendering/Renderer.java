@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
 import java.awt.image.BufferedImage;
+import java.util.ArrayDeque;
 import java.util.PriorityQueue;
 
 public class Renderer implements WindowStateListener {
@@ -18,9 +19,13 @@ public class Renderer implements WindowStateListener {
     private BufferedImage buffer;
     private BufferedImage uiBuffer;
     private final PriorityQueue<Renderable> renderQueue;
+    private final ArrayDeque<RenderableText> uiRenderQueue;
+
 
     private Renderer() {
         renderQueue = new PriorityQueue<>(new Renderable.Comparator());
+        uiRenderQueue = new ArrayDeque<>();
+
         uiBuffer = new BufferedImage(
                 Application.getWindow().getWidth(),
                 Application.getWindow().getHeight(),
@@ -50,7 +55,7 @@ public class Renderer implements WindowStateListener {
     public static void addCircleToRenderQueue(Vec2 position, float radius, Color color, int priority) { getInstance().renderQueue.add(new RenderableCircle(radius, color, position, priority)); }
     public static void addRectToRenderQueue(Vec2 position, Vec2 size, Color color, int priority) { getInstance().renderQueue.add(new RenderableRectangle(size, color, position, priority)); }
     public static void addImageToRenderQueue(BufferedImage sprite, Vec2 position, int priority) { getInstance().renderQueue.add(new RenderableImage(sprite, position, priority)); }
-    public static void drawText(int x, int y, String text, Color color, int priority) { getInstance().drawText(text, x, y, color); }
+    public static void addTextToRenderQueue(int x, int y, String text, Color color) { getInstance().uiRenderQueue.add(new RenderableText(text, x, y, color)); }
     /** Applies the buffer to the screen. */
     public static void present(Graphics g) { getInstance().presentInternal(g); }
 
@@ -62,6 +67,12 @@ public class Renderer implements WindowStateListener {
         Graphics g = buffer.getGraphics();
         g.setColor(color);
         g.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
+
+        for (int i = 0; i < uiBuffer.getHeight(); i++) {
+            for (int j = 0; j < uiBuffer.getWidth(); j++) {
+                uiBuffer.setRGB(j, i, 0);
+            }
+        }
     }
     private void drawImage(BufferedImage sprite, Vec2 position){
         Graphics g = buffer.getGraphics();
@@ -117,6 +128,10 @@ public class Renderer implements WindowStateListener {
                 throw new RuntimeException("Unknown renderable type");
             }
         }
+        while(!uiRenderQueue.isEmpty()){
+            RenderableText renderableText = uiRenderQueue.poll();
+            drawText(renderableText.getText(), renderableText.getX(), renderableText.getY(), renderableText.getColor());
+        }
 
         // Render buffer
         g.drawImage(buffer,
@@ -127,7 +142,6 @@ public class Renderer implements WindowStateListener {
                 null
         );
         g.drawImage(uiBuffer, 0, 0, null);
-        clear(Color.GRAY);
     }
 
     /* -------------- HELPER METHODS ----------------- */

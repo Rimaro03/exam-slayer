@@ -23,7 +23,10 @@ public class Window extends JPanel implements WindowStateListener {
     }
 
     /** Updates the window and draws the frame. */
-    public void update() { repaint(); }
+    public void update() {
+        repaint();
+        Renderer.clear(Color.GRAY);
+    }
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
         Renderer.present(g);
