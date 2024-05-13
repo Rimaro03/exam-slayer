@@ -22,10 +22,10 @@ public class LevelGenerator {
         Room startRoom = generateRooms();
         Room[] bossRooms = getBossRooms(startRoom);
 
-        System.out.println("Start room : " + startRoom.getX() + " " + startRoom.getY());
+        log.info("Start room : {} {}", startRoom.getX(), startRoom.getY());
 
         for(Room bossRoom : bossRooms)
-            System.out.println("Boss room : " + bossRoom.getX() + " " + bossRoom.getY());
+            log.info("Boss room : {} {}", bossRoom.getX(), bossRoom.getY());
 
         return new Level(startRoom);
     }
@@ -59,30 +59,41 @@ public class LevelGenerator {
     }
 
     /** Returns the room that is the farthest from the start room using a bfs search. */
-    private Room[] getBossRooms(Room startRoom){ // TODO : optimize this
+    private Room[] getBossRooms(Room startRoom){
         Stack<Room> queue = new Stack<>();
-        Set<Room> visited = new HashSet<>();
+        Map<Room, Integer> visited = new HashMap<>();
         ArrayList<Room> allRooms = new ArrayList<>();
 
         queue.add(startRoom);
+        visited.put(startRoom, 0);
         while(!queue.isEmpty()){
             Room currentRoom = queue.pop();
 
-            visited.add(currentRoom);
             allRooms.add(currentRoom);
 
             for(int direction = 0; direction < 4; direction++){
                 Room adjacentRoom = currentRoom.getAdjacentRoom(direction);
-                if(adjacentRoom == null || visited.contains(adjacentRoom)) { continue; }
+                if(adjacentRoom == null || visited.containsKey(adjacentRoom)) { continue; }
 
                 queue.push(adjacentRoom);
+                visited.put(adjacentRoom, visited.get(currentRoom) + 1);
             }
         }
 
         Room[] bossRooms = new Room[Level.BOSS_ROOM_COUNT];
+        int step = allRooms.size() / Level.BOSS_ROOM_COUNT;
         for (int i = 0; i < Level.BOSS_ROOM_COUNT; i++) {
-            int index = (i + 1) * (allRooms.size() - 1) / Level.BOSS_ROOM_COUNT;
-            bossRooms[i] = allRooms.get(index);
+            Room chosen = null;
+            int maxDistance = 0;
+            int start = i * step;
+            int end = i != Level.BOSS_ROOM_COUNT - 1 ? (i + 1) * step : allRooms.size();
+            for(Room room : allRooms.subList(start, end)){
+                if(visited.get(room) > maxDistance){
+                    maxDistance = visited.get(room);
+                    chosen = room;
+                }
+            }
+            bossRooms[i] = chosen;
         }
 
         return bossRooms;
