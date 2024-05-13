@@ -14,4 +14,15 @@ public class RenderableRectangle extends Renderable {
         this.size = size;
         this.color = color;
     }
+
+    @Override
+    public void draw(Graphics g) {
+        g.setColor(color);
+        g.fillRect(
+                Renderer.worldToScreenX(position.getX() - size.getX() / 2),
+                Renderer.worldToScreenY(position.getY() + size.getY() / 2),
+                Renderer.worldToScreenSize(size.getX()),
+                Renderer.worldToScreenSize(size.getY())
+        );
+    }
 }

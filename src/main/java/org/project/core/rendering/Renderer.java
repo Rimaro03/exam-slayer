@@ -4,40 +4,31 @@ import org.project.core.Application;
 import org.project.utils.Vec2;
 
 import java.awt.*;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowStateListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayDeque;
 import java.util.PriorityQueue;
 
-public class Renderer implements WindowStateListener {
+public class Renderer implements ComponentListener {
     private static final int VERTICAL_RESOLUTION = 256;
     private static final int PIXEL_PER_UNIT_SPACE = 16;
 
     private static Renderer instance;
 
     private BufferedImage buffer;
-    private BufferedImage uiBuffer;
     private final PriorityQueue<Renderable> renderQueue;
-    private final ArrayDeque<RenderableText> uiRenderQueue;
 
 
     private Renderer() {
         renderQueue = new PriorityQueue<>(new Renderable.Comparator());
-        uiRenderQueue = new ArrayDeque<>();
 
-        uiBuffer = new BufferedImage(
-                Application.getWindow().getWidth(),
-                Application.getWindow().getHeight(),
-                BufferedImage.TYPE_INT_ARGB
-        );
         buffer = new BufferedImage(
                 VERTICAL_RESOLUTION * Application.getWindow().getWidth() / Application.getWindow().getHeight(),
                 VERTICAL_RESOLUTION,
                 BufferedImage.TYPE_INT_ARGB
         );
 
-        Application.getInstance().addWindowStateListener(this);
+        //Application.getInstance().addWindowStateListener(this);
+        Application.getInstance().addComponentListener(this);
     }
 
 
@@ -52,14 +43,43 @@ public class Renderer implements WindowStateListener {
     /** Clears the buffer with the given color */
     public static void clear(Color color){ getInstance().clearInternal(color);}
 
+    /** Adds a circle to the render queue
+     * @param position The world position of the circle
+     * @param radius The radius of the circle
+     * @param color The color of the circle
+     * @param priority The priority of the circle higher priority will be rendered last
+     */
     public static void addCircleToRenderQueue(Vec2 position, float radius, Color color, int priority) { getInstance().renderQueue.add(new RenderableCircle(radius, color, position, priority)); }
+    /** Adds a rectangle to the render queue
+     * @param position The world position of the rectangle
+     * @param size A vec2 representing the width and height of the rectangle
+     * @param color The color of the circle
+     * @param priority The priority of the circle higher priority will be rendered last
+     */
     public static void addRectToRenderQueue(Vec2 position, Vec2 size, Color color, int priority) { getInstance().renderQueue.add(new RenderableRectangle(size, color, position, priority)); }
-    public static void addImageToRenderQueue(BufferedImage sprite, Vec2 position, int priority) { getInstance().renderQueue.add(new RenderableImage(sprite, position, priority)); }
-    public static void addTextToRenderQueue(int x, int y, String text, Color color) { getInstance().uiRenderQueue.add(new RenderableText(text, x, y, color)); }
+    /** Adds an image to the render queue
+     * @param position The world position of the image
+     * @param sprite The image buffer to render
+     * @param priority The priority of the circle higher priority will be rendered last
+     */
+    public static void addImageToRenderQueue(Vec2 position, BufferedImage sprite, int priority) { getInstance().renderQueue.add(new RenderableImage(sprite, position, priority)); }
+    /** Adds text to the render queue
+     * @param position The world position of the text
+     * @param text The text to render
+     * @param color The color of the text
+     * @param size The size of the text
+     * @param priority The priority of the circle higher priority will be rendered last
+     */
+    public static void addTextToRenderQueue(Vec2 position, String text, Color color, int size, int priority) { getInstance().renderQueue.add(new RenderableText(text, position, size, color, priority)); }
     /** Applies the buffer to the screen. */
     public static void present(Graphics g) { getInstance().presentInternal(g); }
 
-
+    /** Converts a world x position to a screen x position */
+    public static int worldToScreenX(float x) { return getInstance().worldToScreenXInternal(x); }
+    /** Converts a world y position to a screen y position */
+    public static int worldToScreenY(float y) { return getInstance().worldToScreenYInternal(y); }
+    /** Converts a world size to a screen size */
+    public static int worldToScreenSize(float size) { return getInstance().worldToScreenSizeInternal(size); }
 
     /* -------------- INTERNAL METHODS ----------------- */
 
@@ -67,70 +87,13 @@ public class Renderer implements WindowStateListener {
         Graphics g = buffer.getGraphics();
         g.setColor(color);
         g.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
-
-        for (int i = 0; i < uiBuffer.getHeight(); i++) {
-            for (int j = 0; j < uiBuffer.getWidth(); j++) {
-                uiBuffer.setRGB(j, i, 0);
-            }
-        }
-    }
-    private void drawImage(BufferedImage sprite, Vec2 position){
-        Graphics g = buffer.getGraphics();
-
-        g.drawImage(
-                sprite,
-                worldToScreenX(position.getX()) - sprite.getWidth(null) / 2,
-                worldToScreenY(position.getY()) - sprite.getHeight(null) / 2,
-                null
-        );
-    }
-    private void drawRect(Vec2 position, Vec2 scale, Color color) {
-        Graphics g = buffer.getGraphics();
-        g.setColor(color);
-        g.drawRect(
-                worldToScreenX(position.getX() - scale.getX() / 2),
-                worldToScreenY(position.getY() + scale.getY() / 2),
-                worldToScreenWidth(scale.getX()),
-                worldToScreenHeight(scale.getY())
-        );
-    }
-    private void drawCircle(Vec2 position, float radius, Color color) {
-        Graphics g = buffer.getGraphics();
-        g.setColor(color);
-        g.drawOval(
-                worldToScreenX(position.getX() - radius),
-                worldToScreenY(position.getY() + radius),
-                worldToScreenWidth(radius * 2),
-                worldToScreenHeight(radius * 2)
-        );
-    }
-
-    private void drawText(String text, int x, int y, Color color) {
-        Graphics g = uiBuffer.getGraphics();
-        g.setColor(color);
-        g.drawString(text, x, y);
     }
 
     private void presentInternal(Graphics g){
         // Draw all renderables
+        Graphics bufferGraphics = buffer.getGraphics();
         while(!renderQueue.isEmpty()){
-            Renderable renderable = renderQueue.poll();
-            if(renderable instanceof RenderableImage){
-                RenderableImage renderableImage = (RenderableImage) renderable;
-                drawImage(renderableImage.getImage(), renderable.getPosition());
-            } else if(renderable instanceof RenderableRectangle){
-                RenderableRectangle renderableRectangle = (RenderableRectangle) renderable;
-                drawRect(renderableRectangle.getPosition(), renderableRectangle.getSize(), renderableRectangle.getColor());
-            } else if(renderable instanceof RenderableCircle){
-                RenderableCircle renderableCircle = (RenderableCircle) renderable;
-                drawCircle(renderableCircle.getPosition(), renderableCircle.getRadius(), renderableCircle.getColor());
-            } else {
-                throw new RuntimeException("Unknown renderable type");
-            }
-        }
-        while(!uiRenderQueue.isEmpty()){
-            RenderableText renderableText = uiRenderQueue.poll();
-            drawText(renderableText.getText(), renderableText.getX(), renderableText.getY(), renderableText.getColor());
+            renderQueue.poll().draw(bufferGraphics);
         }
 
         // Render buffer
@@ -141,36 +104,43 @@ public class Renderer implements WindowStateListener {
                 Application.getWindow().getHeight(),
                 null
         );
-        g.drawImage(uiBuffer, 0, 0, null);
+        clear(Color.gray);
     }
 
     /* -------------- HELPER METHODS ----------------- */
-    private int worldToScreenX(float x) {
+    public int worldToScreenXInternal(float x) {
         return (int)(x * PIXEL_PER_UNIT_SPACE + buffer.getWidth() * 0.5f);
     }
-    private int worldToScreenY(float y) {
+    public int worldToScreenYInternal(float y) {
         return (int)(buffer.getHeight() * 0.5f - y * PIXEL_PER_UNIT_SPACE);
     }
-    private int worldToScreenWidth(float width) {
-        return (int)(width * PIXEL_PER_UNIT_SPACE);
-    }
-    private int worldToScreenHeight(float height) {
-        return (int)(height * PIXEL_PER_UNIT_SPACE);
+    public int worldToScreenSizeInternal(float size) {
+        return (int)(size * PIXEL_PER_UNIT_SPACE);
     }
 
     /* -------------------WINDOW STATE LISTENER ----------------*/
 
     @Override
-    public void windowStateChanged(WindowEvent e) {
+    public void componentResized(ComponentEvent e) {
         buffer = new BufferedImage(
-                VERTICAL_RESOLUTION * e.getWindow().getWidth() / e.getWindow().getHeight(),
+                VERTICAL_RESOLUTION * e.getComponent().getWidth() / e.getComponent().getHeight(),
                 VERTICAL_RESOLUTION,
                 BufferedImage.TYPE_INT_ARGB
         );
-        uiBuffer = new BufferedImage(
-                e.getWindow().getWidth(),
-                e.getWindow().getHeight(),
-                BufferedImage.TYPE_INT_ARGB
-        );
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent e) {
+
+    }
+
+    @Override
+    public void componentShown(ComponentEvent e) {
+
+    }
+
+    @Override
+    public void componentHidden(ComponentEvent e) {
+
     }
 }

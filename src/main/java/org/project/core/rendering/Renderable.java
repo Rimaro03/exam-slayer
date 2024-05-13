@@ -3,9 +3,11 @@ package org.project.core.rendering;
 import lombok.Getter;
 import org.project.utils.Vec2;
 
+import java.awt.*;
+
 @Getter
 public abstract class Renderable {
-    private final Vec2 position;
+    protected final Vec2 position;
     private final int priority;
 
     public Renderable(Vec2 position, int priority) {
@@ -19,4 +21,6 @@ public abstract class Renderable {
             return o1.getPriority() - o2.getPriority();
         }
     }
+
+    public abstract void draw(Graphics g);
 }

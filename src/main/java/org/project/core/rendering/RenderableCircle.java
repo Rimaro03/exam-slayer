@@ -14,4 +14,11 @@ public class RenderableCircle extends Renderable {
         this.radius = radius;
         this.color = color;
     }
+
+    @Override
+    public void draw(Graphics g) {
+        g.setColor(color);
+        int diameter = Renderer.worldToScreenSize(this.radius * 2);
+        g.fillOval(Renderer.worldToScreenX(position.getX()), Renderer.worldToScreenY(position.getY()), diameter, diameter);
+    }
 }
