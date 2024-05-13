@@ -65,7 +65,7 @@ public class Level {
         while(!queue.isEmpty()){
             Room room = queue.poll();
 
-            Renderer.drawRect(new Vec2(x + room.getX(), y + room.getY()).multiply(4), new Vec2(2, 2), Color.BLUE);
+            Renderer.addRectToRenderQueue(new Vec2(x + room.getX(), y + room.getY()).multiply(4), new Vec2(2, 2), Color.BLUE, -2);
             visited.add(room);
 
             for (int i = 0; i < 4; i++) {
@@ -74,10 +74,10 @@ public class Level {
             }
         }
 
-        Renderer.drawCircle(new Vec2(0, 1).multiply(4), 1, currentRoom.getAdjacentRoom(0) != null ? Color.GREEN : Color.RED);
-        Renderer.drawCircle(new Vec2(1, 0).multiply(4), 1, currentRoom.getAdjacentRoom(1) != null ? Color.GREEN : Color.RED);
-        Renderer.drawCircle(new Vec2(0, -1).multiply(4), 1, currentRoom.getAdjacentRoom(2) != null ? Color.GREEN : Color.RED);
-        Renderer.drawCircle(new Vec2(-1, 0).multiply(4), 1, currentRoom.getAdjacentRoom(3) != null ? Color.GREEN : Color.RED);
+        Renderer.addCircleToRenderQueue(new Vec2(0, 1).multiply(4), 1, currentRoom.getAdjacentRoom(0) != null ? Color.GREEN : Color.RED, 2);
+        Renderer.addCircleToRenderQueue(new Vec2(1, 0).multiply(4), 1, currentRoom.getAdjacentRoom(1) != null ? Color.GREEN : Color.RED, 2);
+        Renderer.addCircleToRenderQueue(new Vec2(0, -1).multiply(4), 1, currentRoom.getAdjacentRoom(2) != null ? Color.GREEN : Color.RED, 2);
+        Renderer.addCircleToRenderQueue(new Vec2(-1, 0).multiply(4), 1, currentRoom.getAdjacentRoom(3) != null ? Color.GREEN : Color.RED, 2);
 
         if(Input.isKeyPressed(Input.KEY_UP) && currentRoom.getAdjacentRoom(0) != null) { changeRoom(0); }
         if(Input.isKeyPressed(Input.KEY_RIGHT) && currentRoom.getAdjacentRoom(1) != null) { changeRoom(1); }

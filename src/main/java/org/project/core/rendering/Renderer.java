@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
 import java.awt.image.BufferedImage;
+import java.util.PriorityQueue;
 
 public class Renderer implements WindowStateListener {
     private static final int VERTICAL_RESOLUTION = 256;
@@ -15,8 +16,16 @@ public class Renderer implements WindowStateListener {
     private static Renderer instance;
 
     private BufferedImage buffer;
+    private BufferedImage uiBuffer;
+    private final PriorityQueue<Renderable> renderQueue;
 
     private Renderer() {
+        renderQueue = new PriorityQueue<>(new Renderable.Comparator());
+        uiBuffer = new BufferedImage(
+                Application.getWindow().getWidth(),
+                Application.getWindow().getHeight(),
+                BufferedImage.TYPE_INT_ARGB
+        );
         buffer = new BufferedImage(
                 VERTICAL_RESOLUTION * Application.getWindow().getWidth() / Application.getWindow().getHeight(),
                 VERTICAL_RESOLUTION,
@@ -37,18 +46,11 @@ public class Renderer implements WindowStateListener {
 
     /** Clears the buffer with the given color */
     public static void clear(Color color){ getInstance().clearInternal(color);}
-    /** Draws an image */
-    public static void draw(BufferedImage sprite, Vec2 position){ getInstance().drawInternal(sprite, position); }
-    /*** Draw a raw rectangle */
-    public static void drawRect(Vec2 position, Vec2 scale, Color color){ getInstance().drawRectInternal(position, scale, color); }
-    /*** Draw a raw circle **/
-    public static void drawCircle(Vec2 position, float radius, Color color) { getInstance().drawCircleInternal(position, radius, color);}
-    /** Draws a pixel */
-    public static void drawPixel(Vec2 position, Color color){ getInstance().drawPixelInternal(position, color); }
 
-    /** Write text */
-    public static void writeText(String text, Vec2 position, Color color) { getInstance().drawTextInternal(text, position, color); }
-
+    public static void addCircleToRenderQueue(Vec2 position, float radius, Color color, int priority) { getInstance().renderQueue.add(new RenderableCircle(radius, color, position, priority)); }
+    public static void addRectToRenderQueue(Vec2 position, Vec2 size, Color color, int priority) { getInstance().renderQueue.add(new RenderableRectangle(size, color, position, priority)); }
+    public static void addImageToRenderQueue(BufferedImage sprite, Vec2 position, int priority) { getInstance().renderQueue.add(new RenderableImage(sprite, position, priority)); }
+    public static void drawText(int x, int y, String text, Color color, int priority) { getInstance().drawText(text, x, y, color); }
     /** Applies the buffer to the screen. */
     public static void present(Graphics g) { getInstance().presentInternal(g); }
 
@@ -61,7 +63,7 @@ public class Renderer implements WindowStateListener {
         g.setColor(color);
         g.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
     }
-    private void drawInternal(BufferedImage sprite, Vec2 position){
+    private void drawImage(BufferedImage sprite, Vec2 position){
         Graphics g = buffer.getGraphics();
 
         g.drawImage(
@@ -71,7 +73,7 @@ public class Renderer implements WindowStateListener {
                 null
         );
     }
-    private void drawRectInternal(Vec2 position, Vec2 scale, Color color) {
+    private void drawRect(Vec2 position, Vec2 scale, Color color) {
         Graphics g = buffer.getGraphics();
         g.setColor(color);
         g.drawRect(
@@ -81,7 +83,7 @@ public class Renderer implements WindowStateListener {
                 worldToScreenHeight(scale.getY())
         );
     }
-    private void drawCircleInternal(Vec2 position, float radius, Color color) {
+    private void drawCircle(Vec2 position, float radius, Color color) {
         Graphics g = buffer.getGraphics();
         g.setColor(color);
         g.drawOval(
@@ -92,24 +94,31 @@ public class Renderer implements WindowStateListener {
         );
     }
 
-    private void drawPixelInternal(Vec2 position, Color color){
-        Graphics g = buffer.getGraphics();
+    private void drawText(String text, int x, int y, Color color) {
+        Graphics g = uiBuffer.getGraphics();
         g.setColor(color);
-        g.drawOval(
-                worldToScreenX(position.getX()),
-                worldToScreenY(position.getY()),
-                1,
-                1
-        );
-    }
-
-    private void drawTextInternal(String text, Vec2 position, Color color) {
-        Graphics g = buffer.getGraphics();
-        g.setColor(color);
-        g.drawString(text, worldToScreenX(position.getX()), worldToScreenY(position.getY()));
+        g.drawString(text, x, y);
     }
 
     private void presentInternal(Graphics g){
+        // Draw all renderables
+        while(!renderQueue.isEmpty()){
+            Renderable renderable = renderQueue.poll();
+            if(renderable instanceof RenderableImage){
+                RenderableImage renderableImage = (RenderableImage) renderable;
+                drawImage(renderableImage.getImage(), renderable.getPosition());
+            } else if(renderable instanceof RenderableRectangle){
+                RenderableRectangle renderableRectangle = (RenderableRectangle) renderable;
+                drawRect(renderableRectangle.getPosition(), renderableRectangle.getSize(), renderableRectangle.getColor());
+            } else if(renderable instanceof RenderableCircle){
+                RenderableCircle renderableCircle = (RenderableCircle) renderable;
+                drawCircle(renderableCircle.getPosition(), renderableCircle.getRadius(), renderableCircle.getColor());
+            } else {
+                throw new RuntimeException("Unknown renderable type");
+            }
+        }
+
+        // Render buffer
         g.drawImage(buffer,
                 0,
                 0,
@@ -117,6 +126,7 @@ public class Renderer implements WindowStateListener {
                 Application.getWindow().getHeight(),
                 null
         );
+        g.drawImage(uiBuffer, 0, 0, null);
         clear(Color.GRAY);
     }
 
@@ -141,6 +151,11 @@ public class Renderer implements WindowStateListener {
         buffer = new BufferedImage(
                 VERTICAL_RESOLUTION * e.getWindow().getWidth() / e.getWindow().getHeight(),
                 VERTICAL_RESOLUTION,
+                BufferedImage.TYPE_INT_ARGB
+        );
+        uiBuffer = new BufferedImage(
+                e.getWindow().getWidth(),
+                e.getWindow().getHeight(),
                 BufferedImage.TYPE_INT_ARGB
         );
     }

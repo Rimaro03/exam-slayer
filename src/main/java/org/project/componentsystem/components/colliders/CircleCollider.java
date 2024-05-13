@@ -112,7 +112,7 @@ public class CircleCollider extends AbstractCircleCollider{
     }
 
     public void draw() {
-        Renderer.drawCircle(getGameObject().getPosition(), getRadius(), Color.red);
+        Renderer.addCircleToRenderQueue(getGameObject().getPosition(), getRadius(), Color.red, 2);
     }
 
 
