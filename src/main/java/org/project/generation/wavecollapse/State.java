@@ -13,8 +13,8 @@ public class State {
     public static final State ALL_DOORS = new State((byte)0b1111);
 
     private static final int NO_DOOR_WEIGHTS = 1;
-    private static final int FOUR_DOORS_WEIGHTS = 6;
-    private static final int ONE_DOOR_WEIGHTS = 3;
+    private static final int FOUR_DOORS_WEIGHTS = 3;
+    private static final int ONE_DOOR_WEIGHTS = 1;
     private static final int TWO_DOORS_WEIGHTS = 12;
     private static final int THREE_DOORS_WEIGHTS = 9;
     public static final int[] WEIGHTS = {

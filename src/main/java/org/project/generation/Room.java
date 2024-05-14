@@ -8,9 +8,7 @@ import org.project.componentsystem.components.colliders.BoxCollider;
 import org.project.componentsystem.components.colliders.Collider;
 import org.project.generation.wavecollapse.Direction;
 import org.project.generation.wavecollapse.InvalidDirectionException;
-import org.project.generation.wavecollapse.QuantumRoom;
 import org.project.utils.Vec2;
-import java.util.Set;
 
 import java.util.ArrayList;
 

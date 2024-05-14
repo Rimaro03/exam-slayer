@@ -29,16 +29,20 @@ public class LevelGenerator {
     private final int mapSize;
     private final Random rand;
     private final int minRoomCount;
-    private final int minBossRoomDistanceFromStart;
-    private final int minBossRoomDistanceFromEachOther;
+
+
+    private final int distanceFromStartBias;
+    private final int distanceFromBossBias;
+    private static final int DISTANCE_FROM_START_WEIGHT = 10;
+    private static final int DISTANCE_FROM_BOSS_WEIGHT = 9;
 
     public LevelGenerator(int mapSize, long seed){
         this.mapSize = mapSize;
         this.rand = new Random(seed);
 
         minRoomCount = mapSize * mapSize / 2;
-        minBossRoomDistanceFromStart = mapSize / 2;
-        minBossRoomDistanceFromEachOther = mapSize;
+        distanceFromBossBias = mapSize / 4;
+        distanceFromStartBias = mapSize / 2;
 
         log.info("Level generator seed set to {}", seed);
 
@@ -49,14 +53,19 @@ public class LevelGenerator {
     public Level build(){
 
         Room startRoom = generateRooms();
-        Room[] bossRooms = getBossRooms(startRoom);
+        List<Room> bossRooms = getBossRooms(startRoom);
 
         if(Debug.ENABLED) {
             printMap(startRoom, bossRooms);
+            for(Room bossRoom : bossRooms){
+                log.info("Boss room at [x={}, y={}]", bossRoom.getX(), bossRoom.getY());
+            }
         }
 
         return new Level(startRoom);
     }
+
+    /* ---------------- BUILD SUB METHODS -------------------- */
     private Room generateRooms(){
         if(mapSize < 5){ throw new IllegalArgumentException("Map size must be at least 5 : [mapSize=" + mapSize + "]"); }
 
@@ -85,150 +94,57 @@ public class LevelGenerator {
             return generateRooms();
         }
     }
-
     /** Returns the room that is the farthest from the start room using a bfs search. */
-    private Room[] getBossRooms(Room startRoom){
-        Room[] bossRooms = new Room[Level.BOSS_ROOM_COUNT];
-
-        Queue<Room> queue = new ArrayDeque<>();
-        Map<Room, Integer> visited = new HashMap<>(); // visited keeps track of the distance from the start room
-
-        queue.add(startRoom);
-        visited.put(startRoom, 0);
-
-        while(!queue.isEmpty()){
-            Room currentRoom = queue.poll();
-
-            for(int direction = 0; direction < 4; direction++){
-                Room adjacentRoom = currentRoom.getAdjacentRoom(direction);
-                if(adjacentRoom == null) { continue; }
-
-                int distance = visited.get(currentRoom) + 1;
-
-                if(!visited.containsKey(adjacentRoom) || visited.get(adjacentRoom) > distance) {
-                    visited.put(adjacentRoom, distance);
-                    queue.add(adjacentRoom);
-                }
-
-            }
-        }
+    private ArrayList<Room> getBossRooms(Room startRoom){
+        ArrayList<Room> bossRooms = new ArrayList<>(Level.BOSS_ROOM_COUNT);
+        Map<Room, Integer> distanceMap = getDistanceMap(startRoom);
 
         for (int i = 0; i < Level.BOSS_ROOM_COUNT; i++) {
-            int maxDistance = 0;
-            for(Map.Entry<Room, Integer> roomToDistance : visited.entrySet()){
-                if(roomToDistance.getValue() > maxDistance){
-                    boolean isDistantEnoughFromBossRooms = true; // check if the room is distant enough from the other boss rooms
-                    for (int j = 0; j < i; j++) {
-                        if(distance(bossRooms[j], roomToDistance.getKey()) < minBossRoomDistanceFromEachOther){
-                            isDistantEnoughFromBossRooms = false;
-                            break;
-                        }
-                    }
-                    if(!isDistantEnoughFromBossRooms) { continue; }
+            int maxScore = Integer.MIN_VALUE;
+            Room chosenRoom = null;
+            for(Map.Entry<Room, Integer> roomToDistance : distanceMap.entrySet()){
+                int currentScore = getBossRoomScore(roomToDistance.getKey(), roomToDistance.getValue(), bossRooms);
 
-                    maxDistance = roomToDistance.getValue();
-                    bossRooms[i] = roomToDistance.getKey();
+                if(currentScore > maxScore){
+                    maxScore = currentScore;
+                    chosenRoom = roomToDistance.getKey();
                 }
             }
+            bossRooms.add(chosenRoom);
         }
 
         return bossRooms;
     }
 
+    /* ------------------- ALGORITHMS ----------------------- */
+    /** Returns the closest distance from all the boss rooms.  */
+    private int distanceFromClosest(Room room, List<Room> bossRooms){
+        if(bossRooms.isEmpty()) { return 0; }
+
+        int minDistance = Integer.MAX_VALUE;
+        for(Room bossRoom : bossRooms){
+            minDistance = Math.min(minDistance, distance(room, bossRoom));
+        }
+        return minDistance;
+    }
     /**
-     * Returns the distance between two rooms via a bfs search
-     * @throws RuntimeException if the rooms are not connected
+     * Returns the distance between two rooms via a bfs search.
+     * @throws RuntimeException if the rooms are not connected.
      * */
     private int distance(Room a, Room b){
-        Queue<Room> queue = new ArrayDeque<>();
-        Map<Room, Integer> visited = new HashMap<>();
-
-        queue.add(a);
-        visited.put(a, 0);
-        while(!queue.isEmpty()){
-            Room currentRoom = queue.poll();
-            if(currentRoom == b) { return visited.get(currentRoom); }
-
-            for(int direction = 0; direction < 4; direction++){
-                Room adjacentRoom = currentRoom.getAdjacentRoom(direction);
-                if(adjacentRoom == null) { continue; }
-
-                int distance = visited.get(currentRoom) + 1;
-
-                if(!visited.containsKey(adjacentRoom) || visited.get(adjacentRoom) > distance) {
-                    visited.put(adjacentRoom, distance);
-                    queue.add(adjacentRoom);
-                }
-            }
-        }
-        throw new RuntimeException("Rooms are not connected");
+        Map<Room, Integer> distanceMap = getDistanceMap(a);
+        if(!distanceMap.containsKey(b)){ throw new RuntimeException("Rooms are not connected"); }
+        return distanceMap.get(b);
     }
-    private void printMap(Room startRoom, Room[] bossRooms){
-        Room[][] rooms = new Room[mapSize][mapSize];
-        Queue<Room> queue = new ArrayDeque<>();
-        queue.add(startRoom);
-        while(!queue.isEmpty()){
-            Room currentRoom = queue.poll();
-
-            rooms[currentRoom.getY()][currentRoom.getX()] = currentRoom;
-            //System.out.println("Added : " + currentRoom.getX() + " " + currentRoom.getY());
-
-            for(int direction = 0; direction < 4; direction++){
-                Room adjacentRoom = currentRoom.getAdjacentRoom(direction);
-                if(adjacentRoom == null || rooms[adjacentRoom.getY()][adjacentRoom.getX()] != null) { continue; }
-
-                queue.add(adjacentRoom);
-            }
-        }
-
-        for (int i = 0; i < mapSize; i++) {
-            for (int j = 0; j < mapSize; j++) {
-                if(rooms[i][j] == null) {
-                    System.out.print("  ");
-                    continue;
-                }
-
-                boolean continue_ = false;
-                for(Room bossRoom : bossRooms){
-                    if(/*rooms[i][j].getX() == bossRoom.getX() && rooms[i][j].getY() == bossRoom.getY()*/ rooms[i][j] == bossRoom){
-                        System.out.print("B ");
-                        continue_ = true;
-                        break;
-                    }
-                }
-                if(continue_) { continue; }
-
-                if(rooms[i][j] == startRoom)
-                    System.out.print("S ");
-                else
-                    System.out.print(rooms[i][j]);
-            }
-            System.out.println();
-        }
+    /** Returns the score of a room to be a boss room.
+     * @return (BossDist - BossBias) * BossWeight + (StartDist - StartBias) * StartWeight
+     * */
+    private int getBossRoomScore(Room room, int distanceFromStart, List<Room> bossRooms){
+        int score = 0;
+        score += (distanceFromClosest(room, bossRooms) - distanceFromBossBias) * DISTANCE_FROM_BOSS_WEIGHT;
+        score += (distanceFromStart - distanceFromStartBias) * DISTANCE_FROM_START_WEIGHT;
+        return score;
     }
-
-    /* -------------- WAVE COLLAPSE FUNCTIONS ---------------*/
-
-    /** Initialize all the quantum rooms to max entropy quantum rooms (max number of possible states). */
-    private void initializeQuantumRooms(QuantumRoom[][] quantumRooms){
-        for(int x = 0; x < mapSize; x++){
-            for(int y = 0; y < mapSize; y++){
-                quantumRooms[y][x] = new QuantumRoom(x, y);
-            }
-        }
-    }
-    /** Collapse the boundaries of the map to avoid the generation of rooms that are not connected to the map. */
-    private void collapseBoundaries(QuantumRoom[][] quantumRooms){
-        for (int x = 0; x < mapSize; x++) {
-            collapse(quantumRooms, State.NO_DOOR, x, 0);
-            collapse(quantumRooms, State.NO_DOOR, x, mapSize - 1);
-        }
-        for (int y = 0; y < mapSize; y++) {
-            collapse(quantumRooms, State.NO_DOOR, 0, y);
-            collapse(quantumRooms, State.NO_DOOR, mapSize - 1, y);
-        }
-    }
-
     /** Returns the head (start) of a graph of rooms. */
     private Room floodFill(QuantumRoom[][] quantumRooms, int x, int y) throws GenerationFailedException {
         Queue<QuantumRoom> quantumRoomQueue = new ArrayDeque<>();
@@ -274,6 +190,28 @@ public class LevelGenerator {
         return roomsCache[y][x];
     }
 
+    /** Returns a map of the distance from the start room of all other rooms using Dijkstra's algorithm. */
+    private HashMap<Room, Integer> getDistanceMap(Room startRoom){
+        PriorityQueue<RoomDistancePair> queue = new PriorityQueue<>();
+        HashMap<Room, Integer> distanceMap = new HashMap<>();
+
+        queue.add(new RoomDistancePair(startRoom, 0));
+        while(!queue.isEmpty()){
+            RoomDistancePair currentRoomDistancePair = queue.poll();
+
+            for (int dir = 0; dir < 4; dir++) {
+                Room adjacentRoom = currentRoomDistancePair.room.getAdjacentRoom(dir);
+                if(adjacentRoom == null || distanceMap.containsKey(adjacentRoom)) { continue; }
+
+                int newDistance = currentRoomDistancePair.distance + 1;
+                queue.add(new RoomDistancePair(adjacentRoom, newDistance));
+            }
+
+            distanceMap.put(currentRoomDistancePair.room, currentRoomDistancePair.distance);
+        }
+
+        return distanceMap;
+    }
     /** Returns the quantum room that has less possible states to collapse to. */
     private QuantumRoom getQuantumRoomWithLowestEntropy(QuantumRoom[][] quantumRooms, Random rand){
         ArrayList<QuantumRoom> candidates = new ArrayList<>();
@@ -293,6 +231,117 @@ public class LevelGenerator {
         return candidates.get(rand.nextInt(candidates.size()));
     }
 
+    /* ------------------------ DEBUG ------------------------- */
+    /** Print the map to the console. (Debug) */
+    private void printMap(Room startRoom, List<Room> bossRooms){
+        Room[][] rooms = new Room[mapSize][mapSize];
+        Queue<Room> queue = new ArrayDeque<>();
+        queue.add(startRoom);
+        while(!queue.isEmpty()){
+            Room currentRoom = queue.poll();
+
+            rooms[currentRoom.getY()][currentRoom.getX()] = currentRoom;
+            for(int direction = 0; direction < 4; direction++){
+                Room adjacentRoom = currentRoom.getAdjacentRoom(direction);
+                if(adjacentRoom == null || rooms[adjacentRoom.getY()][adjacentRoom.getX()] != null) { continue; }
+
+                queue.add(adjacentRoom);
+            }
+        }
+
+        for (int i = 0; i < mapSize; i++) {
+            for (int j = 0; j < mapSize; j++) {
+                if(rooms[i][j] == null) {
+                    System.out.print("  ");
+                    continue;
+                }
+
+                boolean continue_ = false;
+                for(Room bossRoom : bossRooms){
+                    if(rooms[i][j] == bossRoom){
+                        System.out.print("B ");
+                        continue_ = true;
+                        break;
+                    }
+                }
+                if(continue_) { continue; }
+
+                if(rooms[i][j] == startRoom)
+                    System.out.print("S ");
+                else
+                    System.out.print(rooms[i][j]);
+            }
+            System.out.println();
+        }
+    }
+    private void printDistanceMap(Room startRoom){
+        Map<Room, Integer> distanceMap = getDistanceMap(startRoom);
+
+        String[][] strMat = new String[mapSize][mapSize];
+        for (int i = 0; i < mapSize; i++) {
+            for (int j = 0; j < mapSize; j++) {
+                strMat[i][j] = "  ";
+            }
+        }
+        for(Map.Entry<Room, Integer> entry : distanceMap.entrySet()){
+            strMat[entry.getKey().getY()][entry.getKey().getX()] = entry.getValue().toString();
+            while (strMat[entry.getKey().getY()][entry.getKey().getX()].length() < 2) {
+                strMat[entry.getKey().getY()][entry.getKey().getX()] += " ";
+            }
+        }
+
+        for (int i = 0; i < mapSize; i++) {
+            for (int j = 0; j < mapSize; j++) {
+                System.out.print(strMat[i][j]);
+            }
+            System.out.println();
+        }
+    }
+    private void printBossScoreMap(Room startRoom, List<Room> bossRooms){
+        Map<Room, Integer> distanceMap = getDistanceMap(startRoom);
+
+        String[][] strMat = new String[mapSize][mapSize];
+        for (int i = 0; i < mapSize; i++) {
+            for (int j = 0; j < mapSize; j++) {
+                strMat[i][j] = "      ";
+            }
+        }
+        for(Map.Entry<Room, Integer> entry : distanceMap.entrySet()){
+            strMat[entry.getKey().getY()][entry.getKey().getX()] = getBossRoomScore(entry.getKey(), entry.getValue(), bossRooms) + "";
+            while (strMat[entry.getKey().getY()][entry.getKey().getX()].length() < 6) {
+                strMat[entry.getKey().getY()][entry.getKey().getX()] += " ";
+            }
+        }
+
+        for (int i = 0; i < mapSize; i++) {
+            for (int j = 0; j < mapSize; j++) {
+                System.out.print(strMat[i][j]);
+            }
+            System.out.println();
+        }
+    }
+
+    /* -------------- WAVE COLLAPSE FUNCTIONS ---------------*/
+
+    /** Initialize all the quantum rooms to max entropy quantum rooms (max number of possible states). */
+    private void initializeQuantumRooms(QuantumRoom[][] quantumRooms){
+        for(int x = 0; x < mapSize; x++){
+            for(int y = 0; y < mapSize; y++){
+                quantumRooms[y][x] = new QuantumRoom(x, y);
+            }
+        }
+    }
+    /** Collapse the boundaries of the map to avoid the generation of rooms that are not connected to the map. */
+    private void collapseBoundaries(QuantumRoom[][] quantumRooms){
+        for (int x = 0; x < mapSize; x++) {
+            collapse(quantumRooms, State.NO_DOOR, x, 0);
+            collapse(quantumRooms, State.NO_DOOR, x, mapSize - 1);
+        }
+        for (int y = 0; y < mapSize; y++) {
+            collapse(quantumRooms, State.NO_DOOR, 0, y);
+            collapse(quantumRooms, State.NO_DOOR, mapSize - 1, y);
+        }
+    }
 
     /** Collapses the quantum room at (x, y) and propagate the changes to all neighbours quantum rooms. */
     private void collapse(QuantumRoom[][] quantumRooms, int x, int y){

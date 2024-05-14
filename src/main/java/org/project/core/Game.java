@@ -12,7 +12,7 @@ public class Game {
     private final Level currentLevel;
 
     private Game(){
-        currentLevel = new LevelGenerator(10,new Random().nextLong()).build();
+        currentLevel = new LevelGenerator(8,new Random().nextLong()).build();
     }
     public static Game loadNewGame(){
         // To-do : The game will ask the user to select : load a saved game or start a new game
