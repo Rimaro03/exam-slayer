@@ -53,7 +53,13 @@ public class LevelGenerator {
                 log.info("Boss room at [x={}, y={}]", bossRoom.getX(), bossRoom.getY());
             }
         }
+        Set<Room> allRooms = getConnectedRooms(startRoom);
+        for (Room room : allRooms) {
+            if(room == startRoom) { room.init(Room.InitType.Start); }
+            else if (bossRooms.contains(room)) { room.init(Room.InitType.Boss); }
+            else{ room.init(Room.InitType.Normal); }
 
+        }
         return new Level(startRoom, bossRooms);
     }
 
@@ -96,7 +102,6 @@ public class LevelGenerator {
             Room chosenRoom = null;
             for(Map.Entry<Room, Integer> roomToDistance : distanceMap.entrySet()){
                 float currentScore = getBossRoomScore(roomToDistance.getKey(), roomToDistance.getValue(), bossRooms);
-
                 if(currentScore > maxScore){
                     maxScore = currentScore;
                     chosenRoom = roomToDistance.getKey();
@@ -205,7 +210,7 @@ public class LevelGenerator {
 
         return distanceMap;
     }
-    public static HashSet<Room> getConnectedRooms(Room startRoom){
+    private static HashSet<Room> getConnectedRooms(Room startRoom){
         HashSet<Room> connectedRooms = new HashSet<>();
         Queue<Room> queue = new ArrayDeque<>();
         queue.add(startRoom);

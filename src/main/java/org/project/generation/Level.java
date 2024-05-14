@@ -47,13 +47,6 @@ public class Level {
         }
     }
     public void init(){
-        Set<Room> rooms = LevelGenerator.getConnectedRooms(currentRoom);
-        for (Room room : rooms) {
-            if(room == currentRoom) { room.init(Room.InitType.Start); }
-            else if (bossRooms.contains(room)) { room.init(Room.InitType.Boss); }
-            else{ room.init(Room.InitType.Normal); }
-        }
-
         currentRoom.setEnabled(true);
     }
     public void update(){
