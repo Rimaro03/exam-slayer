@@ -7,19 +7,38 @@ import org.project.generation.Room;
 
 import java.util.*;
 
+/*
+
+Generation method:
+1. Generate the map using the wave collapse algorithm
+    1. Initialize a matrix [mapSize x mapSize] of quantum rooms that initially can be all possible states at once.
+    2. Collapse the boundaries of the map to void rooms to avoid the map to generate doors that connect to nowhere.
+    3. Choose a start room and collapse it to a 4-door room
+    4. iterate until all quantum rooms are collapsed:
+        1. Choose the quantum room with the lowest entropy (the quantum room with the lowest number of possible states)
+        2. Collapse the quantum room to a random state
+        3. Propagate the changes to all neighbours quantum rooms
+    5. Flood fill the map from the start room to get the head of the graph of connected rooms (all quantum rooms get converted to actual rooms)
+2. Get the boss rooms
+    1. Get the room that is the farthest from the start room using a bfs search
+    2. Repeat to get the other boss rooms and consider the distance between the boss rooms
+*/
+
 @Log4j2
 public class LevelGenerator {
     private final int mapSize;
     private final Random rand;
     private final int minRoomCount;
-    private final int minBossRoomDistance;
+    private final int minBossRoomDistanceFromStart;
+    private final int minBossRoomDistanceFromEachOther;
 
     public LevelGenerator(int mapSize, long seed){
         this.mapSize = mapSize;
         this.rand = new Random(seed);
 
-        minRoomCount = mapSize * mapSize / 4;
-        minBossRoomDistance = mapSize / 2;
+        minRoomCount = mapSize * mapSize / 2;
+        minBossRoomDistanceFromStart = mapSize / 2;
+        minBossRoomDistanceFromEachOther = mapSize;
 
         log.info("Level generator seed set to {}", seed);
 
@@ -100,7 +119,7 @@ public class LevelGenerator {
                 if(roomToDistance.getValue() > maxDistance){
                     boolean isDistantEnoughFromBossRooms = true; // check if the room is distant enough from the other boss rooms
                     for (int j = 0; j < i; j++) {
-                        if(distance(bossRooms[j], roomToDistance.getKey()) < minBossRoomDistance){
+                        if(distance(bossRooms[j], roomToDistance.getKey()) < minBossRoomDistanceFromEachOther){
                             isDistantEnoughFromBossRooms = false;
                             break;
                         }
@@ -115,6 +134,11 @@ public class LevelGenerator {
 
         return bossRooms;
     }
+
+    /**
+     * Returns the distance between two rooms via a bfs search
+     * @throws RuntimeException if the rooms are not connected
+     * */
     private int distance(Room a, Room b){
         Queue<Room> queue = new ArrayDeque<>();
         Map<Room, Integer> visited = new HashMap<>();
@@ -323,49 +347,4 @@ public class LevelGenerator {
         }
 
     }
-    
-    /*private void propagateWave(QuantumRoom[][] quantumRooms, int x, int y){
-        Queue<QuantumRoomPair> queue = new LinkedList<>();
-
-        // insert all neighbors of the quantum room at (x, y) into the queue
-        for (int direction = 0; direction < 4; direction++) {
-            int otherX = Direction.x(x, direction);
-            int otherY = Direction.y(y, direction);
-            if(otherX < 0 || otherX >= mapSize || otherY < 0 || otherY >= mapSize) { continue; }
-            queue.add(new QuantumRoomPair(quantumRooms[y][x], quantumRooms[otherY][otherX], direction));
-        }
-
-        while (!queue.isEmpty()){
-            QuantumRoomPair pair = queue.poll();
-
-            boolean hasChanged = false;
-            int i = 0;
-            while(i < pair.quantumRoomB.entropy()){
-                State stateB = pair.quantumRoomB.getPossibleStates().get(i);
-                boolean noMatch = true;
-                for(State stateA : pair.quantumRoomA.getPossibleStates()){
-                    if(State.canConnect(stateA, stateB, pair.directionFromAtoB)){
-                        noMatch = false;
-                        break;
-                    }
-                }
-                if(noMatch){ // if no state in A can connect to B, remove stateB from the possible states of B
-                    pair.quantumRoomB.removeState(stateB);
-                    hasChanged = true;
-                }
-                else { i++; }
-            }
-
-            // if the quantum roomB has not changed the wave has interrupted his propagation
-            // in that direction
-            if(!hasChanged) { continue; }
-            
-            for (int direction = 0; direction < 4; direction++) {
-                int otherX = Direction.x(pair.quantumRoomB.getX(), direction);
-                int otherY = Direction.y(pair.quantumRoomB.getY(), direction);
-                if(otherX < 0 || otherX >= quantumRooms.length || otherY < 0 || otherY >= quantumRooms.length) { continue; }
-                queue.add(new QuantumRoomPair(quantumRooms[pair.quantumRoomB.getY()][pair.quantumRoomB.getX()], quantumRooms[otherY][otherX], direction));
-            }
-        }
-    }*/
 }

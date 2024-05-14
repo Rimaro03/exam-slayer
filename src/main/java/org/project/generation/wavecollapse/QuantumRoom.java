@@ -37,9 +37,15 @@ public class QuantumRoom {
     public void collapse(Random rand) throws GenerationFailedException {
         if(entropy() == 0){ throw new GenerationFailedException("Zero entropy!"); }
 
-        int state = rand.nextInt(possibleStates.size());
+        ArrayList<State> weightedStates = new ArrayList<>();
+        for(State state : possibleStates) {
+            for (int i = 0; i < State.WEIGHTS[state.getValue()]; i++)
+                weightedStates.add(state);
+        }
+        int state = rand.nextInt(weightedStates.size());
+
         collapsed = true;
-        State chosen = possibleStates.get(state);
+        State chosen = weightedStates.get(state);
         possibleStates.clear();
         possibleStates.add(chosen);
     }
