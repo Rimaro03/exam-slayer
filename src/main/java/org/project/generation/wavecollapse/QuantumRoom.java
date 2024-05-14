@@ -39,7 +39,7 @@ public class QuantumRoom {
 
         ArrayList<State> weightedStates = new ArrayList<>();
         for(State state : possibleStates) {
-            for (int i = 0; i < State.WEIGHTS[state.getValue()]; i++)
+            for (int i = 0; i < GenerationSettings.WEIGHTS[state.getValue()]; i++)
                 weightedStates.add(state);
         }
         int state = rand.nextInt(weightedStates.size());

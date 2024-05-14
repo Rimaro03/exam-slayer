@@ -30,9 +30,6 @@ public class LevelGenerator {
     private final Random rand;
     private final int minRoomCount;
 
-    private static final int DISTANCE_FROM_START_WEIGHT = 10;
-    private static final int DISTANCE_FROM_BOSS_WEIGHT = 5;
-
     public LevelGenerator(int mapSize, long seed){
         this.mapSize = mapSize;
         this.rand = new Random(seed);
@@ -115,7 +112,7 @@ public class LevelGenerator {
     /* ------------------- ALGORITHMS ----------------------- */
     /** Returns the closest distance from all the boss rooms.  */
     private int distanceFromClosest(Room room, List<Room> bossRooms){
-        if(bossRooms.isEmpty()) { return 0; }
+        if(bossRooms.isEmpty()) { return Integer.MAX_VALUE; }
 
         int minDistance = Integer.MAX_VALUE;
         for(Room bossRoom : bossRooms){
@@ -139,7 +136,7 @@ public class LevelGenerator {
         double x = (double) distanceFromClosest(room, bossRooms);
         double y = (double) distanceFromStart;
 
-        return (float) (DISTANCE_FROM_BOSS_WEIGHT * Math.log(x + 1) + DISTANCE_FROM_START_WEIGHT * Math.log(y + 1));
+        return (float) (GenerationSettings.DISTANCE_FROM_BOSS_WEIGHT * Math.log(x) + GenerationSettings.DISTANCE_FROM_START_WEIGHT * Math.log(y));
     }
     /** Returns the head (start) of a graph of rooms. */
     private Room floodFill(QuantumRoom[][] quantumRooms, int x, int y) throws GenerationFailedException {
