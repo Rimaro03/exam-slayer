@@ -2,6 +2,7 @@ package org.project.generation;
 
 
 import lombok.Getter;
+import lombok.Setter;
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.GameObjectFactory;
 import org.project.componentsystem.components.colliders.BoxCollider;
@@ -11,6 +12,7 @@ import org.project.generation.wavecollapse.InvalidDirectionException;
 import org.project.utils.Vec2;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Room {
     public static final float SIZE = 15.75f;
@@ -38,13 +40,13 @@ public class Room {
         if(direction < 0 || direction >= 4) { throw new InvalidDirectionException(); }
         return adjacentRooms[direction];
     }
-    public int getType(){
-        int type = 0;
+    public int getState(){
+        int state = 0;
         for (int i = 0; i < 4; i++) {
             if(adjacentRooms[i] != null)
-                type +=  1 << i;
+                state +=  1 << i;
         }
-        return type;
+        return state;
     }
 
     public GameObject getGameObject(String name) {
@@ -64,9 +66,6 @@ public class Room {
 
 
     public void setEnabled(boolean enabled){
-        if(!initialized)
-            init();
-
         for(GameObject go : gameObjects){
             go.setEnabled(enabled);
         }
@@ -74,12 +73,12 @@ public class Room {
     /**
      * Initializes the room by creating the setting up the room game objects.
      */
-    private void init(){
+    public void init(InitType initType){
         if(initialized)
             throw new RuntimeException("Room already initialized");
 
         // Create room collider-sprite game object
-        GameObject roomGameObject = GameObjectFactory.createRoomGameObject(getType());
+        GameObject roomGameObject = GameObjectFactory.createRoomGameObject(getState());
         gameObjects.add(0, roomGameObject);
 
         // Create room door collider game objects
@@ -92,8 +91,25 @@ public class Room {
         }
 
         // IF U NEED TO ADD MORE GAME OBJECTS, ADD THEM HERE!!!
+        switch (initType){
+            case Start:
+                addGameObject(GameObjectFactory.createPlayer("Player"));
+                break;
+            case Boss:
+                addGameObject(GameObjectFactory.createBoss(0));
+                break;
+            case Normal:
+                 GameObject[] enemies = GameObjectFactory.createEnemies(new Random().nextInt(3) + 5);
+                 for (GameObject enemy : enemies) {
+                     addGameObject(enemy);
+                 }
+                 break;
+            default:
+                throw new RuntimeException("Invalid init type");
+        }
 
         initialized = true;
+        setEnabled(false);
     }
     public void updateGameObjects() {
         for (GameObject gameObject : gameObjects) {
@@ -136,5 +152,11 @@ public class Room {
         } else {
             return "  ";
         }
+    }
+
+    public enum InitType {
+        Start,
+        Boss,
+        Normal
     }
 }

@@ -54,32 +54,32 @@ public class LevelGenerator {
             }
         }
 
-        return new Level(startRoom);
+        return new Level(startRoom, bossRooms);
     }
 
     /* ---------------- BUILD SUB METHODS -------------------- */
     private Room generateRooms(){
         if(mapSize < 5){ throw new IllegalArgumentException("Map size must be at least 5 : [mapSize=" + mapSize + "]"); }
 
-        QuantumRoom[][] quantumRooms = new QuantumRoom[mapSize][mapSize];
+        SuperRoom[][] superRooms = new SuperRoom[mapSize][mapSize];
 
 
         int startX = 2 + rand.nextInt(mapSize - 4);
         int startY = 2 + rand.nextInt(mapSize - 4);
 
         try{
-            initializeQuantumRooms(quantumRooms);
-            collapseBoundaries(quantumRooms);
+            initializeQuantumRooms(superRooms);
+            collapseBoundaries(superRooms);
 
-            collapse(quantumRooms, State.ALL_DOORS, startX, startY);
+            collapse(superRooms, State.ALL_DOORS, startX, startY);
 
-            QuantumRoom chosenQuantumRoom = getQuantumRoomWithLowestEntropy(quantumRooms, rand);
-            while(chosenQuantumRoom != null) {
-                collapse(quantumRooms, chosenQuantumRoom.getX(), chosenQuantumRoom.getY());
+            SuperRoom chosenSuperRoom = getQuantumRoomWithLowestEntropy(superRooms, rand);
+            while(chosenSuperRoom != null) {
+                collapse(superRooms, chosenSuperRoom.getX(), chosenSuperRoom.getY());
 
-                chosenQuantumRoom = getQuantumRoomWithLowestEntropy(quantumRooms, rand);
+                chosenSuperRoom = getQuantumRoomWithLowestEntropy(superRooms, rand);
             }
-            return floodFill(quantumRooms, startX, startY);
+            return floodFill(superRooms, startX, startY);
 
         } catch (GenerationFailedException e) { // there are low cases where the generation can fail
             log.warn("Generation failed [{}], retrying...", e.getMessage());
@@ -139,37 +139,37 @@ public class LevelGenerator {
         return (float) (GenerationSettings.DISTANCE_FROM_BOSS_WEIGHT * Math.log(x) + GenerationSettings.DISTANCE_FROM_START_WEIGHT * Math.log(y));
     }
     /** Returns the head (start) of a graph of rooms. */
-    private Room floodFill(QuantumRoom[][] quantumRooms, int x, int y) throws GenerationFailedException {
-        Queue<QuantumRoom> quantumRoomQueue = new ArrayDeque<>();
-        Set<QuantumRoom> visited = new HashSet<>();
+    private Room floodFill(SuperRoom[][] superRooms, int x, int y) throws GenerationFailedException {
+        Queue<SuperRoom> superRoomQueue = new ArrayDeque<>();
+        Set<SuperRoom> visited = new HashSet<>();
 
-        quantumRoomQueue.add(quantumRooms[y][x]);
+        superRoomQueue.add(superRooms[y][x]);
         //BFS to find all connected quantum rooms and fill the room queue
-        while(!quantumRoomQueue.isEmpty()){
-            QuantumRoom currentQuantumRoom = quantumRoomQueue.poll();
+        while(!superRoomQueue.isEmpty()){
+            SuperRoom currentSuperRoom = superRoomQueue.poll();
 
-            visited.add(currentQuantumRoom);
+            visited.add(currentSuperRoom);
 
             for (int direction = 0; direction < 4; direction++) {
-                int otherX = Direction.x(currentQuantumRoom.getX(), direction);
-                int otherY = Direction.y(currentQuantumRoom.getY(), direction);
+                int otherX = Direction.x(currentSuperRoom.getX(), direction);
+                int otherY = Direction.y(currentSuperRoom.getY(), direction);
                 if(otherX < 0 || otherX >= mapSize || otherY < 0 || otherY >= mapSize) { continue; }
 
-                QuantumRoom nextQuantumRoom = quantumRooms[otherY][otherX];
-                if(!currentQuantumRoom.getState().hasDoor(direction) || visited.contains(nextQuantumRoom)) { continue; }
+                SuperRoom nextSuperRoom = superRooms[otherY][otherX];
+                if(!currentSuperRoom.getState().hasDoor(direction) || visited.contains(nextSuperRoom)) { continue; }
 
-                quantumRoomQueue.add(nextQuantumRoom);
+                superRoomQueue.add(nextSuperRoom);
             }
         }
         if(visited.size() < minRoomCount){ throw new GenerationFailedException("Not enough connected quantum rooms : " + visited.size()); }
         else { log.info("Map generated with {} rooms", visited.size());}
 
         Room[][] roomsCache = new Room[mapSize][mapSize]; // room matrix cache
-        for (QuantumRoom qRoom : visited) { // initialize all the connected rooms
+        for (SuperRoom qRoom : visited) { // initialize all the connected rooms
             roomsCache[qRoom.getY()][qRoom.getX()] = new Room(qRoom.getX(), qRoom.getY());
         }
 
-        for(QuantumRoom qRoom : visited){ // set all the connections
+        for(SuperRoom qRoom : visited){ // set all the connections
             Room current = roomsCache[qRoom.getY()][qRoom.getX()];
             for (int direction = 0; direction < 4; direction++) {
                 if(!qRoom.getState().hasDoor(direction)) { continue; }
@@ -184,7 +184,7 @@ public class LevelGenerator {
     }
 
     /** Returns a map of the distance from the start room of all other rooms using Dijkstra's algorithm. */
-    private HashMap<Room, Integer> getDistanceMap(Room startRoom){
+    private static HashMap<Room, Integer> getDistanceMap(Room startRoom){
         Queue<RoomDistancePair> queue = new PriorityQueue<>();
         HashMap<Room, Integer> distanceMap = new HashMap<>();
 
@@ -205,19 +205,38 @@ public class LevelGenerator {
 
         return distanceMap;
     }
+    public static HashSet<Room> getConnectedRooms(Room startRoom){
+        HashSet<Room> connectedRooms = new HashSet<>();
+        Queue<Room> queue = new ArrayDeque<>();
+        queue.add(startRoom);
+
+        while(!queue.isEmpty()){
+            Room currentRoom = queue.poll();
+            connectedRooms.add(currentRoom);
+
+            for (int dir = 0; dir < 4; dir++) {
+                Room adjacentRoom = currentRoom.getAdjacentRoom(dir);
+                if(adjacentRoom == null || connectedRooms.contains(adjacentRoom)) { continue; }
+
+                queue.add(adjacentRoom);
+            }
+        }
+
+        return connectedRooms;
+    }
     /** Returns the quantum room that has less possible states to collapse to. */
-    private QuantumRoom getQuantumRoomWithLowestEntropy(QuantumRoom[][] quantumRooms, Random rand){
-        ArrayList<QuantumRoom> candidates = new ArrayList<>();
+    private SuperRoom getQuantumRoomWithLowestEntropy(SuperRoom[][] superRooms, Random rand){
+        ArrayList<SuperRoom> candidates = new ArrayList<>();
         int lowestEntropy = Integer.MAX_VALUE;
-        for(QuantumRoom[] row : quantumRooms){
-            for(QuantumRoom quantumRoom : row){
-                if(quantumRoom.isCollapsed()) { continue; }
-                if(quantumRoom.entropy() < lowestEntropy){
-                    lowestEntropy = quantumRoom.entropy();
+        for(SuperRoom[] row : superRooms){
+            for(SuperRoom superRoom : row){
+                if(superRoom.isCollapsed()) { continue; }
+                if(superRoom.entropy() < lowestEntropy){
+                    lowestEntropy = superRoom.entropy();
                     candidates.clear();
-                    candidates.add(quantumRoom);
+                    candidates.add(superRoom);
                 }
-                else if(quantumRoom.entropy() == lowestEntropy){ candidates.add(quantumRoom); }
+                else if(superRoom.entropy() == lowestEntropy){ candidates.add(superRoom); }
             }
         }
         if(candidates.isEmpty()){ return null; }
@@ -317,66 +336,66 @@ public class LevelGenerator {
     /* -------------- WAVE COLLAPSE FUNCTIONS ---------------*/
 
     /** Initialize all the quantum rooms to max entropy quantum rooms (max number of possible states). */
-    private void initializeQuantumRooms(QuantumRoom[][] quantumRooms){
+    private void initializeQuantumRooms(SuperRoom[][] superRooms){
         for(int x = 0; x < mapSize; x++){
             for(int y = 0; y < mapSize; y++){
-                quantumRooms[y][x] = new QuantumRoom(x, y);
+                superRooms[y][x] = new SuperRoom(x, y);
             }
         }
     }
     /** Collapse the boundaries of the map to avoid the generation of rooms that are not connected to the map. */
-    private void collapseBoundaries(QuantumRoom[][] quantumRooms){
+    private void collapseBoundaries(SuperRoom[][] superRooms){
         for (int x = 0; x < mapSize; x++) {
-            collapse(quantumRooms, State.NO_DOOR, x, 0);
-            collapse(quantumRooms, State.NO_DOOR, x, mapSize - 1);
+            collapse(superRooms, State.NO_DOOR, x, 0);
+            collapse(superRooms, State.NO_DOOR, x, mapSize - 1);
         }
         for (int y = 0; y < mapSize; y++) {
-            collapse(quantumRooms, State.NO_DOOR, 0, y);
-            collapse(quantumRooms, State.NO_DOOR, mapSize - 1, y);
+            collapse(superRooms, State.NO_DOOR, 0, y);
+            collapse(superRooms, State.NO_DOOR, mapSize - 1, y);
         }
     }
 
     /** Collapses the quantum room at (x, y) and propagate the changes to all neighbours quantum rooms. */
-    private void collapse(QuantumRoom[][] quantumRooms, int x, int y){
-        quantumRooms[y][x].collapse(rand);
-        propagateWave(quantumRooms, x, y);
+    private void collapse(SuperRoom[][] superRooms, int x, int y){
+        superRooms[y][x].collapse(rand);
+        propagateWave(superRooms, x, y);
     }
 
     /** Collapses the quantum room at (x, y) to state and propagate the changes to all neighbours quantum rooms. */
-    private void collapse(QuantumRoom[][] quantumRooms, State state, int x, int y){
-        quantumRooms[y][x].collapse(state);
-        propagateWave(quantumRooms, x, y);
+    private void collapse(SuperRoom[][] superRooms, State state, int x, int y){
+        superRooms[y][x].collapse(state);
+        propagateWave(superRooms, x, y);
     }
 
     /** From the quantum room at (x, y) this method propagate (like a wave) the changes applied to (x, y) recursively,
      * updating all neighbours quantum room until the changes are not anymore influential and then the wave stops.
      */
-    private void propagateWave(QuantumRoom[][] quantumRooms, int x, int y){
+    private void propagateWave(SuperRoom[][] superRooms, int x, int y){
         // A is the quantum room at x, y
         // B is the quantum room at x + dx, y + dy
-        QuantumRoom quantumRoomA = quantumRooms[y][x];
-        QuantumRoom quantumRoomB;
+        SuperRoom superRoomA = superRooms[y][x];
+        SuperRoom superRoomB;
         for (int direction = 0; direction < 4; direction++)
         {
             int bX = Direction.x(x, direction);
             int bY = Direction.y(y, direction);
             if(bX < 0 || bX >= mapSize || bY < 0 || bY >= mapSize) { continue; }
 
-            quantumRoomB = quantumRooms[bY][bX];
+            superRoomB = superRooms[bY][bX];
 
             boolean hasChanged = false;
             int i = 0;
-            while(i < quantumRoomB.entropy()){
-                State stateB = quantumRoomB.getPossibleStates().get(i);
+            while(i < superRoomB.entropy()){
+                State stateB = superRoomB.getPossibleStates().get(i);
                 boolean noMatch = true;
-                for(State stateA : quantumRoomA.getPossibleStates()){
+                for(State stateA : superRoomA.getPossibleStates()){
                     if(State.canConnect(stateA, stateB, direction)){
                         noMatch = false;
                         break;
                     }
                 }
                 if(noMatch){ // if no state in A can connect to B, remove stateB from the possible states of B
-                    quantumRoomB.removeState(stateB);
+                    superRoomB.removeState(stateB);
                     hasChanged = true;
                 }
                 else { i++; }
@@ -385,7 +404,7 @@ public class LevelGenerator {
             // if the quantum roomB has not changed the wave has interrupted his propagation
             // in this direction
             if(hasChanged)
-                propagateWave(quantumRooms, bX, bY);
+                propagateWave(superRooms, bX, bY);
         }
 
     }

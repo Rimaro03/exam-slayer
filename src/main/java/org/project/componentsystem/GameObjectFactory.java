@@ -10,9 +10,17 @@ import org.project.componentsystem.components.colliders.DoorCollider;
 import org.project.generation.Room;
 import org.project.utils.Vec2;
 
+import java.util.Random;
+
 public class GameObjectFactory {
     public static GameObject createGameObject(String name) {
         return new GameObject(name);
+    }
+    private static GameObject createGameObject(GameObject obj, Component... components) {
+        for (Component component : components) {
+            obj.addComponent(component);
+        }
+        return obj;
     }
 
     public static GameObject createPlayer(String name) {
@@ -42,10 +50,25 @@ public class GameObjectFactory {
         roomCollider.getIgnoreColliders().add(doorCollider);
         return createGameObject(door, doorCollider);
     }
-    private static GameObject createGameObject(GameObject obj, Component... components) {
-        for (Component component : components) {
-            obj.addComponent(component);
+    public static GameObject[] createEnemies(int amount){
+        GameObject[] enemies = new GameObject[amount];
+        Random rand = new Random();
+
+        for (int i = 0; i < amount; i++) {
+            GameObject enemy = createGameObject("Enemy");
+            createGameObject(
+                    enemy,
+                    //new AnimatedSpriteRenderer(enemy, "resources/textures/characters/Enemy.png", 32, 32),
+                    new BoxCollider(enemy, new Vec2(2, 2), true, true)
+            );
+            enemy.setPosition(new Vec2((.5f - rand.nextFloat()) * (Room.SIZE - 2), (.5f - rand.nextFloat()) * (Room.SIZE - 2)));
+            enemies[i] = enemy;
         }
-        return obj;
+        return enemies;
+    }
+    public static GameObject createBoss(int id){
+        // TODO : Implement boss creation
+        GameObject boss = createGameObject("Boss");
+        return createGameObject(boss, new BoxCollider(boss, new Vec2(4, 4), true, true));
     }
 }

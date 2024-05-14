@@ -81,15 +81,13 @@ public class DoorCollider extends AbstractBoxCollider{
     @Override
     public void onCollide(Collider other) {
         // Change room if the player collides with the door collider
-        Game.getCurrentLevel().getCurrentRoom().getGameObjects().forEach(go -> {
-            if(go.getName().equals("Player")){
-                go.setPosition(new Vec2(
-                        Direction.x(0, direction) * (2.5f - Room.SIZE / 2),
-                        Direction.y(0, direction) * (2.5f - Room.SIZE / 2))
-                );
-            }
-        });
-        Game.getCurrentLevel().changeRoom(direction);
+        if(other.getGameObject().getName().equals("Player")){
+            other.getGameObject().setPosition(new Vec2(
+                    Direction.x(0, direction) * (2.5f - Room.SIZE / 2),
+                    Direction.y(0, direction) * (2.5f - Room.SIZE / 2))
+            );
+            Game.getCurrentLevel().changeRoom(direction);
+        }
 
     }
 

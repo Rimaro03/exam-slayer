@@ -7,11 +7,13 @@ import org.project.componentsystem.GameObjectFactory;
 import org.project.core.Physics;
 import org.project.core.Input;
 import org.project.core.rendering.Renderer;
+import org.project.generation.wavecollapse.LevelGenerator;
 import org.project.utils.Vec2;
 
 import java.awt.*;
 import java.util.ArrayDeque;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
@@ -19,12 +21,14 @@ import java.util.Set;
 public class Level {
     public static final int BOSS_ROOM_COUNT = 3;
     private Room currentRoom;
+    private final List<Room> bossRooms;
 
     /** This constructor get as input the start room of the map,
      * all other room are supposed to be linked to each other forming a graph of rooms.
      */
-    public Level(Room startRoom){
+    public Level(Room startRoom, List<Room> bossRooms){
         currentRoom = startRoom;
+        this.bossRooms = bossRooms;
     }
 
     public void changeRoom(int direction){
@@ -43,7 +47,13 @@ public class Level {
         }
     }
     public void init(){
-        currentRoom.addGameObject(GameObjectFactory.createPlayer("Player"));
+        Set<Room> rooms = LevelGenerator.getConnectedRooms(currentRoom);
+        for (Room room : rooms) {
+            if(room == currentRoom) { room.init(Room.InitType.Start); }
+            else if (bossRooms.contains(room)) { room.init(Room.InitType.Boss); }
+            else{ room.init(Room.InitType.Normal); }
+        }
+
         currentRoom.setEnabled(true);
     }
     public void update(){

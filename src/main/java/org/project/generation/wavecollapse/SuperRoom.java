@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.util.Random;
 
 @Getter
-public class QuantumRoom {
+public class SuperRoom {
     private static final int START_ENTROPY = 1 << 4; // 2^4 = 16 possible states
     private final ArrayList<State> possibleStates;
     private boolean collapsed;
     private final int x, y;
 
-    public QuantumRoom(int x, int y){
+    public SuperRoom(int x, int y){
         this.x = x;
         this.y = y;
         collapsed = false;
