@@ -30,19 +30,14 @@ public class LevelGenerator {
     private final Random rand;
     private final int minRoomCount;
 
-
-    private final int distanceFromStartBias;
-    private final int distanceFromBossBias;
     private static final int DISTANCE_FROM_START_WEIGHT = 10;
-    private static final int DISTANCE_FROM_BOSS_WEIGHT = 9;
+    private static final int DISTANCE_FROM_BOSS_WEIGHT = 5;
 
     public LevelGenerator(int mapSize, long seed){
         this.mapSize = mapSize;
         this.rand = new Random(seed);
 
         minRoomCount = mapSize * mapSize / 2;
-        distanceFromBossBias = mapSize / 4;
-        distanceFromStartBias = mapSize / 2;
 
         log.info("Level generator seed set to {}", seed);
 
@@ -100,16 +95,17 @@ public class LevelGenerator {
         Map<Room, Integer> distanceMap = getDistanceMap(startRoom);
 
         for (int i = 0; i < Level.BOSS_ROOM_COUNT; i++) {
-            int maxScore = Integer.MIN_VALUE;
+            float maxScore = Float.NEGATIVE_INFINITY;
             Room chosenRoom = null;
             for(Map.Entry<Room, Integer> roomToDistance : distanceMap.entrySet()){
-                int currentScore = getBossRoomScore(roomToDistance.getKey(), roomToDistance.getValue(), bossRooms);
+                float currentScore = getBossRoomScore(roomToDistance.getKey(), roomToDistance.getValue(), bossRooms);
 
                 if(currentScore > maxScore){
                     maxScore = currentScore;
                     chosenRoom = roomToDistance.getKey();
                 }
             }
+            //printBossScoreMap(startRoom, bossRooms);
             bossRooms.add(chosenRoom);
         }
 
@@ -137,13 +133,13 @@ public class LevelGenerator {
         return distanceMap.get(b);
     }
     /** Returns the score of a room to be a boss room.
-     * @return (BossDist - BossBias) * BossWeight + (StartDist - StartBias) * StartWeight
+     * @return log(BossDist) * BossWeight + log(StartDist) * StartWeight
      * */
-    private int getBossRoomScore(Room room, int distanceFromStart, List<Room> bossRooms){
-        int score = 0;
-        score += (distanceFromClosest(room, bossRooms) - distanceFromBossBias) * DISTANCE_FROM_BOSS_WEIGHT;
-        score += (distanceFromStart - distanceFromStartBias) * DISTANCE_FROM_START_WEIGHT;
-        return score;
+    private float getBossRoomScore(Room room, int distanceFromStart, List<Room> bossRooms){
+        double x = (double) distanceFromClosest(room, bossRooms);
+        double y = (double) distanceFromStart;
+
+        return (float) (DISTANCE_FROM_BOSS_WEIGHT * Math.log(x + 1) + DISTANCE_FROM_START_WEIGHT * Math.log(y + 1));
     }
     /** Returns the head (start) of a graph of rooms. */
     private Room floodFill(QuantumRoom[][] quantumRooms, int x, int y) throws GenerationFailedException {
@@ -192,7 +188,7 @@ public class LevelGenerator {
 
     /** Returns a map of the distance from the start room of all other rooms using Dijkstra's algorithm. */
     private HashMap<Room, Integer> getDistanceMap(Room startRoom){
-        PriorityQueue<RoomDistancePair> queue = new PriorityQueue<>();
+        Queue<RoomDistancePair> queue = new PriorityQueue<>();
         HashMap<Room, Integer> distanceMap = new HashMap<>();
 
         queue.add(new RoomDistancePair(startRoom, 0));
@@ -303,12 +299,12 @@ public class LevelGenerator {
         String[][] strMat = new String[mapSize][mapSize];
         for (int i = 0; i < mapSize; i++) {
             for (int j = 0; j < mapSize; j++) {
-                strMat[i][j] = "      ";
+                strMat[i][j] = "          ";
             }
         }
         for(Map.Entry<Room, Integer> entry : distanceMap.entrySet()){
             strMat[entry.getKey().getY()][entry.getKey().getX()] = getBossRoomScore(entry.getKey(), entry.getValue(), bossRooms) + "";
-            while (strMat[entry.getKey().getY()][entry.getKey().getX()].length() < 6) {
+            while (strMat[entry.getKey().getY()][entry.getKey().getX()].length() < 10) {
                 strMat[entry.getKey().getY()][entry.getKey().getX()] += " ";
             }
         }
