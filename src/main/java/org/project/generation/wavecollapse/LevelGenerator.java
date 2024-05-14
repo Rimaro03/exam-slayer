@@ -11,21 +11,30 @@ import java.util.*;
 public class LevelGenerator {
     private final int mapSize;
     private final Random rand;
+    private final int minRoomCount;
+    private final int minBossRoomDistance;
+
     public LevelGenerator(int mapSize, long seed){
         this.mapSize = mapSize;
         this.rand = new Random(seed);
+
+        minRoomCount = mapSize * mapSize / 4;
+        minBossRoomDistance = mapSize / 2;
+
+        log.info("Level generator seed set to {}", seed);
+
     }
     /**
      * This method uses the wave collapse algorithm to generate a new level.
      */
     public Level build(){
+
         Room startRoom = generateRooms();
         Room[] bossRooms = getBossRooms(startRoom);
 
-        log.info("Start room : {} {}", startRoom.getX(), startRoom.getY());
-
-        for(Room bossRoom : bossRooms)
-            log.info("Boss room : {} {}", bossRoom.getX(), bossRoom.getY());
+        if(Debug.ENABLED) {
+            printMap(startRoom, bossRooms);
+        }
 
         return new Level(startRoom);
     }
@@ -60,43 +69,118 @@ public class LevelGenerator {
 
     /** Returns the room that is the farthest from the start room using a bfs search. */
     private Room[] getBossRooms(Room startRoom){
-        Stack<Room> queue = new Stack<>();
-        Map<Room, Integer> visited = new HashMap<>();
-        ArrayList<Room> allRooms = new ArrayList<>();
+        Room[] bossRooms = new Room[Level.BOSS_ROOM_COUNT];
+
+        Queue<Room> queue = new ArrayDeque<>();
+        Map<Room, Integer> visited = new HashMap<>(); // visited keeps track of the distance from the start room
 
         queue.add(startRoom);
         visited.put(startRoom, 0);
-        while(!queue.isEmpty()){
-            Room currentRoom = queue.pop();
 
-            allRooms.add(currentRoom);
+        while(!queue.isEmpty()){
+            Room currentRoom = queue.poll();
 
             for(int direction = 0; direction < 4; direction++){
                 Room adjacentRoom = currentRoom.getAdjacentRoom(direction);
-                if(adjacentRoom == null || visited.containsKey(adjacentRoom)) { continue; }
+                if(adjacentRoom == null) { continue; }
 
-                queue.push(adjacentRoom);
-                visited.put(adjacentRoom, visited.get(currentRoom) + 1);
+                int distance = visited.get(currentRoom) + 1;
+
+                if(!visited.containsKey(adjacentRoom) || visited.get(adjacentRoom) > distance) {
+                    visited.put(adjacentRoom, distance);
+                    queue.add(adjacentRoom);
+                }
+
             }
         }
 
-        Room[] bossRooms = new Room[Level.BOSS_ROOM_COUNT];
-        int step = allRooms.size() / Level.BOSS_ROOM_COUNT;
         for (int i = 0; i < Level.BOSS_ROOM_COUNT; i++) {
-            Room chosen = null;
             int maxDistance = 0;
-            int start = i * step;
-            int end = i != Level.BOSS_ROOM_COUNT - 1 ? (i + 1) * step : allRooms.size();
-            for(Room room : allRooms.subList(start, end)){
-                if(visited.get(room) > maxDistance){
-                    maxDistance = visited.get(room);
-                    chosen = room;
+            for(Map.Entry<Room, Integer> roomToDistance : visited.entrySet()){
+                if(roomToDistance.getValue() > maxDistance){
+                    boolean isDistantEnoughFromBossRooms = true; // check if the room is distant enough from the other boss rooms
+                    for (int j = 0; j < i; j++) {
+                        if(distance(bossRooms[j], roomToDistance.getKey()) < minBossRoomDistance){
+                            isDistantEnoughFromBossRooms = false;
+                            break;
+                        }
+                    }
+                    if(!isDistantEnoughFromBossRooms) { continue; }
+
+                    maxDistance = roomToDistance.getValue();
+                    bossRooms[i] = roomToDistance.getKey();
                 }
             }
-            bossRooms[i] = chosen;
         }
 
         return bossRooms;
+    }
+    private int distance(Room a, Room b){
+        Queue<Room> queue = new ArrayDeque<>();
+        Map<Room, Integer> visited = new HashMap<>();
+
+        queue.add(a);
+        visited.put(a, 0);
+        while(!queue.isEmpty()){
+            Room currentRoom = queue.poll();
+            if(currentRoom == b) { return visited.get(currentRoom); }
+
+            for(int direction = 0; direction < 4; direction++){
+                Room adjacentRoom = currentRoom.getAdjacentRoom(direction);
+                if(adjacentRoom == null) { continue; }
+
+                int distance = visited.get(currentRoom) + 1;
+
+                if(!visited.containsKey(adjacentRoom) || visited.get(adjacentRoom) > distance) {
+                    visited.put(adjacentRoom, distance);
+                    queue.add(adjacentRoom);
+                }
+            }
+        }
+        throw new RuntimeException("Rooms are not connected");
+    }
+    private void printMap(Room startRoom, Room[] bossRooms){
+        Room[][] rooms = new Room[mapSize][mapSize];
+        Queue<Room> queue = new ArrayDeque<>();
+        queue.add(startRoom);
+        while(!queue.isEmpty()){
+            Room currentRoom = queue.poll();
+
+            rooms[currentRoom.getY()][currentRoom.getX()] = currentRoom;
+            //System.out.println("Added : " + currentRoom.getX() + " " + currentRoom.getY());
+
+            for(int direction = 0; direction < 4; direction++){
+                Room adjacentRoom = currentRoom.getAdjacentRoom(direction);
+                if(adjacentRoom == null || rooms[adjacentRoom.getY()][adjacentRoom.getX()] != null) { continue; }
+
+                queue.add(adjacentRoom);
+            }
+        }
+
+        for (int i = 0; i < mapSize; i++) {
+            for (int j = 0; j < mapSize; j++) {
+                if(rooms[i][j] == null) {
+                    System.out.print("  ");
+                    continue;
+                }
+
+                boolean continue_ = false;
+                for(Room bossRoom : bossRooms){
+                    if(/*rooms[i][j].getX() == bossRoom.getX() && rooms[i][j].getY() == bossRoom.getY()*/ rooms[i][j] == bossRoom){
+                        System.out.print("B ");
+                        continue_ = true;
+                        break;
+                    }
+                }
+                if(continue_) { continue; }
+
+                if(rooms[i][j] == startRoom)
+                    System.out.print("S ");
+                else
+                    System.out.print(rooms[i][j]);
+            }
+            System.out.println();
+        }
     }
 
     /* -------------- WAVE COLLAPSE FUNCTIONS ---------------*/
@@ -123,18 +207,13 @@ public class LevelGenerator {
 
     /** Returns the head (start) of a graph of rooms. */
     private Room floodFill(QuantumRoom[][] quantumRooms, int x, int y) throws GenerationFailedException {
-        Room[][] roomsCache = new Room[mapSize][mapSize]; // room matrix cache
-
         Queue<QuantumRoom> quantumRoomQueue = new ArrayDeque<>();
         Set<QuantumRoom> visited = new HashSet<>();
 
         quantumRoomQueue.add(quantumRooms[y][x]);
-        roomsCache[y][x] = new Room(x, y); // create start room
-
         //BFS to find all connected quantum rooms and fill the room queue
         while(!quantumRoomQueue.isEmpty()){
             QuantumRoom currentQuantumRoom = quantumRoomQueue.poll();
-            Room currentRoom = roomsCache[currentQuantumRoom.getY()][currentQuantumRoom.getX()]; // supposed to be already created
 
             visited.add(currentQuantumRoom);
 
@@ -147,22 +226,24 @@ public class LevelGenerator {
                 if(!currentQuantumRoom.getState().hasDoor(direction) || visited.contains(nextQuantumRoom)) { continue; }
 
                 quantumRoomQueue.add(nextQuantumRoom);
-                Room nextRoom = new Room(otherX, otherY);
-                roomsCache[otherY][otherX] = nextRoom; // add room to cache
-
-                currentRoom.setAdjacentRoom(direction, nextRoom);
-                nextRoom.setAdjacentRoom(Direction.opposite(direction), currentRoom);
             }
         }
-        if(visited.size() < mapSize * mapSize / 4){ throw new GenerationFailedException("Not enough connected quantum rooms : " + visited.size()); }
+        if(visited.size() < minRoomCount){ throw new GenerationFailedException("Not enough connected quantum rooms : " + visited.size()); }
         else { log.info("Map generated with {} rooms", visited.size());}
 
-        if(Debug.ENABLED){
-            for (int i = 0; i < mapSize; i++) {
-                for (int j = 0; j < mapSize; j++) {
-                    System.out.print(roomsCache[i][j] == null ? "  " : roomsCache[i][j]);
-                }
-                System.out.println();
+        Room[][] roomsCache = new Room[mapSize][mapSize]; // room matrix cache
+        for (QuantumRoom qRoom : visited) { // initialize all the connected rooms
+            roomsCache[qRoom.getY()][qRoom.getX()] = new Room(qRoom.getX(), qRoom.getY());
+        }
+
+        for(QuantumRoom qRoom : visited){ // set all the connections
+            Room current = roomsCache[qRoom.getY()][qRoom.getX()];
+            for (int direction = 0; direction < 4; direction++) {
+                if(!qRoom.getState().hasDoor(direction)) { continue; }
+
+                int adjacentX = Direction.x(qRoom.getX(), direction);
+                int adjacentY = Direction.y(qRoom.getY(), direction);
+                current.setAdjacentRoom(direction, roomsCache[adjacentY][adjacentX]);
             }
         }
 
