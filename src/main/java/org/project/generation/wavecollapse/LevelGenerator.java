@@ -46,20 +46,10 @@ public class LevelGenerator {
 
         Room startRoom = generateRooms();
         List<Room> bossRooms = getBossRooms(startRoom);
+        setRoomsInitType(startRoom, bossRooms);
 
-        if(Debug.ENABLED) {
-            printMap(startRoom, bossRooms);
-            for(Room bossRoom : bossRooms){
-                log.info("Boss room at [x={}, y={}]", bossRoom.getX(), bossRoom.getY());
-            }
-        }
-        Set<Room> allRooms = getConnectedRooms(startRoom);
-        for (Room room : allRooms) {
-            if(room == startRoom) { room.init(Room.InitType.Start); }
-            else if (bossRooms.contains(room)) { room.init(Room.InitType.Boss); }
-            else{ room.init(Room.InitType.Normal); }
+        if(Debug.ENABLED) {printMap(startRoom, bossRooms);}
 
-        }
         return new Level(startRoom, bossRooms);
     }
 
@@ -112,6 +102,14 @@ public class LevelGenerator {
         }
 
         return bossRooms;
+    }
+    private void setRoomsInitType(Room startRoom, List<Room> bossRooms){
+        Set<Room> allRooms = getConnectedRooms(startRoom);
+        for (Room room : allRooms) {
+            if(room == startRoom) { room.setInitType(Room.InitType.Start); }
+            else if (bossRooms.contains(room)) { room.setInitType(Room.InitType.Boss); }
+            else{ room.setInitType(Room.InitType.Normal); }
+        }
     }
 
     /* ------------------- ALGORITHMS ----------------------- */

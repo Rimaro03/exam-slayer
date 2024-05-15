@@ -51,8 +51,7 @@ public class GameObject {
      */
     public void addComponent(Component component) {
         if (!components.contains(component)) {
-            log.info("Starting {} component", component.toString());
-            component.start();
+            component.setEnabled(enabled);
             components.add(component);
         }
     }
@@ -62,8 +61,8 @@ public class GameObject {
      * @param component The Component to remove
      */
     public void removeComponent(Component component) {
-        if (components.contains(component)){
-            component.destory();
+        if(components.contains(component)) {
+            component.setEnabled(false);
             components.remove(component);
         }
     }
@@ -88,6 +87,7 @@ public class GameObject {
     public void start() {
         for (Component component : components) {
             component.start();
+            log.info("Destroyed component: {} on GameObject: {}", component.getClass().getSimpleName(), name);
         }
     }
 
@@ -97,6 +97,13 @@ public class GameObject {
     public void update() {
         for (Component component : components) {
             component.update();
+        }
+    }
+
+    public void destroy() {
+        for (Component component : components) {
+            component.destory();
+            log.info("Destroyed component: {} on GameObject: {}", component.getClass().getSimpleName(), name);
         }
     }
 

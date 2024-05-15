@@ -46,6 +46,14 @@ public class Level {
             throw new RuntimeException("No room in that direction");
         }
     }
+
+    public void instantiateGameObject(GameObject gameObject, Vec2 position){
+        gameObject.setPosition(position);
+        currentRoom.addGameObject(gameObject);
+    }
+    public void destroyGameObject(GameObject gameObject){
+        currentRoom.removeGameObject(gameObject);
+    }
     public void init(){
         currentRoom.setEnabled(true);
     }
