@@ -7,10 +7,12 @@ import java.util.*;
 
 
 /**
- * TODO : add description
+ * This class delivers all the functionalities to generate
+ * a map using the Wave Function Collapse algorithm.
  */
 @Log4j2
 public class WaveFunctionCollapse {
+    private WaveFunctionCollapse() { }
 
     /** Initialize all the quantum rooms to max entropy quantum rooms (max number of possible states).
      * @param mapSize The size of the map.

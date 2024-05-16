@@ -9,7 +9,7 @@ import java.util.*;
 public class Algorithm {
     private Algorithm() { }
 
-    /** @return A map of the distance from the start room of all other rooms using a bfs search.
+    /** @return A map of rooms and their distance from the reference room.
      * @param startRoom The reference room.
      * */
     public static HashMap<Room, Integer> getDistanceMap(Room startRoom){

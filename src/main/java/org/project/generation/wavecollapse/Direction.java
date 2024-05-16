@@ -4,6 +4,7 @@ package org.project.generation.wavecollapse;
  * 0 = UP, 1 = RIGHT, 2 = DOWN, 3 = LEFT
  * */
 public class Direction {
+    private Direction() { }
     /** Returns the opposite direction. */
     public static int opposite(int direction){ return (direction + 2) % 4; }
     /** Returns x moved over direction of 1 unit. */
