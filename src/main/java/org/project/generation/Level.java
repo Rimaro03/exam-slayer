@@ -3,11 +3,9 @@ package org.project.generation;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
-import org.project.componentsystem.GameObjectFactory;
 import org.project.core.Physics;
 import org.project.core.Input;
 import org.project.core.rendering.Renderer;
-import org.project.generation.wavecollapse.LevelGenerator;
 import org.project.utils.Vec2;
 
 import java.awt.*;
@@ -17,6 +15,10 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
+/**
+ * A class representing a playable level, it contains all the rooms as a linked graph of rooms.
+ * Only one room can be enabled at once, and that is the room the player is currently inside.
+ */
 @Getter @Log4j2
 public class Level {
     public static final int BOSS_ROOM_COUNT = 3;
@@ -31,6 +33,10 @@ public class Level {
         this.bossRooms = bossRooms;
     }
 
+    /**
+     * Change the current room to the one in the specified direction relative to the current.
+     * @param direction The direction of the room to change to.
+     */
     public void changeRoom(int direction){
         Room next = currentRoom.getAdjacentRoom(direction);
 
@@ -47,50 +53,35 @@ public class Level {
         }
     }
 
+    /**
+     * Instantiate a game object in the current room at the specified position.
+     * @param gameObject The game object to instantiate.
+     * @param position The position to instantiate the game object at.
+     */
     public void instantiateGameObject(GameObject gameObject, Vec2 position){
         gameObject.setPosition(position);
         currentRoom.addGameObject(gameObject);
     }
+
+    /**
+     * Destroy a game object in the current room.
+     * @param gameObject The game object to destroy.
+     */
     public void destroyGameObject(GameObject gameObject){
         currentRoom.removeGameObject(gameObject);
     }
+
+    /**
+     * Initialize the level by enabling the start room.
+     */
     public void init(){
         currentRoom.setEnabled(true);
     }
+    /**
+     * Performs the game loop on the current room and updates the physics engine.
+     */
     public void update(){
         currentRoom.updateGameObjects();
         Physics.update();
-//        if(Debug.ENABLED) { debugMap(); }
-    }
-
-    private void debugMap(){
-        int x = -currentRoom.getX();
-        int y = -currentRoom.getY();
-
-        Queue<Room> queue = new ArrayDeque<>();
-        Set<Room> visited = new HashSet<>();
-        queue.add(currentRoom);
-
-        while(!queue.isEmpty()){
-            Room room = queue.poll();
-
-            Renderer.addRectToRenderQueue(new Vec2(x + room.getX(), y + room.getY()).multiply(4), new Vec2(2, 2), Color.BLUE, -2);
-            visited.add(room);
-
-            for (int i = 0; i < 4; i++) {
-                if(room.getAdjacentRoom(i) == null || visited.contains(room.getAdjacentRoom(i))) { continue; }
-                queue.add(room.getAdjacentRoom(i));
-            }
-        }
-
-        Renderer.addCircleToRenderQueue(new Vec2(0, 1).multiply(4), 1, currentRoom.getAdjacentRoom(0) != null ? Color.GREEN : Color.RED, 2);
-        Renderer.addCircleToRenderQueue(new Vec2(1, 0).multiply(4), 1, currentRoom.getAdjacentRoom(1) != null ? Color.GREEN : Color.RED, 2);
-        Renderer.addCircleToRenderQueue(new Vec2(0, -1).multiply(4), 1, currentRoom.getAdjacentRoom(2) != null ? Color.GREEN : Color.RED, 2);
-        Renderer.addCircleToRenderQueue(new Vec2(-1, 0).multiply(4), 1, currentRoom.getAdjacentRoom(3) != null ? Color.GREEN : Color.RED, 2);
-
-        if(Input.isKeyPressed(Input.KEY_UP) && currentRoom.getAdjacentRoom(0) != null) { changeRoom(0); }
-        if(Input.isKeyPressed(Input.KEY_RIGHT) && currentRoom.getAdjacentRoom(1) != null) { changeRoom(1); }
-        if(Input.isKeyPressed(Input.KEY_DOWN) && currentRoom.getAdjacentRoom(2) != null) { changeRoom(2); }
-        if(Input.isKeyPressed(Input.KEY_LEFT) && currentRoom.getAdjacentRoom(3) != null) { changeRoom(3); }
     }
 }

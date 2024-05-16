@@ -9,18 +9,21 @@ import org.project.componentsystem.components.colliders.BoxCollider;
 import org.project.componentsystem.components.colliders.Collider;
 import org.project.generation.wavecollapse.Direction;
 import org.project.generation.wavecollapse.InvalidDirectionException;
+import org.project.generation.wavecollapse.RoomState;
 import org.project.utils.Vec2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
+/**
+ * A room is a container of game objects that can be enabled and disabled.
+ * It also contains 4 pointers to his neighbour rooms.
+ */
 public class Room {
     public static final float SIZE = 15.75f;
-    @Getter
     private final ArrayList<GameObject> gameObjects;
     private final Room[] adjacentRooms;
-    @Getter
     private boolean initialized;
     @Setter
     private InitType initType;
@@ -35,14 +38,27 @@ public class Room {
 
     }
 
+    /**
+     * @param direction The direction of the adjacent room. {@link Direction}
+     * @param room The room to set as adjacent.
+     */
     public void setAdjacentRoom(int direction, Room room) {
         if(direction < 0 || direction >= 4) { throw new InvalidDirectionException(); }
         adjacentRooms[direction] = room;
     }
+    /**
+     * @param direction The direction of the adjacent room. {@link Direction}
+     * @return The adjacent room in the specified direction, null if there isn't.
+     */
     public Room getAdjacentRoom(int direction) {
         if(direction < 0 || direction >= 4) { throw new InvalidDirectionException(); }
         return adjacentRooms[direction];
     }
+
+    /**
+     * @return The state of the room as an integer representing
+     * the configuration of door {@link RoomState}
+     */
     public int getState(){
         int state = 0;
         for (int i = 0; i < 4; i++) {
@@ -52,6 +68,10 @@ public class Room {
         return state;
     }
 
+    /**
+     * @param name The name of the GameObject to get
+     * @return The GameObject with the specified name, null if it doesn't exist.
+     */
     public GameObject getGameObject(String name) {
         for (GameObject gameObject : gameObjects) {
             if (gameObject.getName().equals(name)) {
@@ -66,6 +86,7 @@ public class Room {
      */
     public void addGameObject(GameObject gameObject) {
         gameObjects.add(gameObject);
+        gameObject.setEnabled(true);
         gameObject.start();
     }
     /**
@@ -74,10 +95,16 @@ public class Room {
      */
     public void removeGameObject(GameObject gameObject) {
         gameObjects.remove(gameObject);
+        gameObject.setEnabled(false);
         gameObject.destroy();
     }
 
 
+    /**
+     * sets the room enabled status to the specified and applies
+     * it to all the game objects of the room.
+     * @param enabled the status to set the room to.
+     */
     public void setEnabled(boolean enabled){
         for(GameObject go : gameObjects){
             go.setEnabled(enabled);
@@ -87,7 +114,9 @@ public class Room {
             init();
     }
     /**
-     * Initializes the room by creating the setting up the room game objects.
+     * Spawns all the starting objects of the room like walls and doors,
+     * plus all the game objects specified by its InitType
+     * (boss if is a boss room, player if is the start room, etc...)
      */
     public void init(){
         if(initialized)
@@ -128,6 +157,9 @@ public class Room {
 
         initialized = true;
     }
+    /**
+     * Updates all the game objects of the room
+     */
     public void updateGameObjects() {
         for (GameObject gameObject : gameObjects) {
             gameObject.update();
@@ -170,9 +202,21 @@ public class Room {
         }
     }
 
+    /**
+     * The type of initialization of the room :
+     */
     public enum InitType {
+        /**
+         * The room is the start room of the level.
+         */
         Start,
+        /**
+         * The room is a boss room.
+         */
         Boss,
+        /**
+         * The room is a normal room with normal enemies.
+         */
         Normal
     }
 }

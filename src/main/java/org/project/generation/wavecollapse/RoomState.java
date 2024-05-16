@@ -8,13 +8,13 @@ import lombok.Getter;
  * 0 is door closed, 1 is door open.
  * */
 @Getter
-public class State {
-    public static final State NO_DOOR = new State((byte)0b0000);
-    public static final State ALL_DOORS = new State((byte)0b1111);
+public class RoomState {
+    public static final RoomState NO_DOOR = new RoomState((byte)0b0000);
+    public static final RoomState ALL_DOORS = new RoomState((byte)0b1111);
 
     private final byte value;
 
-    public State(byte value){
+    public RoomState(byte value){
         this.value = value;
     }
 
@@ -22,7 +22,7 @@ public class State {
     public boolean hasDoor(int direction) { return (value & (1 << direction)) != 0; }
 
     /** Returns true if from A to B all states have an open door. */
-    public static boolean canConnect(State stateA, State stateB, int directionFromAtoB){
+    public static boolean canConnect(RoomState stateA, RoomState stateB, int directionFromAtoB){
         return stateA.hasDoor(directionFromAtoB) == stateB.hasDoor(Direction.opposite(directionFromAtoB));
     }
 
@@ -30,8 +30,8 @@ public class State {
     /* ---------------- OBJECT METHODS -----------------*/
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof State){
-            return value == ((State) obj).value;
+        if(obj instanceof RoomState){
+            return value == ((RoomState) obj).value;
         }
         return false;
     }

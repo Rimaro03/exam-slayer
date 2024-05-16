@@ -6,6 +6,8 @@ import org.project.generation.wavecollapse.LevelGenerator;
 
 import java.util.Random;
 
+
+
 @Getter
 public class Game {
     private static Game currentGame;
