@@ -7,6 +7,7 @@ import org.project.componentsystem.GameObject;
 import org.project.componentsystem.GameObjectFactory;
 import org.project.componentsystem.components.colliders.BoxCollider;
 import org.project.componentsystem.components.colliders.Collider;
+import org.project.core.Game;
 import org.project.generation.wavecollapse.Direction;
 import org.project.generation.wavecollapse.InvalidDirectionException;
 import org.project.generation.wavecollapse.RoomState;
@@ -123,19 +124,20 @@ public class Room {
             throw new RuntimeException("Room already initialized");
 
         // Create room collider-sprite game object
-        GameObject roomGameObject = GameObjectFactory.createRoomGameObject(getState());
+        GameObject roomGameObject = GameObjectFactory.createRoomGameObject();
         gameObjects.add(roomGameObject);
 
         // Create room door collider game objects
         for (int direction = 0; direction < 4; direction++) {
+            // direction 0 = up, 1 = right, 2 = down, 3 = left
             if(adjacentRooms[direction] == null) { continue; }
 
             GameObject door = GameObjectFactory.createDoorGameObject(direction, (Collider) roomGameObject.getComponent(BoxCollider.class));
-            door.setPosition(door.getPosition().add(new Vec2(Direction.x(0, direction) * (SIZE * .5f - 0.2f), Direction.y(0, direction) * (SIZE * 0.5f))));
+            door.setPosition(door.getPosition().add(new Vec2(Direction.x(0, direction) * (SIZE * .5f - 1.5f), Direction.y(0, direction) * (SIZE * 0.5f - 1.5f))));
             gameObjects.add(door);
         }
 
-        // IF U NEED TO ADD MORE GAME OBJECTS, ADD THEM HERE!!!
+        // IF YOU NEED TO ADD MORE GAME OBJECTS, ADD THEM HERE!!!
         switch (initType){
             case Start:
                 gameObjects.add(GameObjectFactory.createPlayer("Player"));
@@ -144,8 +146,16 @@ public class Room {
                 gameObjects.add(GameObjectFactory.createBoss(0));
                 break;
             case Normal:
-                 GameObject[] enemies = GameObjectFactory.createEnemies(new Random().nextInt(3) + 5);
+                 GameObject[] enemies = GameObjectFactory.createEnemies(new Random().nextInt(2) + 4);
                  gameObjects.addAll(Arrays.asList(enemies));
+                 if(!Game.all_items.isEmpty()) {
+                    GameObject item = GameObjectFactory.createPhysicalItem(
+                            new Vec2(1, 1),
+                            Game.all_items.get(0)
+                    );
+                    gameObjects.add(item);
+                    Game.all_items.remove(0);
+                 }
                  break;
             default:
                 throw new RuntimeException("Invalid init type");

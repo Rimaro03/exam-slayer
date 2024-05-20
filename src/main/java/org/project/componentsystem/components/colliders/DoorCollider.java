@@ -83,8 +83,8 @@ public class DoorCollider extends AbstractBoxCollider{
         // Change room if the player collides with the door collider
         if(other.getGameObject().getName().equals("Player")){
             other.getGameObject().setPosition(new Vec2(
-                    Direction.x(0, direction) * (2.5f - Room.SIZE / 2),
-                    Direction.y(0, direction) * (2.5f - Room.SIZE / 2))
+                    Direction.x(0, direction) * (2.5f - Room.SIZE / 2 + 1.5f),
+                    Direction.y(0, direction) * (2.5f - Room.SIZE / 2 + 1.5f))
             );
             Game.getCurrentLevel().changeRoom(direction);
         }
@@ -92,7 +92,7 @@ public class DoorCollider extends AbstractBoxCollider{
     }
 
     public void draw(){
-        if(Debug.ENABLED)
+        if(Debug.ENABLED && isEnabled())
             Renderer.addRectToRenderQueue(
                     getGameObject().getPosition(),
                     getSize(),

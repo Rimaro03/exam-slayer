@@ -14,7 +14,7 @@ import java.util.HashMap;
 @Setter @Getter @Log4j2
 public class PlayerStats extends Component {
     private Stats stats;
-    private HashMap<Item, Integer> inventory;
+    private HashMap<Item, Integer> inventory = new HashMap<>();
     private Vec2 position = new Vec2(4, 5);
 
     /**

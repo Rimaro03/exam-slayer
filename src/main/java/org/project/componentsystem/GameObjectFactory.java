@@ -1,13 +1,12 @@
 package org.project.componentsystem;
 
-import org.project.componentsystem.components.AnimatedSpriteRenderer;
-import org.project.componentsystem.components.Component;
-import org.project.componentsystem.components.PlayerController;
-import org.project.componentsystem.components.PlayerStats;
+import org.project.componentsystem.components.*;
 import org.project.componentsystem.components.colliders.BoxCollider;
 import org.project.componentsystem.components.colliders.Collider;
 import org.project.componentsystem.components.colliders.DoorCollider;
+import org.project.componentsystem.components.colliders.ItemCollider;
 import org.project.generation.Room;
+import org.project.items.Item;
 import org.project.utils.Vec2;
 
 import java.util.Random;
@@ -34,21 +33,30 @@ public class GameObjectFactory {
                 new BoxCollider(player, new Vec2(1.2f, 2), true, true)
         );
     }
-    public static GameObject createRoomGameObject(int type){
+    public static GameObject createRoomGameObject(){
         GameObject room = createGameObject("Room");
 
         return createGameObject(
                 room,
-                new AnimatedSpriteRenderer(room, "resources/textures/map/map_" + type + ".png", 256, 256),
+                new AnimatedSpriteRenderer(room, "resources/textures/map/empty_map.png", 256, 256),
                 new BoxCollider(room, new Vec2(Room.SIZE - 2.4f, Room.SIZE - 2), false, false)
         );
     }
     public static GameObject createDoorGameObject(int direction, Collider roomCollider){
         GameObject door = createGameObject("Door");
         DoorCollider doorCollider = new DoorCollider(door, new Vec2(2, 2), false, true, direction);
+        AnimatedSpriteRenderer renderer = new AnimatedSpriteRenderer(
+                door,
+                "resources/textures/map/open_door.png",
+                25,
+                25
+        );
+        renderer.rotate(direction * 90);
+
+
         doorCollider.getIgnoreColliders().add(roomCollider);
         roomCollider.getIgnoreColliders().add(doorCollider);
-        return createGameObject(door, doorCollider);
+        return createGameObject(door, doorCollider, renderer);
     }
     public static GameObject[] createEnemies(int amount){
         GameObject[] enemies = new GameObject[amount];
@@ -70,5 +78,15 @@ public class GameObjectFactory {
         // TODO : Implement boss creation
         GameObject boss = createGameObject("Boss");
         return createGameObject(boss, new BoxCollider(boss, new Vec2(4, 4), true, true));
+    }
+
+    public static GameObject createPhysicalItem(Vec2 size, Item item){
+        GameObject physicalItem = createGameObject(item.getName());
+        return createGameObject(
+                physicalItem,
+                new ItemController(physicalItem, item),
+                new ItemCollider(physicalItem, size, false, true),
+                new AnimatedSpriteRenderer(physicalItem, item.getPhysicalPath(), 16, 16)
+        );
     }
 }
