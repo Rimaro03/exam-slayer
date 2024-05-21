@@ -66,11 +66,11 @@ public class LevelGenerator {
 
             WaveFunctionCollapse.collapse(superRooms, RoomState.ALL_DOORS, startX, startY, mapSize);
 
-            SuperRoom chosenSuperRoom = WaveFunctionCollapse.getQuantumRoomWithLowestEntropy(superRooms, rand);
+            SuperRoom chosenSuperRoom = WaveFunctionCollapse.getSuperRoomWithLowestEntropy(superRooms, rand);
             while(chosenSuperRoom != null) {
                 WaveFunctionCollapse.collapse(superRooms, chosenSuperRoom.getX(), chosenSuperRoom.getY(), mapSize, rand);
 
-                chosenSuperRoom = WaveFunctionCollapse.getQuantumRoomWithLowestEntropy(superRooms, rand);
+                chosenSuperRoom = WaveFunctionCollapse.getSuperRoomWithLowestEntropy(superRooms, rand);
             }
             return WaveFunctionCollapse.floodFill(superRooms, startX, startY, mapSize, minRoomCount);
 

@@ -112,7 +112,7 @@ public class WaveFunctionCollapse {
      * if multiple super rooms have the same number of possible states, one of them is returned randomly.
      * if no super room is found, null is returned.
      */
-    public static SuperRoom getQuantumRoomWithLowestEntropy(SuperRoom[][] superRooms, Random rand){
+    public static SuperRoom getSuperRoomWithLowestEntropy(SuperRoom[][] superRooms, Random rand){
         ArrayList<SuperRoom> candidates = new ArrayList<>();
         int lowestEntropy = Integer.MAX_VALUE;
         for(SuperRoom[] row : superRooms){

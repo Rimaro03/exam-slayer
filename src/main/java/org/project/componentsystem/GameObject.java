@@ -87,7 +87,7 @@ public class GameObject {
     public void start() {
         for (Component component : components) {
             component.start();
-            log.info("Destroyed component: {} on GameObject: {}", component.getClass().getSimpleName(), name);
+            log.info("Started component: {} on GameObject: {}", component.getClass().getSimpleName(), name);
         }
     }
 

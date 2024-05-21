@@ -18,10 +18,14 @@ public class RoomState {
         this.value = value;
     }
 
-    /** Returns true if the bit at index direction is 1 false if is 0. */
+    /** @return true if the bit at index direction is 1 false if is 0. */
     public boolean hasDoor(int direction) { return (value & (1 << direction)) != 0; }
 
-    /** Returns true if from A to B all states have an open door. */
+    /** @return true if from A to B the states have the same door configuration (both open or both closed)
+     * @param stateA The state of the room A.
+     * @param stateB The state of the room B.
+     * @param directionFromAtoB The direction from A to B.
+     * */
     public static boolean canConnect(RoomState stateA, RoomState stateB, int directionFromAtoB){
         return stateA.hasDoor(directionFromAtoB) == stateB.hasDoor(Direction.opposite(directionFromAtoB));
     }
