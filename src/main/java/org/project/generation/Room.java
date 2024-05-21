@@ -57,19 +57,6 @@ public class Room {
     }
 
     /**
-     * @return The state of the room as an integer representing
-     * the configuration of door {@link RoomState}
-     */
-    public int getState(){
-        int state = 0;
-        for (int i = 0; i < 4; i++) {
-            if(adjacentRooms[i] != null)
-                state +=  1 << i;
-        }
-        return state;
-    }
-
-    /**
      * @param name The name of the GameObject to get
      * @return The GameObject with the specified name, null if it doesn't exist.
      */
@@ -173,8 +160,8 @@ public class Room {
      * Updates all the game objects of the room
      */
     public void updateGameObjects() {
-        for (GameObject gameObject : gameObjects) {
-            gameObject.update();
+        for (int i = 0; i < gameObjects.size(); i++) {
+            gameObjects.get(i).update();
         }
     }
 

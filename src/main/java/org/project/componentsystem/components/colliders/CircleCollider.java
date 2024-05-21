@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
+import org.project.core.Game;
 import org.project.core.Physics;
 import org.project.core.Debug;
 import org.project.core.rendering.Renderer;
@@ -103,12 +104,12 @@ public class CircleCollider extends AbstractCircleCollider{
 
     @Override
     public void onEnable() {
-        Physics.addCollider(this);
+        Game.getCurrentLevel().getPhysicsEngine().addCollider(this);
     }
 
     @Override
     public void onDisable() {
-        Physics.removeCollider(this);
+        Game.getCurrentLevel().getPhysicsEngine().removeCollider(this);
     }
 
     public void draw() {

@@ -66,12 +66,12 @@ public class DoorCollider extends AbstractBoxCollider{
 
     @Override
     public void onEnable() {
-        Physics.addCollider(this);
+        Game.getCurrentLevel().getPhysicsEngine().addCollider(this);
     }
 
     @Override
     public void onDisable() {
-        Physics.removeCollider(this);
+        Game.getCurrentLevel().getPhysicsEngine().removeCollider(this);
     }
 
     /**

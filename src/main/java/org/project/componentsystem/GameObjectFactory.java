@@ -1,10 +1,7 @@
 package org.project.componentsystem;
 
 import org.project.componentsystem.components.*;
-import org.project.componentsystem.components.colliders.BoxCollider;
-import org.project.componentsystem.components.colliders.Collider;
-import org.project.componentsystem.components.colliders.DoorCollider;
-import org.project.componentsystem.components.colliders.ItemCollider;
+import org.project.componentsystem.components.colliders.*;
 import org.project.generation.Room;
 import org.project.items.Item;
 import org.project.utils.Vec2;
@@ -30,6 +27,7 @@ public class GameObjectFactory {
                 new PlayerStats(player, 100, 10, 5, 5),
                 new AnimatedSpriteRenderer(player, "resources/textures/characters/MainCharacter.png", 32, 32),
                 new PlayerController(player),
+                new PlayerShootingController(player, .1f),
                 new BoxCollider(player, new Vec2(1.2f, 2), true, true)
         );
     }
@@ -80,6 +78,15 @@ public class GameObjectFactory {
         return createGameObject(boss, new BoxCollider(boss, new Vec2(4, 4), true, true));
     }
 
+    public static GameObject createProjectile(int damage, Vec2 speed, GameObject parent){
+        GameObject projectile = createGameObject("Projectile");
+        return createGameObject(
+                projectile,
+                new ProjectileCollider(projectile, new Vec2(.2f, .2f), true, true, parent),
+                new Projectile(projectile, damage, speed),
+                new AnimatedSpriteRenderer(projectile, "resources/textures/touchable/book.png", 16, 16)
+        );
+    }
     public static GameObject createPhysicalItem(Vec2 size, Item item){
         GameObject physicalItem = createGameObject(item.getName());
         return createGameObject(
