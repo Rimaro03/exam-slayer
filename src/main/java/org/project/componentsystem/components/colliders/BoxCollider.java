@@ -40,7 +40,7 @@ public class BoxCollider extends AbstractBoxCollider {
         if(other instanceof BoxCollider){
             BoxCollider otherBox = (BoxCollider) other;
             if(this.isInside() && otherBox.isInside()) {
-                float repel = 0.06f;
+                float repel = 0.02f;
                 float xDistance = this.getGameObject().getPosition().getX() - otherBox.getGameObject().getPosition().getX();
                 float yDistance = this.getGameObject().getPosition().getY() - otherBox.getGameObject().getPosition().getY();
                 float xMove = (float) (Math.cos(Math.atan2(yDistance, xDistance)) * (this.getSize().getX() + otherBox.getSize().getX() - Math.abs(xDistance)));

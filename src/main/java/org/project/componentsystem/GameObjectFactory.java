@@ -27,7 +27,7 @@ public class GameObjectFactory {
 
         return createGameObject(
                 player,
-                new PlayerStats(player, 100, 10, 5, 5),
+                new PlayerStats(player, 100, 10, 5, 15),
                 new AnimatedSpriteRenderer(player, "resources/textures/characters/MainCharacter.png", 32, 32),
                 new PlayerController(player),
                 new BoxCollider(player, new Vec2(1.2f, 2), true, true)
@@ -67,7 +67,7 @@ public class GameObjectFactory {
             createGameObject(
                     enemy,
                     new AnimatedSpriteRenderer(enemy, "resources/textures/characters/Integral.png", 16, 32),
-                    new BoxCollider(enemy, new Vec2(2, 2), true, true)
+                    new BoxCollider(enemy, new Vec2(1f, 1.5f), true, true)
             );
             enemy.setPosition(new Vec2((.5f - rand.nextFloat()) * (Room.SIZE - 2), (.5f - rand.nextFloat()) * (Room.SIZE - 2)));
             enemies[i] = enemy;

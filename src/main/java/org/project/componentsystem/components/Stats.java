@@ -9,4 +9,6 @@ public class Stats {
     private int attack;
     private int defense;
     private int speed;
+    private int baseSpeed;
+    private int baseHealth;
 }
