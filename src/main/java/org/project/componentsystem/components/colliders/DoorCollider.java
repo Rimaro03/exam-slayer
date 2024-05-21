@@ -1,11 +1,11 @@
 package org.project.componentsystem.components.colliders;
 
 import org.project.componentsystem.GameObject;
-import org.project.componentsystem.Physics;
+import org.project.core.Physics;
 import org.project.core.Debug;
 import org.project.core.Game;
 import org.project.core.rendering.Renderer;
-import org.project.generation.Direction;
+import org.project.generation.wavecollapse.Direction;
 import org.project.generation.Room;
 import org.project.utils.Vec2;
 
@@ -81,24 +81,23 @@ public class DoorCollider extends AbstractBoxCollider{
     @Override
     public void onCollide(Collider other) {
         // Change room if the player collides with the door collider
-        Game.getCurrentLevel().getCurrentRoom().getGameObjects().forEach(go -> {
-            if(go.getName().equals("Player")){
-                go.setPosition(new Vec2(
-                        Direction.x(0, direction) * (2 - Room.SIZE / 2),
-                        Direction.y(0, direction) * (2 - Room.SIZE / 2))
-                );
-            }
-        });
-        Game.getCurrentLevel().changeRoom(direction);
+        if(other.getGameObject().getName().equals("Player")){
+            other.getGameObject().setPosition(new Vec2(
+                    Direction.x(0, direction) * (2.5f - Room.SIZE / 2 + 1.5f),
+                    Direction.y(0, direction) * (2.5f - Room.SIZE / 2 + 1.5f))
+            );
+            Game.getCurrentLevel().changeRoom(direction);
+        }
 
     }
 
     public void draw(){
-        if(Debug.ENABLED)
-            Renderer.drawRect(
-                getGameObject().getPosition(),
-                getSize(),
-                Color.RED
+        if(Debug.ENABLED && isEnabled())
+            Renderer.addRectToRenderQueue(
+                    getGameObject().getPosition(),
+                    getSize(),
+                    Color.RED,
+                    2
             );
     }
 }

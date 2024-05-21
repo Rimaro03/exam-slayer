@@ -1,21 +1,33 @@
 package org.project.generation;
 
+
 import lombok.Getter;
+import lombok.Setter;
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.GameObjectFactory;
 import org.project.componentsystem.components.colliders.BoxCollider;
 import org.project.componentsystem.components.colliders.Collider;
+import org.project.core.Game;
+import org.project.generation.wavecollapse.Direction;
+import org.project.generation.wavecollapse.InvalidDirectionException;
+import org.project.generation.wavecollapse.RoomState;
 import org.project.utils.Vec2;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
 
+/**
+ * A room is a container of game objects that can be enabled and disabled.
+ * It also contains 4 pointers to his neighbour rooms.
+ */
 public class Room {
     public static final float SIZE = 15.75f;
-    @Getter
     private final ArrayList<GameObject> gameObjects;
     private final Room[] adjacentRooms;
-    @Getter
     private boolean initialized;
+    @Setter
+    private InitType initType;
     @Getter
     private final int x, y;
     public Room(int x, int y) {
@@ -24,17 +36,43 @@ public class Room {
         initialized = false;
         this.x = x;
         this.y = y;
+
     }
 
+    /**
+     * @param direction The direction of the adjacent room. {@link Direction}
+     * @param room The room to set as adjacent.
+     */
     public void setAdjacentRoom(int direction, Room room) {
         if(direction < 0 || direction >= 4) { throw new InvalidDirectionException(); }
         adjacentRooms[direction] = room;
     }
+    /**
+     * @param direction The direction of the adjacent room. {@link Direction}
+     * @return The adjacent room in the specified direction, null if there isn't.
+     */
     public Room getAdjacentRoom(int direction) {
         if(direction < 0 || direction >= 4) { throw new InvalidDirectionException(); }
         return adjacentRooms[direction];
     }
 
+    /**
+     * @return The state of the room as an integer representing
+     * the configuration of door {@link RoomState}
+     */
+    public int getState(){
+        int state = 0;
+        for (int i = 0; i < 4; i++) {
+            if(adjacentRooms[i] != null)
+                state +=  1 << i;
+        }
+        return state;
+    }
+
+    /**
+     * @param name The name of the GameObject to get
+     * @return The GameObject with the specified name, null if it doesn't exist.
+     */
     public GameObject getGameObject(String name) {
         for (GameObject gameObject : gameObjects) {
             if (gameObject.getName().equals(name)) {
@@ -43,26 +81,45 @@ public class Room {
         }
         return null;
     }
+    /**
+     * Adds a new GameObject to the room and starts it
+     * @param gameObject The GameObject to add
+     */
     public void addGameObject(GameObject gameObject) {
         gameObjects.add(gameObject);
+        gameObject.setEnabled(true);
+        gameObject.start();
     }
+    /**
+     * Removes a GameObject from the room and destroys it
+     * @param gameObject The GameObject to remove
+     */
     public void removeGameObject(GameObject gameObject) {
         gameObjects.remove(gameObject);
+        gameObject.setEnabled(false);
+        gameObject.destroy();
     }
 
 
+    /**
+     * sets the room enabled status to the specified and applies
+     * it to all the game objects of the room.
+     * @param enabled the status to set the room to.
+     */
     public void setEnabled(boolean enabled){
-        if(!initialized)
-            init();
-
         for(GameObject go : gameObjects){
             go.setEnabled(enabled);
         }
+
+        if(!initialized)
+            init();
     }
     /**
-     * Initializes the room by creating the setting up the room game objects.
+     * Spawns all the starting objects of the room like walls and doors,
+     * plus all the game objects specified by its InitType
+     * (boss if is a boss room, player if is the start room, etc...)
      */
-    private void init(){
+    public void init(){
         if(initialized)
             throw new RuntimeException("Room already initialized");
 
@@ -72,57 +129,110 @@ public class Room {
 
         // Create room door collider game objects
         for (int direction = 0; direction < 4; direction++) {
+            // direction 0 = up, 1 = right, 2 = down, 3 = left
             if(adjacentRooms[direction] == null) { continue; }
 
             GameObject door = GameObjectFactory.createDoorGameObject(direction, (Collider) roomGameObject.getComponent(BoxCollider.class));
-            door.setPosition(door.getPosition().add(new Vec2(Direction.x(0, direction) * (SIZE * .5f + .9f), Direction.y(0, direction) * (SIZE * 0.5f + .9f))));
+            door.setPosition(door.getPosition().add(new Vec2(Direction.x(0, direction) * (SIZE * .5f - 1.5f), Direction.y(0, direction) * (SIZE * 0.5f - 1.5f))));
             gameObjects.add(door);
         }
 
-        // IF U NEED TO ADD MORE GAME OBJECTS, ADD THEM HERE!!!
+        // IF YOU NEED TO ADD MORE GAME OBJECTS, ADD THEM HERE!!!
+        switch (initType){
+            case Start:
+                gameObjects.add(GameObjectFactory.createPlayer("Player"));
+                break;
+            case Boss:
+                gameObjects.add(GameObjectFactory.createBoss(0));
+                break;
+            case Normal:
+                GameObject[] enemies = GameObjectFactory.createEnemies(new Random().nextInt(2) + 4);
+                gameObjects.addAll(Arrays.asList(enemies));
+                break;
+            case Item:
+                 if(!Game.all_items.isEmpty()) {
+                    GameObject item = GameObjectFactory.createPhysicalItem(
+                            new Vec2(1, 1),
+                            Game.all_items.get(0)
+                    );
+                    gameObjects.add(item);
+                    Game.all_items.remove(0);
+                 }
+                 break;
+            default:
+                throw new RuntimeException("Invalid init type");
+        }
+
+
+        for(GameObject go : gameObjects)
+            go.start();
 
         initialized = true;
     }
+    /**
+     * Updates all the game objects of the room
+     */
     public void updateGameObjects() {
         for (GameObject gameObject : gameObjects) {
             gameObject.update();
         }
     }
 
-
     public String toString(){
         if(adjacentRooms[0] != null && adjacentRooms[2] != null && adjacentRooms[3] != null && adjacentRooms[1] != null){
-            return "┼";
+            return "┼─";
         } else if(adjacentRooms[0] != null && adjacentRooms[2] != null && adjacentRooms[3] != null){
-            return "┤";
+            return "┤ ";
         } else if(adjacentRooms[0] != null && adjacentRooms[2] != null && adjacentRooms[1] != null){
-            return "├";
+            return "├─";
         } else if(adjacentRooms[0] != null && adjacentRooms[3] != null && adjacentRooms[1] != null){
-            return "┬";
+            return "┬─";
         } else if(adjacentRooms[2] != null && adjacentRooms[3] != null && adjacentRooms[1] != null){
-            return "┴";
+            return "┴─";
         } else if(adjacentRooms[0] != null && adjacentRooms[1] != null){
-            return "┌";
+            return "┌─";
         } else if(adjacentRooms[0] != null && adjacentRooms[3] != null){
-            return "┐";
+            return "┐ ";
         } else if(adjacentRooms[2] != null && adjacentRooms[1] != null){
-            return "└";
+            return "└─";
         } else if(adjacentRooms[2] != null && adjacentRooms[3] != null){
-            return "┘";
+            return "┘ ";
         } else if(adjacentRooms[0] != null && adjacentRooms[2] != null){
-            return "│";
+            return "│ ";
         } else if(adjacentRooms[3] != null && adjacentRooms[1] != null){
-            return "─";
+            return "──";
         } else if(adjacentRooms[0] != null){
-            return "│";
+            return "│ ";
         } else if(adjacentRooms[2] != null){
-            return "│";
+            return "│ ";
         } else if(adjacentRooms[3] != null){
-            return "─";
+            return "──";
         } else if(adjacentRooms[1] != null) {
-            return "─";
+            return "──";
         } else {
-            return " ";
+            return "  ";
         }
+    }
+
+    /**
+     * The type of initialization of the room :
+     */
+    public enum InitType {
+        /**
+         * The room is the start room of the level.
+         */
+        Start,
+        /**
+         * The room is a boss room.
+         */
+        Boss,
+        /**
+         * The room is a normal room with normal enemies.
+         */
+        Normal,
+        /**
+         * The room is a room with an item inside.
+         */
+        Item
     }
 }

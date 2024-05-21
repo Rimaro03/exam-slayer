@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
-import org.project.componentsystem.Physics;
+import org.project.core.Physics;
 import org.project.core.Debug;
 import org.project.core.rendering.Renderer;
 import org.project.utils.Vec2;
@@ -112,7 +112,7 @@ public class CircleCollider extends AbstractCircleCollider{
     }
 
     public void draw() {
-        Renderer.drawCircle(getGameObject().getPosition(), getRadius(), Color.red);
+        Renderer.addCircleToRenderQueue(getGameObject().getPosition(), getRadius(), Color.red, 2);
     }
 
 

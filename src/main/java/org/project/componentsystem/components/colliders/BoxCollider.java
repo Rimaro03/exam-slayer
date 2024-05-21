@@ -1,7 +1,7 @@
 package org.project.componentsystem.components.colliders;
 
 import org.project.componentsystem.GameObject;
-import org.project.componentsystem.Physics;
+import org.project.core.Physics;
 import org.project.core.Debug;
 import org.project.core.rendering.Renderer;
 import org.project.utils.Vec2;
@@ -17,6 +17,7 @@ public class BoxCollider extends AbstractBoxCollider {
      * @param enabled    Whether this Component is enabled or not
      * @param size       The size of the box collider (width, height)
      * @param movable    Whether the collider is movable by others or not
+     * @param inside     Whether the collider is inside the box or not
      */
     public BoxCollider(GameObject gameObject, boolean enabled, Vec2 size, boolean movable, boolean inside) {
         super(gameObject, enabled, size, movable, inside);
@@ -109,7 +110,6 @@ public class BoxCollider extends AbstractBoxCollider {
      */
     @Override
     public void destory() {
-
     }
 
     @Override
@@ -119,11 +119,12 @@ public class BoxCollider extends AbstractBoxCollider {
     public void onDisable() {Physics.removeCollider(this); }
 
     public void draw(){
-        if(Debug.ENABLED)
-            Renderer.drawRect(
-                getGameObject().getPosition(),
-                getSize(),
-                Color.RED
+        if(Debug.ENABLED && isEnabled())
+            Renderer.addRectToRenderQueue(
+                    getGameObject().getPosition(),
+                    getSize(),
+                    Color.RED,
+                    2
             );
     }
 

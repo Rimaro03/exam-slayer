@@ -5,6 +5,8 @@ import org.project.componentsystem.GameObject;
 import org.project.core.rendering.Renderer;
 
 import javax.imageio.ImageIO;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -35,15 +37,28 @@ public class AnimatedSpriteRenderer extends Component {
 
     public void start() {}
     public void update(){
-        Renderer.draw(currentFrame, getGameObject().getPosition());
+        if (isEnabled()) {
+            Renderer.addImageToRenderQueue(getGameObject().getPosition(), currentFrame, 0);
+        }
     }
 
+    /**
+     * Rotate the current frame
+     * @param degrees The degrees to rotate
+     */
+    public void rotate(int degrees) {
+        double radians = Math.toRadians(degrees);
+        double locationX = currentFrame.getWidth() / 2.0;
+        double locationY = currentFrame.getHeight() / 2.0;
+        AffineTransform tx = AffineTransform.getRotateInstance(radians, locationX, locationY);
+        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+        currentFrame = op.filter(currentFrame, null);
+    }
     /**
      * Destory the component
      */
     @Override
     public void destory() {
-
     }
 
     @Override
