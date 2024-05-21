@@ -40,9 +40,9 @@ public class GenerationSettings {
     private static final int DISTANCE_FROM_START_WEIGHT_FOR_BOSS_SCORE = 100;
     private static final int DISTANCE_FROM_BOSS_WEIGHT_FOR_BOSS_SCORE = 50;
 
-    private static final int DISTANCE_FROM_BOSS_WEIGHT_FOR_ITEM_SCORE = 150;
-    private static final int DISTANCE_FROM_START_WEIGHT_FOR_ITEM_SCORE = 10;
-    private static final int DISTANCE_FROM_ITEM_WEIGHT_FOR_ITEM_SCORE = 20;
+    private static final int DISTANCE_FROM_BOSS_WEIGHT_FOR_ITEM_SCORE = 1;
+    private static final int DISTANCE_FROM_START_WEIGHT_FOR_ITEM_SCORE = 1;
+    private static final int DISTANCE_FROM_ITEM_WEIGHT_FOR_ITEM_SCORE = 1;
 
     /** Returns the score of a room to be a boss room.
      * @param distFromStart the distance from the start room.
@@ -50,12 +50,12 @@ public class GenerationSettings {
      * @return log(BossDist) * BossWeight + log(StartDist) * StartWeight
      * */
     public static float getBossRoomScore(int distFromStart, int distFromClosestBoss){
-        return (float) (GenerationSettings.DISTANCE_FROM_BOSS_WEIGHT_FOR_BOSS_SCORE  * Math.log(distFromStart) +
+        return (float) (GenerationSettings.DISTANCE_FROM_BOSS_WEIGHT_FOR_BOSS_SCORE  * Math.log(distFromStart)      +
                         GenerationSettings.DISTANCE_FROM_START_WEIGHT_FOR_BOSS_SCORE * Math.log(distFromClosestBoss));
     }
     public static float getItemRoomScore(int distFromStart, int distFromClosestBoss, int distanceFromClosestItem){
-        return (float) (GenerationSettings.DISTANCE_FROM_START_WEIGHT_FOR_ITEM_SCORE * Math.log(distFromStart)        +
-                        GenerationSettings.DISTANCE_FROM_BOSS_WEIGHT_FOR_ITEM_SCORE  * Math.log(distFromClosestBoss)  +
+        return (float) (GenerationSettings.DISTANCE_FROM_START_WEIGHT_FOR_ITEM_SCORE * Math.log(distFromStart)          +
+                        GenerationSettings.DISTANCE_FROM_BOSS_WEIGHT_FOR_ITEM_SCORE  * Math.log(distFromClosestBoss)    +
                         GenerationSettings.DISTANCE_FROM_ITEM_WEIGHT_FOR_ITEM_SCORE  * Math.log(distanceFromClosestItem));
     }
 }

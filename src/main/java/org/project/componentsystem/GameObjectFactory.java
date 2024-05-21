@@ -66,7 +66,7 @@ public class GameObjectFactory {
             GameObject enemy = createGameObject("Enemy");
             createGameObject(
                     enemy,
-                    //new AnimatedSpriteRenderer(enemy, "resources/textures/characters/Enemy.png", 32, 32),
+                    new AnimatedSpriteRenderer(enemy, "resources/textures/characters/Integral.png", 16, 32),
                     new BoxCollider(enemy, new Vec2(2, 2), true, true)
             );
             enemy.setPosition(new Vec2((.5f - rand.nextFloat()) * (Room.SIZE - 2), (.5f - rand.nextFloat()) * (Room.SIZE - 2)));
