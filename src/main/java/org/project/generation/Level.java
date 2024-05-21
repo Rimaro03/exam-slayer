@@ -21,7 +21,6 @@ import java.util.Set;
  */
 @Getter @Log4j2
 public class Level {
-    public static final int BOSS_ROOM_COUNT = 3;
     private Room currentRoom;
     private final List<Room> bossRooms;
 

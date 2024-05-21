@@ -2,6 +2,7 @@ package org.project.core;
 
 import lombok.Getter;
 import org.project.generation.Level;
+import org.project.generation.wavecollapse.GenerationSettings;
 import org.project.generation.wavecollapse.LevelGenerator;
 import org.project.items.Item;
 import org.project.items.Sword;
@@ -19,13 +20,17 @@ public class Game {
     private Game(){
         currentLevel = new LevelGenerator(8, new Random().nextLong()).build();
         // TODO : Load all items from a file (sword is a test item)
-        all_items.add(new Sword(
-                "Diamond Sword",
-                10,
-                "resources/textures/touchable/sword.png",
-                "resources/textures/stats/items/sword.png",
-                1
-        ));
+        // Just for testing
+        for (int i = 0; i < GenerationSettings.ITEM_ROOM_COUNT; i++) {
+            all_items.add(new Sword(
+                    "Diamond Sword",
+                    10,
+                    "resources/textures/touchable/sword.png",
+                    "resources/textures/stats/items/sword.png",
+                    1
+            ));
+        }
+
     }
     public static Game loadNewGame(){
         // To-do : The game will ask the user to select : load a saved game or start a new game

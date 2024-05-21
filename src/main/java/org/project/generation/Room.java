@@ -146,8 +146,10 @@ public class Room {
                 gameObjects.add(GameObjectFactory.createBoss(0));
                 break;
             case Normal:
-                 GameObject[] enemies = GameObjectFactory.createEnemies(new Random().nextInt(2) + 4);
-                 gameObjects.addAll(Arrays.asList(enemies));
+                GameObject[] enemies = GameObjectFactory.createEnemies(new Random().nextInt(2) + 4);
+                gameObjects.addAll(Arrays.asList(enemies));
+                break;
+            case Item:
                  if(!Game.all_items.isEmpty()) {
                     GameObject item = GameObjectFactory.createPhysicalItem(
                             new Vec2(1, 1),
@@ -227,6 +229,10 @@ public class Room {
         /**
          * The room is a normal room with normal enemies.
          */
-        Normal
+        Normal,
+        /**
+         * The room is a room with an item inside.
+         */
+        Item
     }
 }
