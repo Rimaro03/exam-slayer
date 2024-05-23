@@ -27,4 +27,5 @@ public abstract class Item {
      * Uses this Item
      */
     public abstract void use();
+    public abstract void update();
 }

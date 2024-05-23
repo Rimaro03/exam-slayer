@@ -10,7 +10,6 @@ import org.project.utils.Vec2;
 public class PlayerController extends Component {
     AnimatedSpriteRenderer spriteRenderer;
     float animationSpeed = 10.f;
-    float playerSpeed = 15.f;
     public PlayerController(GameObject gameObject) {
         super(gameObject);
     }
@@ -23,7 +22,8 @@ public class PlayerController extends Component {
         boolean isMoving = false;
         int animationStep = (int)(Time.seconds() * animationSpeed) % 4;
         Vec2 delta = new Vec2(0, 0);
-
+        PlayerStats playerStats = (PlayerStats) getGameObject().getComponent(PlayerStats.class);
+        int speed = playerStats.getStats().getSpeed();
         if(Input.isKeyPressed(Input.KEY_A)) {
             delta = delta.add(new Vec2(-1, 0));
             isMoving = true;
@@ -51,7 +51,7 @@ public class PlayerController extends Component {
 
         getGameObject().setPosition(
                 getGameObject().getPosition().add(
-                        delta.normalized().multiply(playerSpeed * Time.TIME_STEP_IN_SECONDS)
+                        delta.normalized().multiply(speed * Time.TIME_STEP_IN_SECONDS)
                 )
         );
 

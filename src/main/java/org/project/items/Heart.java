@@ -1,36 +1,32 @@
 package org.project.items;
 
+import lombok.Getter;
+import lombok.Setter;
 
-import lombok.extern.log4j.Log4j2;
-
-
-@Log4j2
-public class Sword extends Item{
-
-    // Example of a class that extends Item
-    private final int damage;
-
+@Getter @Setter
+public class Heart extends Item{
+    private final int health;
     /**
-     * Initializes a new Item with the given name and weight
+     * Initializes a new Item with the given name and weight and health value
+     * This item is used to increase the health of the player when picked up
      *
      * @param name         The name of this Item
      * @param weight       The weight of this Item
      * @param physicalPath The path to the physical representation of this Item (e.g. the path to the image file)
      * @param invetoryPath The path to the inventory representation of this Item (e.g. the path to the image file)
-     * @param damage       The damage of this Sword
+     * @param health       The health of this Heart
      */
-    public Sword(String name, int weight, String physicalPath, String invetoryPath, int damage) {
+    public Heart(String name, int weight, String physicalPath, String invetoryPath, int health) {
         super(name, weight, physicalPath, invetoryPath);
-        this.damage = damage;
+        this.health = health;
     }
 
-
     /**
-     * Uses this Sword
+     * Uses this Item
      */
     @Override
     public void use() {
-        log.info("Sword used with damage: {}", damage);
+
     }
 
     /**
@@ -38,6 +34,6 @@ public class Sword extends Item{
      */
     @Override
     public void update() {
-        log.info("Sword updated");
+
     }
 }
