@@ -1,6 +1,7 @@
 package org.project.componentsystem.components.colliders;
 
 import org.project.componentsystem.GameObject;
+import org.project.core.Game;
 import org.project.core.Physics;
 import org.project.core.Debug;
 import org.project.core.rendering.Renderer;
@@ -113,10 +114,10 @@ public class BoxCollider extends AbstractBoxCollider {
     }
 
     @Override
-    public void onEnable() { Physics.addCollider(this); }
+    public void onEnable() { Game.getCurrentLevel().getPhysicsEngine().addCollider(this); }
 
     @Override
-    public void onDisable() {Physics.removeCollider(this); }
+    public void onDisable() { Game.getCurrentLevel().getPhysicsEngine().removeCollider(this); }
 
     public void draw(){
         if(Debug.ENABLED && isEnabled())

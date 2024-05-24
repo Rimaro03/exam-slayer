@@ -23,6 +23,7 @@ import java.util.Set;
 public class Level {
     private Room currentRoom;
     private final List<Room> bossRooms;
+    private final Physics physicsEngine;
 
     /** This constructor get as input the start room of the map,
      * all other room are supposed to be linked to each other forming a graph of rooms.
@@ -30,6 +31,7 @@ public class Level {
     public Level(Room startRoom, List<Room> bossRooms){
         currentRoom = startRoom;
         this.bossRooms = bossRooms;
+        this.physicsEngine = new Physics();
     }
 
     /**
@@ -81,6 +83,6 @@ public class Level {
      */
     public void update(){
         currentRoom.updateGameObjects();
-        Physics.update();
+        physicsEngine.update();
     }
 }
