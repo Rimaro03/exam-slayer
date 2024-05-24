@@ -2,6 +2,8 @@ package org.project.componentsystem;
 
 import org.project.componentsystem.components.*;
 import org.project.componentsystem.components.colliders.*;
+import org.project.componentsystem.components.weapons.PlayerShootingController;
+import org.project.componentsystem.components.weapons.WeaponData;
 import org.project.generation.Room;
 import org.project.items.Item;
 import org.project.utils.Vec2;
@@ -78,13 +80,13 @@ public class GameObjectFactory {
         return createGameObject(boss, new BoxCollider(boss, new Vec2(4, 4), true, true));
     }
 
-    public static GameObject createProjectile(int damage, Vec2 speed, GameObject parent){
+    public static GameObject createProjectile(WeaponData weaponData, Vec2 direction, GameObject parent){
         GameObject projectile = createGameObject("Projectile");
         return createGameObject(
                 projectile,
                 new ProjectileCollider(projectile, new Vec2(.2f, .2f), true, true, parent),
-                new Projectile(projectile, damage, speed),
-                new AnimatedSpriteRenderer(projectile, "resources/textures/touchable/book.png", 16, 16)
+                new Projectile(projectile, weaponData.damage, direction.multiply(weaponData.speed)),
+                new AnimatedSpriteRenderer(projectile, weaponData.imagePath, weaponData.imageWidth, weaponData.imageHeight)
         );
     }
     public static GameObject createPhysicalItem(Vec2 size, Item item){

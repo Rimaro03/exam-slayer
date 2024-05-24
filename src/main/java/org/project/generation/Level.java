@@ -23,7 +23,7 @@ import java.util.Set;
 public class Level {
     private Room currentRoom;
     private final List<Room> bossRooms;
-    private Physics physicsEngine;
+    private final Physics physicsEngine;
 
     /** This constructor get as input the start room of the map,
      * all other room are supposed to be linked to each other forming a graph of rooms.
