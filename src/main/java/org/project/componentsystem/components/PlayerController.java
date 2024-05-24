@@ -2,6 +2,7 @@ package org.project.componentsystem.components;
 
 import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
+import org.project.componentsystem.components.stats.PlayerStats;
 import org.project.core.Input;
 import org.project.core.Time;
 import org.project.utils.Vec2;
@@ -23,7 +24,7 @@ public class PlayerController extends Component {
         int animationStep = (int)(Time.seconds() * animationSpeed) % 4;
         Vec2 delta = new Vec2(0, 0);
         PlayerStats playerStats = (PlayerStats) getGameObject().getComponent(PlayerStats.class);
-        int speed = playerStats.getStats().getSpeed();
+        int speed = playerStats.getSpeed();
         if(Input.isKeyPressed(Input.KEY_A)) {
             delta = delta.add(new Vec2(-1, 0));
             isMoving = true;

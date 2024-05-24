@@ -2,6 +2,8 @@ package org.project.componentsystem;
 
 import org.project.componentsystem.components.*;
 import org.project.componentsystem.components.colliders.*;
+import org.project.componentsystem.components.stats.EntityStats;
+import org.project.componentsystem.components.stats.PlayerStats;
 import org.project.componentsystem.components.weapons.PlayerShootingController;
 import org.project.componentsystem.components.weapons.WeaponData;
 import org.project.generation.Room;
@@ -67,7 +69,8 @@ public class GameObjectFactory {
             createGameObject(
                     enemy,
                     new AnimatedSpriteRenderer(enemy, "resources/textures/characters/Integral.png", 16, 32),
-                    new BoxCollider(enemy, new Vec2(1f, 1.5f), true, true)
+                    new BoxCollider(enemy, new Vec2(1f, 1.5f), true, true),
+                    new EntityStats(enemy, 50, 5, 2, 10)
             );
             enemy.setPosition(new Vec2((.5f - rand.nextFloat()) * (Room.SIZE - 2), (.5f - rand.nextFloat()) * (Room.SIZE - 2)));
             enemies[i] = enemy;

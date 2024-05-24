@@ -1,12 +1,11 @@
-package org.project.componentsystem.components;
+package org.project.componentsystem.components.stats;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.project.componentsystem.GameObject;
 
 @Setter @Getter
-public class EntityStats extends Component {
-    private Stats stats;
+public class EntityStats extends Stats {
     /**
      * Initializes a new EntityStats with the given GameObject and stats
      * @param gameObject The reference to the GameObject that this EntityStats is attached to
@@ -29,12 +28,7 @@ public class EntityStats extends Component {
      * @param speed The speed of this EntityStats
      */
     public EntityStats(GameObject gameObject, boolean enabled, int health, int attack, int defense, int speed) {
-        super(gameObject, enabled);
-        this.stats = new Stats();
-        this.stats.setHealth(health);
-        this.stats.setAttack(attack);
-        this.stats.setDefense(defense);
-        this.stats.setSpeed(speed);
+        super(gameObject, enabled, health, attack, defense, speed);
     }
 
     @Override

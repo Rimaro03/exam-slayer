@@ -1,7 +1,7 @@
 package org.project.componentsystem;
 
 import org.junit.jupiter.api.Test;
-import org.project.componentsystem.components.PlayerStats;
+import org.project.componentsystem.components.stats.PlayerStats;
 import org.project.utils.Vec2;
 
 import static org.junit.jupiter.api.Assertions.*;

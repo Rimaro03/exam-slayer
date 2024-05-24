@@ -2,6 +2,9 @@ package org.project.componentsystem.components.colliders;
 
 import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
+import org.project.componentsystem.components.Component;
+import org.project.componentsystem.components.Projectile;
+import org.project.componentsystem.components.stats.Stats;
 import org.project.core.Game;
 import org.project.utils.Vec2;
 
@@ -20,19 +23,16 @@ public class ProjectileCollider extends AbstractBoxCollider {
 
     @Override
     public void onCollide(Collider other) {
-
-
         if(other.getGameObject() != parent) {
             Game.getCurrentLevel().destroyGameObject(this.getGameObject());
            log.info("Projectile collided with {}", other.getGameObject().getName());
-           /*
-            TODO: Implement this
-            Stats stats = other.getGameObject().getComponent(Stats.class);
+
+            Stats stats = (Stats) other.getGameObject().getComponent(Stats.class);
             if(stats != null){
                 Projectile projectile = (Projectile)this.getGameObject().getComponent(Projectile.class);
                 stats.takeDamage(projectile.getDamage());
             }
-            */
+
         }
     }
 

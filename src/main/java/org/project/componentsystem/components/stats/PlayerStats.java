@@ -1,4 +1,4 @@
-package org.project.componentsystem.components;
+package org.project.componentsystem.components.stats;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,14 +10,11 @@ import org.project.items.Heart;
 import org.project.items.Item;
 import org.project.utils.Vec2;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.File;
 import java.util.HashMap;
 
 @Setter @Getter @Log4j2
-public class PlayerStats extends Component {
-    private Stats stats;
+public class PlayerStats extends Stats {
     private HashMap<Item, Integer> inventory = new HashMap<>();
     private Vec2 position = new Vec2(-10, 7);
 
@@ -43,14 +40,7 @@ public class PlayerStats extends Component {
      * @param speed The speed of this PlayerStats
      */
     public PlayerStats(GameObject gameObject, boolean enabled, int health, int attack, int defense, int speed) {
-        super(gameObject, enabled);
-        this.stats = new Stats();
-        this.stats.setHealth(health);
-        this.stats.setAttack(attack);
-        this.stats.setDefense(defense);
-        this.stats.setSpeed(speed);
-        this.stats.setBaseSpeed(speed);
-        this.stats.setBaseHealth(health);
+        super(gameObject, enabled, health, attack, defense, speed);
     }
 
     @Override
@@ -60,22 +50,22 @@ public class PlayerStats extends Component {
     public void update() {
         updateSpeed();
         updateHealth();
-        Renderer.addTextToRenderQueue(position, "Health: " + stats.getHealth(), Color.WHITE, 10, 2);
-        Renderer.addTextToRenderQueue(position.add(new Vec2(0, -0.5f)), "Attack: " + stats.getAttack(), Color.WHITE, 10, 2);
-        Renderer.addTextToRenderQueue(position.add(new Vec2(0, -1)), "Defense: " + stats.getDefense(), Color.WHITE, 10, 2);
-        Renderer.addTextToRenderQueue(position.add(new Vec2(0, -1.5f)), "Speed: " + stats.getSpeed(), Color.WHITE, 10, 2);
+        Renderer.addTextToRenderQueue(position, "Health: " + health, Color.WHITE, 10, 2);
+        Renderer.addTextToRenderQueue(position.add(new Vec2(0, -0.5f)), "Attack: " + attack, Color.WHITE, 10, 2);
+        Renderer.addTextToRenderQueue(position.add(new Vec2(0, -1)), "Defense: " + defense, Color.WHITE, 10, 2);
+        Renderer.addTextToRenderQueue(position.add(new Vec2(0, -1.5f)), "Speed: " + speed, Color.WHITE, 10, 2);
         Object[] keys = inventory.keySet().toArray();
         for (int i = 0; i < keys.length; i++) {
             Item item = (Item) keys[i];
             Renderer.addImageToRenderQueue(
                     position.add(new Vec2(0.3f, -2 - i * 0.6f)),
-                    ImageIO.read(new File(item.getInvetoryPath())),
+                    item.getInventoryImage(),
                     i
             );
             for (int j = 0; j < inventory.get(item); j++) {
                 Renderer.addImageToRenderQueue(
                         position.add(new Vec2(0.3f + j / 2f * 0.6f, -2 - i * 0.6f)),
-                        ImageIO.read(new File(item.getInvetoryPath())),
+                        item.getInventoryImage(),
                         i + j
                 );
             }
@@ -107,8 +97,8 @@ public class PlayerStats extends Component {
         for (Item item : inventory.keySet()) {
             totalWeight += item.getWeight() * inventory.get(item);
         }
-        int tempSpeed = stats.getBaseSpeed() - totalWeight;
-        stats.setSpeed(Math.max(tempSpeed, 5));
+        int tempSpeed = baseSpeed - totalWeight;
+        speed = Math.max(tempSpeed, 5);
     }
 
     private void updateHealth() {
@@ -118,6 +108,6 @@ public class PlayerStats extends Component {
                 totalHealth += ((Heart) item).getHealth() * inventory.get(item);
             }
         }
-        stats.setHealth(stats.getBaseHealth() + totalHealth);
+        health = baseHealth + totalHealth;
     }
 }

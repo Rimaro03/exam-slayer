@@ -4,7 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.components.AnimatedSpriteRenderer;
 import org.project.componentsystem.components.ItemController;
-import org.project.componentsystem.components.PlayerStats;
+import org.project.componentsystem.components.stats.PlayerStats;
 import org.project.items.Item;
 import org.project.utils.Vec2;
 

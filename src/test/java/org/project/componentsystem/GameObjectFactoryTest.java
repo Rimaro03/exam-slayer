@@ -1,7 +1,7 @@
 package org.project.componentsystem;
 
 import org.junit.jupiter.api.Test;
-import org.project.componentsystem.components.PlayerStats;
+import org.project.componentsystem.components.stats.PlayerStats;
 
 class GameObjectFactoryTest {
 
@@ -15,7 +15,7 @@ class GameObjectFactoryTest {
     void createPlayer() {
         GameObject player = GameObjectFactory.createPlayer("Player");
         assert player.getName().equals("Player");
-        assert ((PlayerStats) player.getComponent(PlayerStats.class)).getStats().getHealth() == 100;
+        assert ((PlayerStats) player.getComponent(PlayerStats.class)).getHealth() == 100;
     }
 
 }
