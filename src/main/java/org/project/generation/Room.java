@@ -26,6 +26,8 @@ public class Room {
     private final ArrayList<GameObject> gameObjects;
     private final Room[] adjacentRooms;
     private boolean initialized;
+    @Getter @Setter
+    private boolean cleared;
     @Setter
     private InitType initType;
     @Getter
@@ -34,9 +36,9 @@ public class Room {
         gameObjects = new ArrayList<>();
         adjacentRooms = new Room[4];
         initialized = false;
+        cleared = false;
         this.x = x;
         this.y = y;
-
     }
 
     /**
@@ -146,6 +148,7 @@ public class Room {
                     Game.all_items.remove(0);
                  }
                  break;
+            case Empty: break;
             default:
                 throw new RuntimeException("Invalid init type");
         }
@@ -220,6 +223,10 @@ public class Room {
         /**
          * The room is a room with an item inside.
          */
-        Item
+        Item,
+        /**
+         * The room is empty a shop inside (Used to load a saved game).
+         */
+        Empty
     }
 }

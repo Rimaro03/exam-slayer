@@ -6,6 +6,8 @@ package org.project.generation.wavecollapse;
  * of doors, boss and start room generation settings
  */
 public class GenerationSettings {
+    public static final int MAP_SIZE = 8;
+
     private static final int NO_DOOR_WEIGHTS = 1;
     private static final int FOUR_DOORS_WEIGHTS = 3;
     private static final int ONE_DOOR_WEIGHTS = 1;

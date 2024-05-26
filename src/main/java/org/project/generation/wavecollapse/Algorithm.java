@@ -57,6 +57,16 @@ public class Algorithm {
         return connectedRooms;
     }
 
+
+    public static Room getRoomAt(int x, int y, Room startRoom){
+        Set<Room> connectedRooms = getConnectedRooms(startRoom);
+        for(Room room : connectedRooms){
+            if(room.getX() == x && room.getY() == y){
+                return room;
+            }
+        }
+        return null;
+    }
     /** @return The closest distance from all the listed rooms.
      * @param room The reference room.
      * @param rooms The list of rooms to compare the distance with.

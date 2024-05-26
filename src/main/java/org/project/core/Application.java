@@ -13,8 +13,6 @@ public class Application extends JFrame {
 
     private Application() { }
 
-
-
     /* ---------------- SINGLETON METHODS ----------------- */
 
     public static Window getWindow(){ return getInstance().window; }
@@ -34,8 +32,10 @@ public class Application extends JFrame {
     }
     private void runInternal(){
         // GAME INITIALIZATION HERE!
-        Game game = Game.loadNewGame();
+        Game game = Game.loadNewGame("saved/saved_game.txt"); // TODO : Load saved game automatically
+        addWindowListener(game);
         game.start();
+
         while(true){
             long startTime = System.currentTimeMillis();
 

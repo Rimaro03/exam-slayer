@@ -1,0 +1,3 @@
+LevelClearedRooms 1,4 1,5 2,4 
+LevelStartRoomPosition 1,5
+LevelSeed -687226123476596959
