@@ -3,12 +3,22 @@ package org.project.savingsystem;
 import java.util.List;
 import java.util.Scanner;
 
-public class ListReader<T extends Savable> {
+/**
+ * Class to read a list of Savable objects from a string
+ * @param <T> the type of the Savable object
+ */
+public class ListReader<T extends Savable<T>> {
     private final String value;
     ListReader(String value){
         this.value = value;
     }
 
+    /**
+     * Updates the list elements with the values read from the string,
+     * if the string has more values than the list, the extra values are ignored.
+     * @param list the list to read
+     * @return the list with the values read
+     */
     public List<T> readList(List<T> list) {
         Scanner scanner = new Scanner(value);
 

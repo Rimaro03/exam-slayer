@@ -18,9 +18,27 @@ public class SavingIO {
     private final String path;
     private final StringBuilder text;
 
+    /**
+     * Creates a new SavingIO object with the given path.
+     * remember to call flush() before the program ends to save the changes.
+     * @param path
+     */
     public SavingIO(String path){
         this.path = path;
         this.text = getText();;
+    }
+    /**
+     * Flushes all the changes applied to the file.
+     * if not called before the program ends, the changes will be lost.
+     */
+    public void flush(){
+        try {
+            PrintWriter writer = new PrintWriter(path);
+            writer.print(text.toString());
+            writer.close();
+        } catch (IOException e) {
+            log.error("File not found : {}", path);
+        }
     }
 
     /* ----------------- PRIMITIVE SETTERS ------------------- */
@@ -97,7 +115,6 @@ public class SavingIO {
             text.replace(startIndex, endIndex, savingString);
         else
             text.append(name).append(" ").append(savingString).append("\n");
-        flush();
     }
     private String get(String name){
         int startIndex = startIndex(name);
@@ -108,20 +125,11 @@ public class SavingIO {
         else
             return text.substring(startIndex, endIndex);
     }
-    private void flush(){
-        try {
-            PrintWriter writer = new PrintWriter(path);
-            writer.print(text.toString());
-            writer.close();
-        } catch (IOException e) {
-            log.error("File not found : {}", path);
-        }
-    }
 
-    private String listToSaveString(List<? extends Savable> list){
+    private String listToSaveString(List<? extends Savable<?>> list){
         StringBuilder builder = new StringBuilder();
 
-        for(Savable obj : list) {
+        for(Savable<?> obj : list) {
             builder.append(obj.toSaveString()).append(" ");
         }
 

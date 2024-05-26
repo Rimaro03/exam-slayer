@@ -89,6 +89,7 @@ public class Game implements WindowListener {
     @Override
     public void windowClosing(WindowEvent e) {
         currentLevel.save();
+        savingIO.flush();
     }
 
     @Override
