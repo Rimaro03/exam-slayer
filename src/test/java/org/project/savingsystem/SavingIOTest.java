@@ -36,7 +36,7 @@ class SavingIOTest {
         savingIO.setVec2Int("testVec2Int", new Vec2Int(101, 102));
     }
 
-    /*
+
     @Test
     void getFloat() {
         SavingIO savingIO = new SavingIO("saved/saving_test.txt");
@@ -60,6 +60,6 @@ class SavingIOTest {
         SavingIO savingIO = new SavingIO("saved/saving_test.txt");
         Vec2Int[] v = { new Vec2Int(1, 2), new Vec2Int(3, 4) };
         assertEquals(Arrays.asList(v), savingIO.getVec2IntList("testVec2IntList"));
-    }*/
+    }
 
 }
