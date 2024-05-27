@@ -1,7 +1,9 @@
 package org.project.utils;
 
+import lombok.Getter;
 import org.project.savingsystem.Savable;
 
+@Getter
 public class Vec2Int implements Savable<Vec2Int> {
     private int x;
     private int y;
@@ -12,14 +14,6 @@ public class Vec2Int implements Savable<Vec2Int> {
     public Vec2Int(int x, int y) {
         this.x = x;
         this.y = y;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
     }
 
     @Override

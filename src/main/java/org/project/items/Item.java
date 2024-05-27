@@ -3,6 +3,7 @@ package org.project.items;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import org.project.componentsystem.GameObject;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -41,5 +42,15 @@ public abstract class Item {
      * Uses this Item
      */
     public abstract void use();
+
+    /**
+     * Update this Item
+     */
     public abstract void update();
+
+    /**
+     * Called when this Item is picked up
+     * @param by The GameObject that picked up this Item
+     */
+    public abstract void onPickUp(GameObject by);
 }

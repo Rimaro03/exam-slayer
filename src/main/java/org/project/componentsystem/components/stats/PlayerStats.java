@@ -48,8 +48,7 @@ public class PlayerStats extends Stats {
 
     @Override @SneakyThrows
     public void update() {
-        updateSpeed();
-        updateHealth();
+        speed = Math.max(speed, 5);
         Renderer.addTextToRenderQueue(position, "Health: " + health, Color.WHITE, 10, 2);
         Renderer.addTextToRenderQueue(position.add(new Vec2(0, -0.5f)), "Attack: " + attack, Color.WHITE, 10, 2);
         Renderer.addTextToRenderQueue(position.add(new Vec2(0, -1)), "Defense: " + defense, Color.WHITE, 10, 2);
@@ -58,13 +57,13 @@ public class PlayerStats extends Stats {
         for (int i = 0; i < keys.length; i++) {
             Item item = (Item) keys[i];
             Renderer.addImageToRenderQueue(
-                    position.add(new Vec2(0.3f, -2 - i * 0.6f)),
+                    position.add(new Vec2(0.5f, -2.5f - i)),
                     item.getInventoryImage(),
                     i
             );
-            for (int j = 0; j < inventory.get(item); j++) {
+            for (int j = 1; j < inventory.get(item); j++) {
                 Renderer.addImageToRenderQueue(
-                        position.add(new Vec2(0.3f + j / 2f * 0.6f, -2 - i * 0.6f)),
+                        position.add(new Vec2(0.5f + j / 2f * .6f, -2.5f - i)),
                         item.getInventoryImage(),
                         i + j
                 );
@@ -92,22 +91,13 @@ public class PlayerStats extends Stats {
 
     }
 
-    private void updateSpeed() {
-        int totalWeight = 0;
-        for (Item item : inventory.keySet()) {
-            totalWeight += item.getWeight() * inventory.get(item);
+    public PlayerStats addItem(Item item) {
+        if (inventory.containsKey(item)) {
+            inventory.put(item, inventory.get(item) + 1);
+        } else {
+            inventory.put(item, 1);
         }
-        int tempSpeed = baseSpeed - totalWeight;
-        speed = Math.max(tempSpeed, 5);
+        return this;
     }
 
-    private void updateHealth() {
-        int totalHealth = 0;
-        for (Item item : inventory.keySet()) {
-            if (item instanceof Heart) {
-                totalHealth += ((Heart) item).getHealth() * inventory.get(item);
-            }
-        }
-        health = baseHealth + totalHealth;
-    }
 }

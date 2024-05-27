@@ -25,8 +25,22 @@ public class WeaponData {
     }
 
 
-    private static final WeaponData physicsBookData = new WeaponData(10, 0.1f, 10.0f, "resources/textures/touchable/book.png", 16, 16);
-    private static final WeaponData swordData = new WeaponData(20, 0.12f, 15.0f, "resources/textures/touchable/sword.png", 16, 16);
+    private static final WeaponData physicsBookData = new WeaponData(
+            10,
+            0.1f,
+            10.0f,
+            "resources/textures/touchable/book.png",
+            16,
+            16
+    );
+    private static final WeaponData swordData = new WeaponData(
+            20,
+            0.12f,
+            15.0f,
+            "resources/textures/touchable/sword.png",
+            16,
+            16
+    );
 
     public static WeaponData getWeaponData(WeaponType type) {
         switch (type) {

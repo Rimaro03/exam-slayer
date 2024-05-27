@@ -15,15 +15,17 @@ public class PlayerShootingController extends Component {
     @Setter
     private WeaponType weaponType = WeaponType.Sword; // DEBUG
 
-    public PlayerShootingController(GameObject gameObject, boolean enabled, float shootInterval) {
+    public PlayerShootingController(GameObject gameObject, boolean enabled, float shootInterval, WeaponType weaponType) {
         super(gameObject, enabled);
         this.shootInterval = shootInterval;
+        this.weaponType = weaponType;
     }
 
 
-    public PlayerShootingController(GameObject gameObject, float shootInterval) {
+    public PlayerShootingController(GameObject gameObject, float shootInterval, WeaponType weaponType) {
         super(gameObject);
         this.shootInterval = shootInterval;
+        this.weaponType = weaponType;
     }
 
     @Override

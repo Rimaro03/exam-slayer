@@ -52,6 +52,8 @@ public class ItemCollider extends BoxCollider{
             HashMap<Item, Integer> inventory = playerStats.getInventory();
             inventory.put(item, inventory.getOrDefault(item, 0) + 1);
             log.info("Player picked up item: {}", item.getName());
+
+            item.onPickUp(other.getGameObject());
             this.destory();
         }
     }

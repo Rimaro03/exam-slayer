@@ -1,11 +1,12 @@
 package org.project.componentsystem.components.stats;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.components.Component;
 import org.project.core.Game;
 
-@Getter
+@Getter @Setter
 public abstract class Stats extends Component {
     protected int health;
     protected int attack;

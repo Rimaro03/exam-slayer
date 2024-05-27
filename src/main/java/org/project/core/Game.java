@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.project.generation.Level;
 import org.project.generation.wavecollapse.GenerationSettings;
 import org.project.generation.wavecollapse.LevelGenerator;
+import org.project.items.Book;
 import org.project.items.Heart;
 import org.project.items.Item;
 import org.project.items.Sword;
@@ -21,8 +22,8 @@ import java.util.Random;
 @Getter
 public class Game implements WindowListener {
     private static Game currentGame;
-    private Level currentLevel;
-    private SavingIO savingIO;
+    private final Level currentLevel;
+    private final SavingIO savingIO;
 
     public static final ArrayList<Item> all_items = new ArrayList<>();
 
@@ -44,8 +45,7 @@ public class Game implements WindowListener {
                 "Diamond Sword",
                 2,
                 "resources/textures/touchable/sword.png",
-                "resources/textures/stats/items/sword.png",
-                1
+                "resources/textures/stats/items/sword.png"
         );
         Heart heart = new Heart(
                 "Heart",
@@ -54,9 +54,25 @@ public class Game implements WindowListener {
                 "resources/textures/stats/items/heart.png",
                 10
         );
-        for (int i = 0; i < GenerationSettings.ITEM_ROOM_COUNT; i++) {
-            all_items.add(sword);
+        Book book = new Book(
+                "Physics Book",
+                1,
+                "resources/textures/touchable/book.png",
+                "resources/textures/stats/items/book.png"
+        );
+        for (int i = 0; i < GenerationSettings.ITEM_ROOM_COUNT * 10; i++) {
             all_items.add(heart);
+            all_items.add(sword);
+            all_items.add(book);
+        }
+
+        // shuffle the items
+        Random random = new Random();
+        for (int i = 0; i < all_items.size(); i++) {
+            int randomIndexToSwap = random.nextInt(all_items.size());
+            Item temp = all_items.get(randomIndexToSwap);
+            all_items.set(randomIndexToSwap, all_items.get(i));
+            all_items.set(i, temp);
         }
 
     }

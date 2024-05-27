@@ -50,6 +50,7 @@ public abstract class AbstractBoxCollider extends Collider {
      */
     public boolean collidesWith(Collider other) {
         if(this.getIgnoreColliders().contains(other)) return false;
+
         if(other instanceof AbstractBoxCollider){
             AbstractBoxCollider otherBox = (AbstractBoxCollider) other;
 

@@ -6,8 +6,12 @@ import org.project.componentsystem.components.stats.EntityStats;
 import org.project.componentsystem.components.stats.PlayerStats;
 import org.project.componentsystem.components.weapons.PlayerShootingController;
 import org.project.componentsystem.components.weapons.WeaponData;
+import org.project.componentsystem.components.weapons.WeaponType;
+import org.project.core.Game;
 import org.project.generation.Room;
+import org.project.items.Book;
 import org.project.items.Item;
+import org.project.items.Sword;
 import org.project.utils.Vec2;
 
 import java.util.Random;
@@ -28,10 +32,16 @@ public class GameObjectFactory {
 
         return createGameObject(
                 player,
-                new PlayerStats(player, 100, 10, 5, 15),
+                new PlayerStats(player, 100, 10, 5, 15)
+                        .addItem(new Book(
+                                "PhysicsBook",
+                                1,
+                                "resources/textures/touchable/book.png",
+                                "resources/textures/stats/items/defaultItem.png"
+                        )),
                 new AnimatedSpriteRenderer(player, "resources/textures/characters/MainCharacter.png", 32, 32),
                 new PlayerController(player),
-                new PlayerShootingController(player, .1f),
+                new PlayerShootingController(player, 0.2f, WeaponType.PhysicsBook),
                 new BoxCollider(player, new Vec2(1.2f, 2), true, true)
         );
     }
@@ -87,7 +97,13 @@ public class GameObjectFactory {
         GameObject projectile = createGameObject("Projectile");
         return createGameObject(
                 projectile,
-                new ProjectileCollider(projectile, new Vec2(.2f, .2f), true, true, parent),
+                new ProjectileCollider(
+                    projectile,
+                    new Vec2(.2f, .2f),
+                    true,
+                    true,
+                    parent
+                ),
                 new Projectile(projectile, weaponData.damage, direction.multiply(weaponData.speed)),
                 new AnimatedSpriteRenderer(projectile, weaponData.imagePath, weaponData.imageWidth, weaponData.imageHeight)
         );
