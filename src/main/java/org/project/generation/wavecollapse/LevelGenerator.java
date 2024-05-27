@@ -28,29 +28,34 @@ Generation method:
 public class LevelGenerator {
     private final int mapSize;
     private final Random rand;
+    private final long seed;
     private final int minRoomCount;
 
-    public LevelGenerator(int mapSize, long seed){
-        this.mapSize = mapSize;
+    public LevelGenerator(long seed){
+        this.mapSize = GenerationSettings.MAP_SIZE;
+        this.seed = seed;
         this.rand = new Random(seed);
 
         minRoomCount = mapSize * mapSize / 2;
 
         log.info("Level generator seed set to {}", seed);
     }
+
     /**
      * This method uses the wave collapse algorithm to generate a new level.
      */
     public Level build(){
-
         Room startRoom = generateRooms();
         List<Room> bossRooms = getBossRooms(startRoom);
         List<Room> itemRooms = getItemRooms(startRoom, bossRooms);
+        if(Debug.ENABLED) {
+            printMap(startRoom, bossRooms, itemRooms);
+            log.info("Start room : [{}, {}]", startRoom.getX(), startRoom.getY());
+        }
+
         setRoomsInitType(startRoom, bossRooms, itemRooms);
 
-        if(Debug.ENABLED) {printMap(startRoom, bossRooms, itemRooms);}
-
-        return new Level(startRoom, bossRooms);
+        return new Level(startRoom, bossRooms, seed);
     }
 
     /* ---------------- BUILD SUB METHODS -------------------- */
@@ -127,10 +132,15 @@ public class LevelGenerator {
     private void setRoomsInitType(Room startRoom, List<Room> bossRooms, List<Room> itemRooms){
         Set<Room> allRooms = Algorithm.getConnectedRooms(startRoom);
         for (Room room : allRooms) {
-            if(room == startRoom) { room.setInitType(Room.InitType.Start); }
-            else if (bossRooms.contains(room)) { room.setInitType(Room.InitType.Boss); }
-            else if (itemRooms.contains(room)) { room.setInitType(Room.InitType.Item); }
-            else{ room.setInitType(Room.InitType.Normal); }
+            if(room == startRoom)
+                room.setInitType(Room.InitType.Start);
+            else if (bossRooms.contains(room))
+                room.setInitType(Room.InitType.Boss);
+            else if (itemRooms.contains(room))
+                room.setInitType(Room.InitType.Item);
+            else {
+                room.setInitType(Room.InitType.Normal);
+            }
         }
     }
 
