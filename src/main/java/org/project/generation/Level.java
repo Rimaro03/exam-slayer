@@ -36,7 +36,7 @@ public class Level {
         this.physicsEngine = new Physics();
         this.seed = seed;
     }
-    public void updateToSavedData(){
+    public void loadMapData(){
         Set<Room> allRooms = Algorithm.getConnectedRooms(currentRoom);
 
         SavingIO savingIO = Game.getSavingIO();
@@ -59,7 +59,7 @@ public class Level {
             }
         }
     }
-    public void save(){
+    public void saveMapData(){
         Set<Room> allRooms = Algorithm.getConnectedRooms(currentRoom);
 
         SavingIO savingIO = Game.getSavingIO();
@@ -76,6 +76,12 @@ public class Level {
         savingIO.setVec2IntList("LevelClearedRooms", clearedRooms);
         savingIO.setVec2Int("LevelStartRoomPosition", startRoomPosition);
         savingIO.setLong("LevelSeed", seed);
+    }
+    public void destroyAllGameObjects(){
+        Set<Room> allRooms = Algorithm.getConnectedRooms(currentRoom);
+        for(Room room : allRooms){
+            room.destroyGameObjects();
+        }
     }
     /**
      * Change the current room to the one in the specified direction relative to the current.

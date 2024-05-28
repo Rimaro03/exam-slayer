@@ -167,6 +167,13 @@ public class Room {
             gameObjects.get(i).update();
         }
     }
+    public void destroyGameObjects() {
+        while(!gameObjects.isEmpty()){
+            GameObject go = gameObjects.get(gameObjects.size() - 1);
+            gameObjects.remove(go);
+            go.destroy();
+        }
+    }
 
     public String toString(){
         if(adjacentRooms[0] != null && adjacentRooms[2] != null && adjacentRooms[3] != null && adjacentRooms[1] != null){

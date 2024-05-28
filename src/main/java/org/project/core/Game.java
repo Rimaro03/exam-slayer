@@ -82,7 +82,7 @@ public class Game implements WindowListener {
         }
 
         currentGame = new Game(saveFilePath);
-        currentGame.currentLevel.updateToSavedData();
+        currentGame.currentLevel.loadMapData();
 
         return currentGame;
     }
@@ -96,6 +96,11 @@ public class Game implements WindowListener {
     public void update(){
         currentLevel.update();
     }
+    private void exit(){
+        currentLevel.saveMapData();
+        currentLevel.destroyAllGameObjects();
+        savingIO.flush();
+    }
 
     @Override
     public void windowOpened(WindowEvent e) {
@@ -104,8 +109,7 @@ public class Game implements WindowListener {
 
     @Override
     public void windowClosing(WindowEvent e) {
-        currentLevel.save();
-        savingIO.flush();
+        exit();
     }
 
     @Override
