@@ -53,6 +53,10 @@ public class SavingIO {
         set(name, String.valueOf(value));
     }
 
+    public void setString(String name, String value){
+        set(name, value);
+    }
+
     /* ------------------------- SAVABLE SETTERS ------------------------- */
 
     public void setVec2Int(String name, Vec2Int value){
@@ -64,7 +68,6 @@ public class SavingIO {
     public void setVec2IntList(String name, List<Vec2Int> list){
         set(name, listToSaveString(list));
     }
-
 
 
     /* -------------------------- PRIMITIVE GETTERS -------------------------*/

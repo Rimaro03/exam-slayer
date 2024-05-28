@@ -137,6 +137,14 @@ public class Room {
             case Normal:
                 GameObject[] enemies = GameObjectFactory.createEnemies(new Random().nextInt(2) + 4);
                 gameObjects.addAll(Arrays.asList(enemies));
+                if(!Game.all_items.isEmpty()) {
+                    GameObject item = GameObjectFactory.createPhysicalItem(
+                            new Vec2(1, 1),
+                            Game.all_items.get(0)
+                    );
+                    gameObjects.add(item);
+                    Game.all_items.remove(0);
+                 }
                 break;
             case Item:
                  if(!Game.all_items.isEmpty()) {

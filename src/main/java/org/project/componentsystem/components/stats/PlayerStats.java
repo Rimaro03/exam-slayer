@@ -5,9 +5,11 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
+import org.project.core.Game;
 import org.project.core.rendering.Renderer;
 import org.project.items.Heart;
 import org.project.items.Item;
+import org.project.savingsystem.SavingIO;
 import org.project.utils.Vec2;
 
 import java.awt.*;
@@ -44,7 +46,9 @@ public class PlayerStats extends Stats {
     }
 
     @Override
-    public void start() { }
+    public void start() {
+
+    }
 
     @Override @SneakyThrows
     public void update() {
@@ -78,7 +82,14 @@ public class PlayerStats extends Stats {
      */
     @Override
     public void destory() {
-
+        int index = 0;
+        for (Item item : inventory.keySet()) {
+            for (int i = 0; i < inventory.get(item); i++) {
+                System.out.println("inventory" + index + " " + item.getName());
+                Game.getSavingIO().setString("inventory" + index, item.getName());
+                index++;
+            }
+        }
     }
 
     @Override
