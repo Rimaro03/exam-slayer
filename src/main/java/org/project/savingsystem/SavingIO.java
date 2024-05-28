@@ -1,12 +1,11 @@
 package org.project.savingsystem;
 
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.core.util.ArrayUtils;
 import org.project.utils.Vec2Int;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Class to save and load values from a file
@@ -21,11 +20,11 @@ public class SavingIO {
     /**
      * Creates a new SavingIO object with the given path.
      * remember to call flush() before the program ends to save the changes.
-     * @param path
+     * @param path the path to the save file.
      */
     public SavingIO(String path){
         this.path = path;
-        this.text = getText();;
+        this.text = readSaveFile();;
     }
     /**
      * Flushes all the changes applied to the file.
@@ -68,6 +67,10 @@ public class SavingIO {
     public void setVec2IntList(String name, List<Vec2Int> list){
         set(name, listToSaveString(list));
     }
+    public void setStringList(String name, List<String> list){ set(name, listToString(list)); }
+    public void setIntList(String name, List<Integer> list){
+        set(name, listToString(list));
+    }
 
 
     /* -------------------------- PRIMITIVE GETTERS -------------------------*/
@@ -83,6 +86,9 @@ public class SavingIO {
     public Long getLong(String name){
         String value = get(name);
         return value != null ? Long.parseLong(value) : null;
+    }
+    public String getString(String name){
+        return get(name);
     }
 
     /* ----------------------------- SAVABLE GETTERS ----------------------------*/
@@ -102,6 +108,30 @@ public class SavingIO {
             for (int i = 0; i < elements; i++) { list.add(new Vec2Int()); }
 
             return new ListReader<Vec2Int>(value).readList(list);
+        }
+        return null;
+    }
+    public List<String> getStringList(String name){
+        String value = get(name);
+        if(value != null) {
+            List<String> list = new ArrayList<>();
+            Scanner scanner = new Scanner(value);
+
+            while(scanner.hasNext())
+                list.add(scanner.next());
+            return list;
+        }
+        return null;
+    }
+    public List<Integer> getIntList(String name){
+        String value = get(name);
+        if(value != null) {
+            List<Integer> list = new ArrayList<>();
+            Scanner scanner = new Scanner(value);
+
+            while(scanner.hasNextInt())
+                list.add(scanner.nextInt());
+            return list;
         }
         return null;
     }
@@ -138,11 +168,22 @@ public class SavingIO {
 
         return builder.toString();
     }
-    private int elementsCount(String text){
-        return text.split(" ").length;
+    private String listToString(List<?> list){
+        StringBuilder builder = new StringBuilder();
+
+        for(Object obj : list) {
+            builder.append(obj.toString()).append(" ");
+        }
+
+        return builder.toString();
     }
 
-    private StringBuilder getText() {
+    private int elementsCount(String text){
+        String[] tokens = text.split(" ");
+        return tokens[0].isEmpty() ? 0 : tokens.length;
+    }
+
+    private StringBuilder readSaveFile() {
         StringBuilder text = new StringBuilder();
         try(FileReader file = new FileReader(path); Scanner scanner = new Scanner(file)){
             while(scanner.hasNextLine())

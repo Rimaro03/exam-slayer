@@ -2,6 +2,7 @@ package org.project.core;
 
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import org.project.componentsystem.components.bosses.BossesInfo;
 import org.project.generation.Level;
 import org.project.generation.wavecollapse.GenerationSettings;
 import org.project.generation.wavecollapse.LevelGenerator;
@@ -13,9 +14,7 @@ import org.project.savingsystem.SavingIO;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.ArrayList;
-import java.util.Random;
-
+import java.util.*;
 
 
 @Log4j2
@@ -25,7 +24,8 @@ public class Game implements WindowListener {
     private final Level currentLevel;
     private final SavingIO savingIO;
 
-    public static final ArrayList<Item> all_items = new ArrayList<>();
+    private LinkedList<Item> itemsQueue;
+    private LinkedList<Integer> bossesIdsQueue;
 
     private Game(String saveFilePath){
         savingIO = new SavingIO(saveFilePath);
@@ -41,6 +41,7 @@ public class Game implements WindowListener {
 
         // TODO : Load all items from a file (sword is a test item)
         // Loop is just for testing
+        itemsQueue = new LinkedList<>();
         Sword sword = new Sword(
                 "Diamond Sword",
                 2,
@@ -61,20 +62,26 @@ public class Game implements WindowListener {
                 "resources/textures/stats/items/book.png"
         );
         for (int i = 0; i < GenerationSettings.ITEM_ROOM_COUNT * 10; i++) {
-            all_items.add(heart);
-            all_items.add(sword);
-            all_items.add(book);
+            itemsQueue.add(heart);
+            itemsQueue.add(sword);
+            itemsQueue.add(book);
         }
 
-        // shuffle the items
-        Random random = new Random();
-        for (int i = 0; i < all_items.size(); i++) {
-            int randomIndexToSwap = random.nextInt(all_items.size());
-            Item temp = all_items.get(randomIndexToSwap);
-            all_items.set(randomIndexToSwap, all_items.get(i));
-            all_items.set(i, temp);
-        }
+        Collections.shuffle(itemsQueue);
 
+        bossesIdsQueue = new LinkedList<>();
+        List<Integer> savedBossesIds = savingIO.getIntList("BossesIds");
+
+        if(savedBossesIds != null){
+            for (Integer id : savedBossesIds) {
+                bossesIdsQueue.add(id);
+            }
+        } else  {
+            for (int id = 0; id < BossesInfo.IMPLEMENTED_BOSSES; id++) {
+                bossesIdsQueue.add(id);
+            }
+            Collections.shuffle(bossesIdsQueue);
+        }
     }
     public static Game loadNewGame(String saveFilePath){
         if(saveFilePath == null){
@@ -99,8 +106,18 @@ public class Game implements WindowListener {
     private void exit(){
         currentLevel.saveMapData();
         currentLevel.destroyAllGameObjects();
+
+        savingIO.setIntList("BossesIds", bossesIdsQueue);
+
         savingIO.flush();
     }
+
+    /* ------------------------- QUEUE METHODS ------------------------- */
+
+    public static Item popItem(){ return currentGame.itemsQueue.poll(); }
+    public static Integer popBossId(){ return currentGame.bossesIdsQueue.poll(); }
+
+    /* ---------------------- WINDOW LISTENER METHODS ---------------------- */
 
     @Override
     public void windowOpened(WindowEvent e) {

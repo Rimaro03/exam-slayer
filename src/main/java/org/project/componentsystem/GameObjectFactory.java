@@ -1,17 +1,17 @@
 package org.project.componentsystem;
 
 import org.project.componentsystem.components.*;
+import org.project.componentsystem.components.bosses.BossesInfo;
 import org.project.componentsystem.components.colliders.*;
+import org.project.componentsystem.components.stats.EnemyInfo;
 import org.project.componentsystem.components.stats.EntityStats;
 import org.project.componentsystem.components.stats.PlayerStats;
 import org.project.componentsystem.components.weapons.PlayerShootingController;
 import org.project.componentsystem.components.weapons.WeaponData;
 import org.project.componentsystem.components.weapons.WeaponType;
-import org.project.core.Game;
 import org.project.generation.Room;
 import org.project.items.Book;
 import org.project.items.Item;
-import org.project.items.Sword;
 import org.project.utils.Vec2;
 
 import java.util.Random;
@@ -50,8 +50,8 @@ public class GameObjectFactory {
 
         return createGameObject(
                 room,
-                new AnimatedSpriteRenderer(room, "resources/textures/map/empty_map.png", 256, 256),
-                new BoxCollider(room, new Vec2(Room.SIZE - 2.4f, Room.SIZE - 2), false, false)
+                new AnimatedSpriteRenderer(room, "resources/textures/map/room.png", 256, 256),
+                new BoxCollider(room, new Vec2(Room.SIZE - 5.f, Room.SIZE - 5.f), false, false)
         );
     }
     public static GameObject createDoorGameObject(int direction, Collider roomCollider){
@@ -76,9 +76,10 @@ public class GameObjectFactory {
 
         for (int i = 0; i < amount; i++) {
             GameObject enemy = createGameObject("Enemy");
+            int enemyId = EnemyInfo.getRandomEnemyId(rand);
             createGameObject(
                     enemy,
-                    new AnimatedSpriteRenderer(enemy, "resources/textures/characters/Integral.png", 16, 32),
+                    new AnimatedSpriteRenderer(enemy, EnemyInfo.getTexturePath(enemyId), EnemyInfo.getTextureWidth(enemyId), EnemyInfo.getTextureHeight(enemyId)),
                     new BoxCollider(enemy, new Vec2(1f, 1.5f), true, true),
                     new EntityStats(enemy, 50, 5, 2, 10)
             );
@@ -88,9 +89,13 @@ public class GameObjectFactory {
         return enemies;
     }
     public static GameObject createBoss(int id){
+        System.out.println(id);
         // TODO : Implement boss creation
-        GameObject boss = createGameObject("Boss");
-        return createGameObject(boss, new BoxCollider(boss, new Vec2(4, 4), true, true));
+        GameObject boss = createGameObject(BossesInfo.getName(id));
+        return createGameObject(boss,
+                new BoxCollider(boss, new Vec2(4, 4), true, true),
+                new AnimatedSpriteRenderer(boss, BossesInfo.getTexturePath(id), BossesInfo.BOSS_RESOLUTION, BossesInfo.BOSS_RESOLUTION)
+        );
     }
 
     public static GameObject createProjectile(WeaponData weaponData, Vec2 direction, GameObject parent){

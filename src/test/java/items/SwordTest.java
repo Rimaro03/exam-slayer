@@ -9,26 +9,26 @@ class SwordTest {
 
     @Test
     void getName() {
-        Sword sword = new Sword("Sword", 10, "resources/textures/touchable/sword.png", "resources/textures/stats/item/sword.png", 10);
+        Sword sword = new Sword("Sword", 10, "resources/textures/touchable/sword.png", "resources/textures/stats/item/sword.png");
         assertEquals("Sword", sword.getName());
     }
 
     @Test
     void getWeight() {
-        Sword sword = new Sword("Sword", 10, "resources/textures/touchable/sword.png", "resources/textures/stats/item/sword.png", 10);
+        Sword sword = new Sword("Sword", 10, "resources/textures/touchable/sword.png", "resources/textures/stats/item/sword.png");
         assertEquals(10, sword.getWeight());
     }
 
     @Test
     void setName() {
-        Sword sword = new Sword("Sword", 10, "resources/textures/touchable/sword.png", "resources/textures/stats/item/sword.png", 10);
+        Sword sword = new Sword("Sword", 10, "resources/textures/touchable/sword.png", "resources/textures/stats/item/sword.png");
         sword.setName("Sword2");
         assertEquals("Sword2", sword.getName());
     }
 
     @Test
     void setWeight() {
-        Sword sword = new Sword("Sword", 10, "resources/textures/touchable/sword.png", "resources/textures/stats/item/sword.png", 10);
+        Sword sword = new Sword("Sword", 10, "resources/textures/touchable/sword.png", "resources/textures/stats/item/sword.png");
         sword.setWeight(20);
         assertEquals(20, sword.getWeight());
     }
@@ -36,7 +36,7 @@ class SwordTest {
 
     @Test
     void use() {
-        Sword sword = new Sword("Sword", 10, "resources/textures/touchable/sword.png", "resources/textures/stats/item/sword.png", 10);
+        Sword sword = new Sword("Sword", 10, "resources/textures/touchable/sword.png", "resources/textures/stats/item/sword.png");
         sword.use();
     }
 }

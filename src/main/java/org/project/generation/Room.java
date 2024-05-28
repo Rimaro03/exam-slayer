@@ -11,6 +11,7 @@ import org.project.core.Game;
 import org.project.generation.wavecollapse.Direction;
 import org.project.generation.wavecollapse.InvalidDirectionException;
 import org.project.generation.wavecollapse.RoomState;
+import org.project.items.Item;
 import org.project.utils.Vec2;
 
 import java.util.ArrayList;
@@ -132,30 +133,24 @@ public class Room {
                 gameObjects.add(GameObjectFactory.createPlayer("Player"));
                 break;
             case Boss:
-                gameObjects.add(GameObjectFactory.createBoss(0));
+                Integer bossId = Game.popBossId();
+                // NULL CHECK IS TEMPORARY UNTIL ALL BOSSES ARE IMPLEMENTED
+                gameObjects.add(GameObjectFactory.createBoss(bossId != null ? bossId : 0));
                 break;
             case Normal:
                 GameObject[] enemies = GameObjectFactory.createEnemies(new Random().nextInt(2) + 4);
                 gameObjects.addAll(Arrays.asList(enemies));
-                if(!Game.all_items.isEmpty()) {
-                    GameObject item = GameObjectFactory.createPhysicalItem(
-                            new Vec2(1, 1),
-                            Game.all_items.get(0)
-                    );
-                    gameObjects.add(item);
-                    Game.all_items.remove(0);
-                 }
-                break;
             case Item:
-                 if(!Game.all_items.isEmpty()) {
-                    GameObject item = GameObjectFactory.createPhysicalItem(
+                Item item = Game.popItem();
+                if(item != null) {
+                    GameObject itemGO = GameObjectFactory.createPhysicalItem(
                             new Vec2(1, 1),
-                            Game.all_items.get(0)
+                            item
                     );
-                    gameObjects.add(item);
-                    Game.all_items.remove(0);
-                 }
-                 break;
+                    gameObjects.add(itemGO);
+                }
+                break;
+
             case Empty: break;
             default:
                 throw new RuntimeException("Invalid init type");

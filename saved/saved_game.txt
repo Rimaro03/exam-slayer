@@ -1,6 +1,0 @@
-inventory0 Heart
-LevelClearedRooms 3,3 3,5 3,6 3,4 
-LevelStartRoomPosition 3,6
-LevelSeed -4503889316765146408
-inventory1 PhysicsBook
-inventory2 Diamond Sword
