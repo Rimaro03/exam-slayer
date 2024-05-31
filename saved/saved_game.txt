@@ -1,7 +1,6 @@
-inventory DiamondSword PhysicsBook DefaultPhysicsBook 
+LevelClearedRooms 
+LevelStartRoomPosition 2,3
+LevelSeed -5011271844821637585
+inventory DefaultPhysicsBook 
 health 100
-attack 10
-LevelClearedRooms 3,4 
-LevelStartRoomPosition 3,4
-LevelSeed -1701077946452713118
 BossesIds 1 0 

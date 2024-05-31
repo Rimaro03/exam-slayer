@@ -213,18 +213,6 @@ public class SavingIO {
         return tokens[0].isEmpty() ? 0 : tokens.length;
     }
 
-    private StringBuilder readSaveFile() {
-        StringBuilder text = new StringBuilder();
-        try (FileReader file = new FileReader(path); Scanner scanner = new Scanner(file)) {
-            while (scanner.hasNextLine())
-                text.append(scanner.nextLine()).append("\n");
-        } catch (IOException e) {
-            log.warn("File not found : {}", path);
-        }
-
-        return text;
-    }
-
     private int startIndex(String name) {
         int indexOfName = text.indexOf(name);
         if (indexOfName == -1)

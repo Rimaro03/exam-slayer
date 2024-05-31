@@ -154,7 +154,8 @@ public class BoxCollider extends AbstractBoxCollider {
                     getGameObject().getPosition(),
                     getSize(),
                     Color.RED,
-                    2
+                    2,
+                    false
             );
     }
 }

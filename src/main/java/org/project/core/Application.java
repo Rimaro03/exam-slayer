@@ -37,7 +37,7 @@ public class Application extends JFrame {
     /* --------------- INTERNAL METHODS ------------- */
 
     private void initInternal() {
-        window = new Window(800, 600);
+        window = new Window(1000, 600);
         setup();
     }
 
@@ -63,6 +63,7 @@ public class Application extends JFrame {
 
 
         addWindowListener(game);
+        window.addKeyListener(game);
         game.start();
 
         while (true) {

@@ -13,7 +13,7 @@ class GameObjectFactoryTest {
 
     @Test
     void createPlayer() {
-        GameObject player = GameObjectFactory.createPlayer("Player");
+        GameObject player = GameObjectFactory.createPlayer();
         assert player.getName().equals("Player");
         assert ((PlayerStats) player.getComponent(PlayerStats.class)).getHealth() == 100;
     }

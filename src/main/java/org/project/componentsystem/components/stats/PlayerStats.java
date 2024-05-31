@@ -20,7 +20,7 @@ import java.util.HashMap;
 @Log4j2
 public class PlayerStats extends Stats {
     private HashMap<Item, Integer> inventory = new HashMap<>();
-    private Vec2 position = new Vec2(-10, 7);
+    private Vec2 position = new Vec2(-12.5f, 7);
 
     private boolean isStarted = false;
 
@@ -29,12 +29,10 @@ public class PlayerStats extends Stats {
      *
      * @param gameObject The reference to the GameObject that this PlayerStats is attached to
      * @param health     The health of this PlayerStats
-     * @param attack     The attack of this PlayerStats
-     * @param defense    The defense of this PlayerStats
      * @param speed      The speed of this PlayerStats
      */
-    public PlayerStats(GameObject gameObject, int health, int attack, int defense, int speed) {
-        this(gameObject, true, health, attack, defense, speed);
+    public PlayerStats(GameObject gameObject, int health, int speed) {
+        this(gameObject, true, health, speed);
     }
 
     /**
@@ -43,12 +41,10 @@ public class PlayerStats extends Stats {
      * @param gameObject The reference to the GameObject that this PlayerStats is attached to
      * @param enabled    Whether this PlayerStats is enabled or not
      * @param health     The health of this PlayerStats
-     * @param attack     The attack of this PlayerStats
-     * @param defense    The defense of this PlayerStats
      * @param speed      The speed of this PlayerStats
      */
-    public PlayerStats(GameObject gameObject, boolean enabled, int health, int attack, int defense, int speed) {
-        super(gameObject, enabled, health, attack, defense, speed);
+    public PlayerStats(GameObject gameObject, boolean enabled, int health, int speed) {
+        super(gameObject, enabled, health, speed);
     }
 
     @Override
@@ -73,10 +69,6 @@ public class PlayerStats extends Stats {
         if (health != null) {
             this.health = health;
         }
-        Integer attack = Game.getSavingIO().getInt("attack");
-        if (attack != null) {
-            this.attack = attack;
-        }
     }
 
     @Override
@@ -84,9 +76,7 @@ public class PlayerStats extends Stats {
     public void update() {
         speed = Math.max(speed, 5);
         Renderer.addTextToRenderQueue(position, "Health: " + health, Color.WHITE, 10, 2);
-        Renderer.addTextToRenderQueue(position.add(new Vec2(0, -0.5f)), "Attack: " + attack, Color.WHITE, 10, 2);
-        Renderer.addTextToRenderQueue(position.add(new Vec2(0, -1)), "Defense: " + defense, Color.WHITE, 10, 2);
-        Renderer.addTextToRenderQueue(position.add(new Vec2(0, -1.5f)), "Speed: " + speed, Color.WHITE, 10, 2);
+        Renderer.addTextToRenderQueue(position.add(new Vec2(0, -.5f)), "Speed: " + speed, Color.WHITE, 10, 2);
         Object[] keys = inventory.keySet().toArray();
         for (int i = 0; i < keys.length; i++) {
             Item item = (Item) keys[i];
@@ -121,8 +111,6 @@ public class PlayerStats extends Stats {
 
         Game.getSavingIO().setStringList("inventory", items);
         Game.getSavingIO().setInt("health", health);
-        Game.getSavingIO().setInt("attack", attack);
-
     }
 
     @Override

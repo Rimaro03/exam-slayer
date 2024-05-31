@@ -10,27 +10,21 @@ import org.project.core.Game;
 @Setter
 public abstract class Stats extends Component {
     protected int health;
-    protected int attack;
-    protected int defense;
     protected int speed;
     protected int baseSpeed;
     protected int baseHealth;
 
-    public Stats(GameObject gameObject, boolean enabled, int health, int attack, int defense, int speed) {
+    public Stats(GameObject gameObject, boolean enabled, int health, int speed) {
         super(gameObject, enabled);
         this.health = health;
-        this.attack = attack;
-        this.defense = defense;
         this.speed = speed;
         this.baseSpeed = speed;
         this.baseHealth = health;
     }
 
-    public Stats(GameObject gameObject, int health, int attack, int defense, int speed) {
+    public Stats(GameObject gameObject, int health, int speed) {
         super(gameObject);
         this.health = health;
-        this.attack = attack;
-        this.defense = defense;
         this.speed = speed;
         this.baseSpeed = speed;
         this.baseHealth = health;

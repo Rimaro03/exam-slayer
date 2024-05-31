@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.util.PriorityQueue;
 
 public class Renderer implements ComponentListener {
+    private static final Color BACKGROUND_COLOR = new Color(41, 41, 60);
     private static final int VERTICAL_RESOLUTION = 256;
     private static final int PIXEL_PER_UNIT_SPACE = 16;
 
@@ -69,8 +70,8 @@ public class Renderer implements ComponentListener {
      * @param color    The color of the circle
      * @param priority The priority of the circle higher priority will be rendered last
      */
-    public static void addRectToRenderQueue(Vec2 position, Vec2 size, Color color, int priority) {
-        getInstance().renderQueue.add(new RenderableRectangle(size, color, position, priority));
+    public static void addRectToRenderQueue(Vec2 position, Vec2 size, Color color, int priority, boolean filled) {
+        getInstance().renderQueue.add(new RenderableRectangle(size, color, position, priority, filled));
     }
 
     /**
@@ -148,7 +149,7 @@ public class Renderer implements ComponentListener {
                 Application.getWindow().getHeight(),
                 null
         );
-        clear(Color.gray);
+        clear(BACKGROUND_COLOR);
     }
 
     /* -------------- HELPER METHODS ----------------- */

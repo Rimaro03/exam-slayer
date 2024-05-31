@@ -3,6 +3,7 @@ package org.project.componentsystem.components;
 import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.components.stats.PlayerStats;
+import org.project.core.Game;
 import org.project.core.Input;
 import org.project.core.Time;
 import org.project.utils.Vec2;
@@ -23,7 +24,7 @@ public class PlayerController extends Component {
     @Override
     public void update() {
         boolean isMoving = false;
-        int animationStep = (int) (Time.seconds() * animationSpeed) % 4;
+        int animationStep = (int) (Game.getTime().seconds() * animationSpeed) % 4;
         Vec2 delta = new Vec2(0, 0);
         PlayerStats playerStats = (PlayerStats) getGameObject().getComponent(PlayerStats.class);
         int speed = playerStats.getSpeed();
@@ -54,7 +55,7 @@ public class PlayerController extends Component {
 
         getGameObject().setPosition(
                 getGameObject().getPosition().add(
-                        delta.normalized().multiply(speed * Time.TIME_STEP_IN_SECONDS)
+                        delta.normalized().multiply(speed * Game.getTime().deltaTime())
                 )
         );
 

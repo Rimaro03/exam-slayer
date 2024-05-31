@@ -61,7 +61,6 @@ public class Level {
             }
         }
     }
-
     public void saveMapData() {
         Set<Room> allRooms = Algorithm.getConnectedRooms(currentRoom);
 
@@ -105,8 +104,8 @@ public class Level {
             currentRoom.setEnabled(false);
             currentRoom = next;
 
-            currentRoom.setEnabled(true);
             currentRoom.addGameObject(player);
+            currentRoom.setEnabled(true);
         } else {
             throw new RuntimeException("No room in that direction");
         }
@@ -121,6 +120,15 @@ public class Level {
     public void instantiateGameObject(GameObject gameObject, Vec2 position) {
         gameObject.setPosition(position);
         currentRoom.addGameObject(gameObject);
+        gameObject.setEnabled(true);
+        gameObject.start();
+    }
+
+    public GameObject findGameObject(String name) {
+        return currentRoom.getGameObject(name);
+    }
+    public GameObject[] findGameObjects(String name){
+        return currentRoom.getGameObjects(name);
     }
 
     /**
@@ -130,6 +138,8 @@ public class Level {
      */
     public void destroyGameObject(GameObject gameObject) {
         currentRoom.removeGameObject(gameObject);
+        gameObject.setEnabled(false);
+        gameObject.destroy();
     }
 
     /**

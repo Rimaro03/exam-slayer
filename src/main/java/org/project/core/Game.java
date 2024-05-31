@@ -12,26 +12,35 @@ import org.project.items.Item;
 import org.project.items.Sword;
 import org.project.savingsystem.SavingIO;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 
 @Log4j2
 @Getter
-public class Game implements WindowListener {
+public class Game implements WindowListener, KeyListener {
     private static Game currentGame;
     private final Level currentLevel;
     private final SavingIO savingIO;
+    private final Time time;
 
     private final LinkedList<Item> itemsQueue;
     private final LinkedList<Integer> bossesIdsQueue;
 
+    private boolean paused;
+    private final ArrayList<GameStateListener> gameStateListeners;
+
     private Game(String saveFilePath) {
         savingIO = new SavingIO(saveFilePath);
+
+        gameStateListeners = new ArrayList<>();
+        paused = false;
+
+        time = new Time();
+        gameStateListeners.add(time);
 
         Long levelSeed = savingIO.getLong("LevelSeed");
         if (levelSeed == null)
@@ -98,13 +107,22 @@ public class Game implements WindowListener {
         return currentGame;
     }
 
-
+    public static Time getTime() {
+        return currentGame.time;
+    }
     public static SavingIO getSavingIO() {
         return currentGame.savingIO;
     }
 
     public static Level getCurrentLevel() {
         return currentGame.currentLevel;
+    }
+
+
+    /* ------------------------- QUEUE METHODS ------------------------- */
+
+    public static Integer popBossId() {
+        return currentGame.bossesIdsQueue.poll();
     }
 
     public static Item popItem() {
@@ -124,14 +142,22 @@ public class Game implements WindowListener {
         return item;
     }
 
-    /* ------------------------- QUEUE METHODS ------------------------- */
 
-    public static Integer popBossId() {
-        return currentGame.bossesIdsQueue.poll();
+    /* ---------------------- GAME LISTENER METHODS --------------------------*/
+
+    public static void addGameStateListener(GameStateListener listener) {
+        currentGame.gameStateListeners.add(listener);
     }
+    public static void removeGameStateListener(GameStateListener listener) {
+        currentGame.gameStateListeners.remove(listener);
+    }
+
+
+    /* ---------------------- GAME METHODS --------------------------*/
 
     public void start() {
         currentLevel.init();
+
     }
 
     public void update() {
@@ -181,6 +207,29 @@ public class Game implements WindowListener {
 
     @Override
     public void windowDeactivated(WindowEvent e) {
+
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+            for (GameStateListener listener : gameStateListeners) {
+                if(paused)
+                    listener.onGameResumed();
+                else
+                    listener.onGamePaused();
+            }
+            paused = !paused;
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
 
     }
 }

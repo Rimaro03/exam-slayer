@@ -3,7 +3,9 @@ package org.project.componentsystem;
 import org.project.componentsystem.components.*;
 import org.project.componentsystem.components.bosses.BossesInfo;
 import org.project.componentsystem.components.colliders.*;
-import org.project.componentsystem.components.stats.EnemyInfo;
+import org.project.componentsystem.components.enemies.EnemyAI;
+import org.project.componentsystem.components.enemies.EnemyInfo;
+import org.project.componentsystem.components.enemies.RoomLocker;
 import org.project.componentsystem.components.stats.EntityStats;
 import org.project.componentsystem.components.stats.PlayerStats;
 import org.project.componentsystem.components.weapons.PlayerShootingController;
@@ -28,22 +30,23 @@ public class GameObjectFactory {
         return obj;
     }
 
-    public static GameObject createPlayer(String name) {
-        GameObject player = createGameObject(name);
+    public static GameObject createPlayer() {
+        GameObject player = createGameObject("Player");
 
         return createGameObject(
                 player,
-                new PlayerStats(player, 100, 10, 5, 15)
+                new PlayerStats(player, 100, 15)
                         .addItem(new Book(
                                 "DefaultPhysicsBook",
                                 1,
                                 "resources/textures/touchable/book.png",
                                 "resources/textures/stats/items/defaultItem.png"
                         )),
-                new AnimatedSpriteRenderer(player, "resources/textures/characters/MainCharacter.png", 32, 32),
+                new AnimatedSpriteRenderer(player, "resources/textures/characters/MainCharacter.png", 32, 32, 1),
                 new PlayerController(player),
                 new PlayerShootingController(player, 0.2f, WeaponType.PhysicsBook),
-                new BoxCollider(player, new Vec2(1.2f, 2), true, true)
+                new BoxCollider(player, new Vec2(1.2f, 2), true, true),
+                new EscMenu(player)
         );
     }
 
@@ -52,8 +55,9 @@ public class GameObjectFactory {
 
         return createGameObject(
                 room,
-                new AnimatedSpriteRenderer(room, "resources/textures/map/room.png", 256, 256),
-                new BoxCollider(room, new Vec2(Room.SIZE - 5.f, Room.SIZE - 5.f), false, false)
+                new AnimatedSpriteRenderer(room, "resources/textures/map/room.png", 256, 256, -1),
+                new BoxCollider(room, new Vec2(Room.SIZE - 5.f, Room.SIZE - 5.f), false, false),
+                new RoomLocker(room)
         );
     }
 
@@ -64,7 +68,8 @@ public class GameObjectFactory {
                 door,
                 "resources/textures/map/open_door.png",
                 25,
-                25
+                25,
+                0
         );
         renderer.rotate(direction * 90);
 
@@ -83,9 +88,10 @@ public class GameObjectFactory {
             int enemyId = EnemyInfo.getRandomEnemyId(rand);
             createGameObject(
                     enemy,
-                    new AnimatedSpriteRenderer(enemy, EnemyInfo.getTexturePath(enemyId), EnemyInfo.getTextureWidth(enemyId), EnemyInfo.getTextureHeight(enemyId)),
+                    new AnimatedSpriteRenderer(enemy, EnemyInfo.getTexturePath(enemyId), EnemyInfo.getTextureWidth(enemyId), EnemyInfo.getTextureHeight(enemyId), 0),
                     new BoxCollider(enemy, new Vec2(1f, 1.5f), true, true),
-                    new EntityStats(enemy, 50, 5, 2, 10)
+                    new EntityStats(enemy, 50, 3, 3, 2.0f, 1),
+                    new EnemyAI(enemy)
             );
             enemy.setPosition(new Vec2((.5f - rand.nextFloat()) * (Room.SIZE - 2), (.5f - rand.nextFloat()) * (Room.SIZE - 2)));
             enemies[i] = enemy;
@@ -99,7 +105,7 @@ public class GameObjectFactory {
         GameObject boss = createGameObject(BossesInfo.getName(id));
         return createGameObject(boss,
                 new BoxCollider(boss, new Vec2(4, 4), true, true),
-                new AnimatedSpriteRenderer(boss, BossesInfo.getTexturePath(id), BossesInfo.BOSS_RESOLUTION, BossesInfo.BOSS_RESOLUTION)
+                new AnimatedSpriteRenderer(boss, BossesInfo.getTexturePath(id), BossesInfo.BOSS_RESOLUTION, BossesInfo.BOSS_RESOLUTION, 0)
         );
     }
 
@@ -115,7 +121,7 @@ public class GameObjectFactory {
                         parent
                 ),
                 new Projectile(projectile, weaponData.damage, direction.multiply(weaponData.speed)),
-                new AnimatedSpriteRenderer(projectile, weaponData.imagePath, weaponData.imageWidth, weaponData.imageHeight)
+                new AnimatedSpriteRenderer(projectile, weaponData.imagePath, weaponData.imageWidth, weaponData.imageHeight, 0)
         );
     }
 
@@ -125,7 +131,7 @@ public class GameObjectFactory {
                 physicalItem,
                 new ItemController(physicalItem, item),
                 new ItemCollider(physicalItem, size, false, true),
-                new AnimatedSpriteRenderer(physicalItem, item.getPhysicalPath(), 16, 16)
+                new AnimatedSpriteRenderer(physicalItem, item.getPhysicalPath(), 16, 16, 0)
         );
     }
 }

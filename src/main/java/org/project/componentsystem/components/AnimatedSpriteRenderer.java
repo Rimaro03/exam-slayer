@@ -17,11 +17,13 @@ public class AnimatedSpriteRenderer extends Component {
     private final int frameHeight;
     private BufferedImage spriteSheet;
     private BufferedImage currentFrame;
+    private final int priority;
 
-    public AnimatedSpriteRenderer(GameObject gameObject, String spriteSheetPath, int frameWidth, int frameHeight) {
+    public AnimatedSpriteRenderer(GameObject gameObject, String spriteSheetPath, int frameWidth, int frameHeight, int priority) {
         super(gameObject);
         this.frameWidth = frameWidth;
         this.frameHeight = frameHeight;
+        this.priority = priority;
         try {
             spriteSheet = ImageIO.read(new File(spriteSheetPath));
             this.currentFrame = spriteSheet.getSubimage(0, 0, frameWidth, frameHeight);
@@ -41,7 +43,7 @@ public class AnimatedSpriteRenderer extends Component {
 
     public void update() {
         if (isEnabled()) {
-            Renderer.addImageToRenderQueue(getGameObject().getPosition(), currentFrame, 0);
+            Renderer.addImageToRenderQueue(getGameObject().getPosition(), currentFrame, priority);
         }
     }
 

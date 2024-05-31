@@ -1,4 +1,4 @@
-package org.project.componentsystem.components.stats;
+package org.project.componentsystem.components.enemies;
 
 import lombok.extern.log4j.Log4j2;
 

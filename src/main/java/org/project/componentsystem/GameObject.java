@@ -108,7 +108,8 @@ public class GameObject {
      */
     public void update() {
         for (Component component : components) {
-            component.update();
+            if(component.isEnabled())
+                component.update();
         }
     }
 

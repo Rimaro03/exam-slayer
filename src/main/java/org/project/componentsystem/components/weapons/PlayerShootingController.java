@@ -36,7 +36,7 @@ public class PlayerShootingController extends Component {
     @Override
     public void update() {
         if (timeToShoot > 0) {
-            timeToShoot -= Time.TIME_STEP_IN_SECONDS;
+            timeToShoot -= Game.getTime().deltaTime();
             return;
         }
 

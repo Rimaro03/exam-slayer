@@ -100,7 +100,8 @@ public class DoorCollider extends AbstractBoxCollider {
                     getGameObject().getPosition(),
                     getSize(),
                     Color.RED,
-                    2
+                    2,
+                    false
             );
     }
 }

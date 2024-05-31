@@ -77,6 +77,15 @@ public class Room {
         }
         return null;
     }
+    public GameObject[] getGameObjects(String name) {
+        ArrayList<GameObject> list = new ArrayList<>();
+        for (GameObject gameObject : gameObjects) {
+            if (gameObject.getName().equals(name)) {
+                list.add(gameObject);
+            }
+        }
+        return list.toArray(new GameObject[list.size()]);
+    }
 
     /**
      * Adds a new GameObject to the room and starts it
@@ -85,8 +94,6 @@ public class Room {
      */
     public void addGameObject(GameObject gameObject) {
         gameObjects.add(gameObject);
-        gameObject.setEnabled(true);
-        gameObject.start();
     }
 
     /**
@@ -96,8 +103,6 @@ public class Room {
      */
     public void removeGameObject(GameObject gameObject) {
         gameObjects.remove(gameObject);
-        gameObject.setEnabled(false);
-        gameObject.destroy();
     }
 
 
@@ -144,7 +149,7 @@ public class Room {
         // IF YOU NEED TO ADD MORE GAME OBJECTS, ADD THEM HERE!!!
         switch (initType) {
             case Start:
-                gameObjects.add(GameObjectFactory.createPlayer("Player"));
+                gameObjects.add(GameObjectFactory.createPlayer());
                 break;
             case Boss:
                 Integer bossId = Game.popBossId();
@@ -172,8 +177,11 @@ public class Room {
         }
 
 
-        for (GameObject go : gameObjects)
+        for (GameObject go : gameObjects) {
+            if(go.getName().equals("Player") && initType != InitType.Start)
+                continue;
             go.start();
+        }
 
         initialized = true;
     }
@@ -183,7 +191,8 @@ public class Room {
      */
     public void updateGameObjects() {
         for (int i = 0; i < gameObjects.size(); i++) {
-            gameObjects.get(i).update();
+            if(gameObjects.get(i).isEnabled())
+                gameObjects.get(i).update();
         }
     }
 
