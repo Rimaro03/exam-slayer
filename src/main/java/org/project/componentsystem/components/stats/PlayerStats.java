@@ -9,24 +9,29 @@ import org.project.core.Game;
 import org.project.core.rendering.Renderer;
 import org.project.items.Heart;
 import org.project.items.Item;
-import org.project.savingsystem.SavingIO;
 import org.project.utils.Vec2;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
-@Setter @Getter @Log4j2
+@Setter
+@Getter
+@Log4j2
 public class PlayerStats extends Stats {
     private HashMap<Item, Integer> inventory = new HashMap<>();
     private Vec2 position = new Vec2(-10, 7);
 
+    private boolean isStarted = false;
+
     /**
      * Initializes a new PlayerStats with the given GameObject
+     *
      * @param gameObject The reference to the GameObject that this PlayerStats is attached to
-     * @param health The health of this PlayerStats
-     * @param attack The attack of this PlayerStats
-     * @param defense The defense of this PlayerStats
-     * @param speed The speed of this PlayerStats
+     * @param health     The health of this PlayerStats
+     * @param attack     The attack of this PlayerStats
+     * @param defense    The defense of this PlayerStats
+     * @param speed      The speed of this PlayerStats
      */
     public PlayerStats(GameObject gameObject, int health, int attack, int defense, int speed) {
         this(gameObject, true, health, attack, defense, speed);
@@ -34,12 +39,13 @@ public class PlayerStats extends Stats {
 
     /**
      * Initializes a new PlayerStats with the given GameObject and enabled status
+     *
      * @param gameObject The reference to the GameObject that this PlayerStats is attached to
-     * @param enabled Whether this PlayerStats is enabled or not
-     * @param health The health of this PlayerStats
-     * @param attack The attack of this PlayerStats
-     * @param defense The defense of this PlayerStats
-     * @param speed The speed of this PlayerStats
+     * @param enabled    Whether this PlayerStats is enabled or not
+     * @param health     The health of this PlayerStats
+     * @param attack     The attack of this PlayerStats
+     * @param defense    The defense of this PlayerStats
+     * @param speed      The speed of this PlayerStats
      */
     public PlayerStats(GameObject gameObject, boolean enabled, int health, int attack, int defense, int speed) {
         super(gameObject, enabled, health, attack, defense, speed);
@@ -47,10 +53,34 @@ public class PlayerStats extends Stats {
 
     @Override
     public void start() {
+        if (isStarted) return;
+        isStarted = true;
+        ArrayList<String> items = (ArrayList<String>) Game.getSavingIO().getStringList("inventory");
+        if (items != null) {
+            for (String item : items) {
+                Item loadedItem = Game.getItemByName(item);
+                if (loadedItem != null) {
+                    this.addItem(loadedItem);
+                    if (!(loadedItem instanceof Heart)) {
+                        loadedItem.onPickUp(getGameObject());
+                    }
+                }
+                Game.removeItem(loadedItem);
+            }
+        }
 
+        Integer health = Game.getSavingIO().getInt("health");
+        if (health != null) {
+            this.health = health;
+        }
+        Integer attack = Game.getSavingIO().getInt("attack");
+        if (attack != null) {
+            this.attack = attack;
+        }
     }
 
-    @Override @SneakyThrows
+    @Override
+    @SneakyThrows
     public void update() {
         speed = Math.max(speed, 5);
         Renderer.addTextToRenderQueue(position, "Health: " + health, Color.WHITE, 10, 2);
@@ -82,14 +112,17 @@ public class PlayerStats extends Stats {
      */
     @Override
     public void destory() {
-        int index = 0;
-        for (Item item : inventory.keySet()) {
-            for (int i = 0; i < inventory.get(item); i++) {
-                System.out.println("inventory" + index + " " + item.getName());
-                Game.getSavingIO().setString("inventory" + index, item.getName());
-                index++;
+        ArrayList<String> items = new ArrayList<>();
+        for (Item item : this.inventory.keySet()) {
+            for (int i = 0; i < this.inventory.get(item); i++) {
+                items.add(item.getName());
             }
         }
+
+        Game.getSavingIO().setStringList("inventory", items);
+        Game.getSavingIO().setInt("health", health);
+        Game.getSavingIO().setInt("attack", attack);
+
     }
 
     @Override

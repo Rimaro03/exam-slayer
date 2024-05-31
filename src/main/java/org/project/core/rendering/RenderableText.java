@@ -2,6 +2,7 @@ package org.project.core.rendering;
 
 import lombok.Getter;
 import org.project.utils.Vec2;
+
 import java.awt.*;
 
 @Getter
@@ -21,7 +22,7 @@ public class RenderableText extends Renderable {
     public void draw(Graphics g) {
         g.setColor(color);
         Font currentFont = g.getFont();
-        if(currentFont.getSize() != size) {
+        if (currentFont.getSize() != size) {
             g.setFont(new Font(currentFont.getFontName(), currentFont.getStyle(), size));
         }
         g.drawString(text, Renderer.worldToScreenX(position.getX()), Renderer.worldToScreenY(position.getY()));

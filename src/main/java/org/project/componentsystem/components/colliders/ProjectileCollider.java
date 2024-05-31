@@ -11,6 +11,7 @@ import org.project.utils.Vec2;
 public class ProjectileCollider extends AbstractBoxCollider {
 
     private final GameObject parent;
+
     public ProjectileCollider(GameObject gameObject, boolean enabled, Vec2 size, boolean movable, boolean inside, GameObject parent) {
         super(gameObject, enabled, size, movable, inside);
         this.parent = parent;
@@ -23,13 +24,13 @@ public class ProjectileCollider extends AbstractBoxCollider {
 
     @Override
     public void onCollide(Collider other) {
-        if(other.getGameObject() != parent && !(other instanceof ProjectileCollider)) {
+        if (other.getGameObject() != parent && !(other instanceof ProjectileCollider)) {
             Game.getCurrentLevel().destroyGameObject(this.getGameObject());
             log.info("Projectile collided with {}", other.getGameObject().getName());
 
             Stats stats = (Stats) other.getGameObject().getComponent(Stats.class);
-            if(stats != null){
-                Projectile projectile = (Projectile)this.getGameObject().getComponent(Projectile.class);
+            if (stats != null) {
+                Projectile projectile = (Projectile) this.getGameObject().getComponent(Projectile.class);
                 stats.takeDamage(projectile.getDamage());
             }
 

@@ -9,6 +9,7 @@ import java.awt.*;
 public class RenderableRectangle extends Renderable {
     private final Vec2 size;
     private final Color color;
+
     public RenderableRectangle(Vec2 size, Color color, Vec2 position, int priority) {
         super(position, priority);
         this.size = size;

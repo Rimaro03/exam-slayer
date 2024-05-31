@@ -7,10 +7,12 @@ import org.project.componentsystem.components.Component;
 
 import java.util.ArrayList;
 
-@Getter @Setter
+@Getter
+@Setter
 public abstract class Collider extends Component {
     private boolean movable;
     private ArrayList<Collider> ignoreColliders = new ArrayList<>();
+
     /**
      * Initializes a new Component with the given GameObject, enabled status and movable status
      *
@@ -35,5 +37,6 @@ public abstract class Collider extends Component {
     }
 
     public abstract boolean collidesWith(Collider other);
+
     public abstract void onCollide(Collider other);
 }

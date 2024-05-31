@@ -12,43 +12,54 @@ public class EnemyInfo {
     private static final int DOUBLE_INTEGRAL_ID = 3;
     private static final int IMPLEMENTED_BOSSES = 4;
 
-    public static String getName(int id){
-        switch (id){
-            case DX_ID: return "Dx";
-            case DY_ID: return "Dy";
-            case INTEGRAL_ID: return "Integral";
-            case DOUBLE_INTEGRAL_ID: return "DoubleIntegral";
+    public static String getName(int id) {
+        switch (id) {
+            case DX_ID:
+                return "Dx";
+            case DY_ID:
+                return "Dy";
+            case INTEGRAL_ID:
+                return "Integral";
+            case DOUBLE_INTEGRAL_ID:
+                return "DoubleIntegral";
             default:
                 invalidIdLog(id);
                 return "Unknown";
         }
     }
-    public static String getTexturePath(int id){
-        switch (id){
-            case DX_ID: return "resources/textures/characters/dx.png";
-            case DY_ID: return "resources/textures/characters/dy.png";
-            case INTEGRAL_ID: return "resources/textures/characters/integral.png";
-            case DOUBLE_INTEGRAL_ID: return "resources/textures/characters/double_integral.png";
+
+    public static String getTexturePath(int id) {
+        switch (id) {
+            case DX_ID:
+                return "resources/textures/characters/dx.png";
+            case DY_ID:
+                return "resources/textures/characters/dy.png";
+            case INTEGRAL_ID:
+                return "resources/textures/characters/integral.png";
+            case DOUBLE_INTEGRAL_ID:
+                return "resources/textures/characters/double_integral.png";
             default:
                 invalidIdLog(id);
                 return "";
         }
     }
 
-    public static int getTextureWidth(int id){
-        switch (id){
+    public static int getTextureWidth(int id) {
+        switch (id) {
             case DX_ID:
             case DY_ID:
             case DOUBLE_INTEGRAL_ID:
                 return 24;
-            case INTEGRAL_ID: return 16;
+            case INTEGRAL_ID:
+                return 16;
             default:
                 invalidIdLog(id);
                 return -1;
         }
     }
-    public static int getTextureHeight(int id){
-        switch (id){
+
+    public static int getTextureHeight(int id) {
+        switch (id) {
             case DX_ID:
             case DY_ID:
             case INTEGRAL_ID:
@@ -59,10 +70,13 @@ public class EnemyInfo {
                 return -1;
         }
     }
-    public static int getRandomEnemyId(Random rand){
+
+    public static int getRandomEnemyId(Random rand) {
         return rand.nextInt(IMPLEMENTED_BOSSES);
     }
 
 
-    private static void invalidIdLog(int id){ log.error("Unknown enemy id: {}", id); }
+    private static void invalidIdLog(int id) {
+        log.error("Unknown enemy id: {}", id);
+    }
 }

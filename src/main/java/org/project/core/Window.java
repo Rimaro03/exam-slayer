@@ -7,8 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowStateListener;
 
 /**
  * Represent the application window.
@@ -16,6 +14,7 @@ import java.awt.event.WindowStateListener;
 @Getter
 public class Window extends JPanel implements ComponentListener {
     private int width, height;
+
     public Window(int width, int height) {
         this.width = width;
         this.height = height;
@@ -24,16 +23,19 @@ public class Window extends JPanel implements ComponentListener {
         Application.getInstance().addComponentListener(this);
     }
 
-    /** Updates the window and draws the frame. */
+    /**
+     * Updates the window and draws the frame.
+     */
     public void update() {
         repaint();
     }
-    protected void paintComponent(Graphics g){
+
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Renderer.present(g);
     }
 
-    private void setup(){
+    private void setup() {
         setPreferredSize(new Dimension(width, height));
         setVisible(true);
         setFocusable(true);

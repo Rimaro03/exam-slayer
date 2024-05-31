@@ -11,18 +11,21 @@ import java.io.File;
 import java.io.IOException;
 
 @Log4j2
-@Getter @Setter
+@Getter
+@Setter
 public abstract class Item {
     private String name;
     private int weight;
     private String physicalPath;
     private String inventoryPath;
     private BufferedImage inventoryImage;
+
     /**
      * Initializes a new Item with the given name and weight
-     * @param name The name of this Item
-     * @param weight The weight of this Item
-     * @param physicalPath The path to the physical representation of this Item (e.g. the path to the image file)
+     *
+     * @param name          The name of this Item
+     * @param weight        The weight of this Item
+     * @param physicalPath  The path to the physical representation of this Item (e.g. the path to the image file)
      * @param inventoryPath The path to the inventory representation of this Item (e.g. the path to the image file)
      */
     public Item(String name, int weight, String physicalPath, String inventoryPath) {
@@ -50,6 +53,7 @@ public abstract class Item {
 
     /**
      * Called when this Item is picked up
+     *
      * @param by The GameObject that picked up this Item
      */
     public abstract void onPickUp(GameObject by);

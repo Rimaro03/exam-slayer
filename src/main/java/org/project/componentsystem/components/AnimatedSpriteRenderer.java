@@ -13,10 +13,11 @@ import java.io.IOException;
 
 @Log4j2
 public class AnimatedSpriteRenderer extends Component {
-    private BufferedImage spriteSheet;
-    private BufferedImage currentFrame;
     private final int frameWidth;
     private final int frameHeight;
+    private BufferedImage spriteSheet;
+    private BufferedImage currentFrame;
+
     public AnimatedSpriteRenderer(GameObject gameObject, String spriteSheetPath, int frameWidth, int frameHeight) {
         super(gameObject);
         this.frameWidth = frameWidth;
@@ -35,8 +36,10 @@ public class AnimatedSpriteRenderer extends Component {
         currentFrame = spriteSheet.getSubimage(x * frameWidth, y * frameHeight, frameWidth, frameHeight);
     }
 
-    public void start() {}
-    public void update(){
+    public void start() {
+    }
+
+    public void update() {
         if (isEnabled()) {
             Renderer.addImageToRenderQueue(getGameObject().getPosition(), currentFrame, 0);
         }
@@ -44,6 +47,7 @@ public class AnimatedSpriteRenderer extends Component {
 
     /**
      * Rotate the current frame
+     *
      * @param degrees The degrees to rotate
      */
     public void rotate(int degrees) {
@@ -54,6 +58,7 @@ public class AnimatedSpriteRenderer extends Component {
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
         currentFrame = op.filter(currentFrame, null);
     }
+
     /**
      * Destory the component
      */

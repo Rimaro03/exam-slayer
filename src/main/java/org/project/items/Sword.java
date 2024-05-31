@@ -9,7 +9,7 @@ import org.project.componentsystem.components.weapons.WeaponType;
 
 
 @Log4j2
-public class Sword extends Item{
+public class Sword extends Item {
 
     /**
      * Initializes a new Item with the given name and weight
@@ -42,6 +42,7 @@ public class Sword extends Item{
 
     /**
      * Called when this Sword is picked up
+     *
      * @param by The GameObject that picked up this Sword
      */
     @Override

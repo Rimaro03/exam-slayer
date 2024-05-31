@@ -31,7 +31,7 @@ public class LevelGenerator {
     private final long seed;
     private final int minRoomCount;
 
-    public LevelGenerator(long seed){
+    public LevelGenerator(long seed) {
         this.mapSize = GenerationSettings.MAP_SIZE;
         this.seed = seed;
         this.rand = new Random(seed);
@@ -44,11 +44,11 @@ public class LevelGenerator {
     /**
      * This method uses the wave collapse algorithm to generate a new level.
      */
-    public Level build(){
+    public Level build() {
         Room startRoom = generateRooms();
         List<Room> bossRooms = getBossRooms(startRoom);
         List<Room> itemRooms = getItemRooms(startRoom, bossRooms);
-        if(Debug.ENABLED) {
+        if (Debug.ENABLED) {
             printMap(startRoom, bossRooms, itemRooms);
             log.info("Start room : [{}, {}]", startRoom.getX(), startRoom.getY());
         }
@@ -59,20 +59,22 @@ public class LevelGenerator {
     }
 
     /* ---------------- BUILD SUB METHODS -------------------- */
-    private Room generateRooms(){
-        if(mapSize < 5){ throw new IllegalArgumentException("Map size must be at least 5 : [mapSize=" + mapSize + "]"); }
+    private Room generateRooms() {
+        if (mapSize < 5) {
+            throw new IllegalArgumentException("Map size must be at least 5 : [mapSize=" + mapSize + "]");
+        }
 
         int startX = 2 + rand.nextInt(mapSize - 4);
         int startY = 2 + rand.nextInt(mapSize - 4);
 
-        try{
+        try {
             SuperRoom[][] superRooms = WaveFunctionCollapse.createSuperRoomGrid(mapSize);
             WaveFunctionCollapse.collapseBoundaries(superRooms, mapSize);
 
             WaveFunctionCollapse.collapse(superRooms, RoomState.ALL_DOORS, startX, startY, mapSize);
 
             SuperRoom chosenSuperRoom = WaveFunctionCollapse.getSuperRoomWithLowestEntropy(superRooms, rand);
-            while(chosenSuperRoom != null) {
+            while (chosenSuperRoom != null) {
                 WaveFunctionCollapse.collapse(superRooms, chosenSuperRoom.getX(), chosenSuperRoom.getY(), mapSize, rand);
 
                 chosenSuperRoom = WaveFunctionCollapse.getSuperRoomWithLowestEntropy(superRooms, rand);
@@ -84,18 +86,21 @@ public class LevelGenerator {
             return generateRooms();
         }
     }
-    /** @return a list of rooms that have been chosen as the best candidates to be a boss room.  */
-    private ArrayList<Room> getBossRooms(Room startRoom){
+
+    /**
+     * @return a list of rooms that have been chosen as the best candidates to be a boss room.
+     */
+    private ArrayList<Room> getBossRooms(Room startRoom) {
         ArrayList<Room> bossRooms = new ArrayList<>(GenerationSettings.BOSS_ROOM_COUNT);
         Map<Room, Integer> distanceMap = Algorithm.getDistanceMap(startRoom);
 
         for (int i = 0; i < GenerationSettings.BOSS_ROOM_COUNT; i++) {
             float maxScore = Float.NEGATIVE_INFINITY;
             Room chosenRoom = null;
-            for(Map.Entry<Room, Integer> roomToDistance : distanceMap.entrySet()){
+            for (Map.Entry<Room, Integer> roomToDistance : distanceMap.entrySet()) {
                 int distFromClosestBoss = Algorithm.distanceFromClosest(roomToDistance.getKey(), bossRooms);
                 float currentScore = GenerationSettings.getBossRoomScore(roomToDistance.getValue(), distFromClosestBoss);
-                if(currentScore > maxScore){
+                if (currentScore > maxScore) {
                     maxScore = currentScore;
                     chosenRoom = roomToDistance.getKey();
                 }
@@ -107,18 +112,18 @@ public class LevelGenerator {
         return bossRooms;
     }
 
-    private ArrayList<Room> getItemRooms(Room startRoom, List<Room> bossRoom){
+    private ArrayList<Room> getItemRooms(Room startRoom, List<Room> bossRoom) {
         ArrayList<Room> itemRooms = new ArrayList<>(GenerationSettings.ITEM_ROOM_COUNT);
         Map<Room, Integer> distanceMap = Algorithm.getDistanceMap(startRoom);
 
         for (int i = 0; i < GenerationSettings.ITEM_ROOM_COUNT; i++) {
             float maxScore = Float.NEGATIVE_INFINITY;
             Room chosenRoom = null;
-            for(Map.Entry<Room, Integer> roomToDistance : distanceMap.entrySet()){
+            for (Map.Entry<Room, Integer> roomToDistance : distanceMap.entrySet()) {
                 int distFromClosestBoss = Algorithm.distanceFromClosest(roomToDistance.getKey(), bossRoom);
                 int distFromClosestItem = Algorithm.distanceFromClosest(roomToDistance.getKey(), itemRooms);
                 float currentScore = GenerationSettings.getItemRoomScore(roomToDistance.getValue(), distFromClosestBoss, distFromClosestItem);
-                if(currentScore > maxScore){
+                if (currentScore > maxScore) {
                     maxScore = currentScore;
                     chosenRoom = roomToDistance.getKey();
                 }
@@ -128,11 +133,14 @@ public class LevelGenerator {
 
         return itemRooms;
     }
-    /** Set the type of initialization of the rooms. {@link Room.InitType} */
-    private void setRoomsInitType(Room startRoom, List<Room> bossRooms, List<Room> itemRooms){
+
+    /**
+     * Set the type of initialization of the rooms. {@link Room.InitType}
+     */
+    private void setRoomsInitType(Room startRoom, List<Room> bossRooms, List<Room> itemRooms) {
         Set<Room> allRooms = Algorithm.getConnectedRooms(startRoom);
         for (Room room : allRooms) {
-            if(room == startRoom)
+            if (room == startRoom)
                 room.setInitType(Room.InitType.Start);
             else if (bossRooms.contains(room))
                 room.setInitType(Room.InitType.Boss);
@@ -146,21 +154,25 @@ public class LevelGenerator {
 
     /* ------------------------ DEBUG ------------------------- */
 
-    /** Prints the map to the console. (Debug)
+    /**
+     * Prints the map to the console. (Debug)
+     *
      * @param startRoom The start room of the map.
      * @param bossRooms The list of boss rooms.
-     * */
-    private void printMap(Room startRoom, List<Room> bossRooms, List<Room> itemRooms){
+     */
+    private void printMap(Room startRoom, List<Room> bossRooms, List<Room> itemRooms) {
         Room[][] rooms = new Room[mapSize][mapSize];
         Queue<Room> queue = new ArrayDeque<>();
         queue.add(startRoom);
-        while(!queue.isEmpty()){
+        while (!queue.isEmpty()) {
             Room currentRoom = queue.poll();
 
             rooms[currentRoom.getY()][currentRoom.getX()] = currentRoom;
-            for(int direction = 0; direction < 4; direction++){
+            for (int direction = 0; direction < 4; direction++) {
                 Room adjacentRoom = currentRoom.getAdjacentRoom(direction);
-                if(adjacentRoom == null || rooms[adjacentRoom.getY()][adjacentRoom.getX()] != null) { continue; }
+                if (adjacentRoom == null || rooms[adjacentRoom.getY()][adjacentRoom.getX()] != null) {
+                    continue;
+                }
 
                 queue.add(adjacentRoom);
             }
@@ -168,16 +180,16 @@ public class LevelGenerator {
 
         for (int i = 0; i < mapSize; i++) {
             for (int j = 0; j < mapSize; j++) {
-                if(rooms[i][j] == null) {
+                if (rooms[i][j] == null) {
                     System.out.print("  ");
                     continue;
                 }
 
-                if(bossRooms.contains(rooms[i][j]))
+                if (bossRooms.contains(rooms[i][j]))
                     System.out.print("B ");
-                else if(itemRooms.contains(rooms[i][j]))
+                else if (itemRooms.contains(rooms[i][j]))
                     System.out.print("I ");
-                else if(rooms[i][j] == startRoom)
+                else if (rooms[i][j] == startRoom)
                     System.out.print("S ");
                 else
                     System.out.print(rooms[i][j]);
@@ -186,10 +198,12 @@ public class LevelGenerator {
         }
     }
 
-    /** Prints a map of distances from the start room to the console. (Debug)
+    /**
+     * Prints a map of distances from the start room to the console. (Debug)
+     *
      * @param startRoom The start room of the map.
      */
-    private void printDistanceMap(Room startRoom){
+    private void printDistanceMap(Room startRoom) {
         Map<Room, Integer> distanceMap = Algorithm.getDistanceMap(startRoom);
 
         String[][] strMat = new String[mapSize][mapSize];
@@ -198,7 +212,7 @@ public class LevelGenerator {
                 strMat[i][j] = "  ";
             }
         }
-        for(Map.Entry<Room, Integer> entry : distanceMap.entrySet()){
+        for (Map.Entry<Room, Integer> entry : distanceMap.entrySet()) {
             strMat[entry.getKey().getY()][entry.getKey().getX()] = entry.getValue().toString();
             while (strMat[entry.getKey().getY()][entry.getKey().getX()].length() < 2) {
                 strMat[entry.getKey().getY()][entry.getKey().getX()] += " ";
@@ -212,11 +226,14 @@ public class LevelGenerator {
             System.out.println();
         }
     }
-    /** Prints the boss score map to the console. (Debug)
+
+    /**
+     * Prints the boss score map to the console. (Debug)
+     *
      * @param startRoom The start room of the map.
      * @param bossRooms The list of boss rooms.
      */
-    private void printBossScoreMap(Room startRoom, List<Room> bossRooms){
+    private void printBossScoreMap(Room startRoom, List<Room> bossRooms) {
         Map<Room, Integer> distanceMap = Algorithm.getDistanceMap(startRoom);
 
         String[][] strMat = new String[mapSize][mapSize];
@@ -225,7 +242,7 @@ public class LevelGenerator {
                 strMat[i][j] = "          ";
             }
         }
-        for(Map.Entry<Room, Integer> entry : distanceMap.entrySet()){
+        for (Map.Entry<Room, Integer> entry : distanceMap.entrySet()) {
             Room cur = entry.getKey();
             int distFromStart = entry.getValue();
             int distFromClosestBoss = Algorithm.distanceFromClosest(cur, bossRooms);

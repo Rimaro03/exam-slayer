@@ -10,8 +10,8 @@ import org.project.core.Time;
 import org.project.utils.Vec2;
 
 public class PlayerShootingController extends Component {
-    private float timeToShoot = 0;
     private final float shootInterval;
+    private float timeToShoot = 0;
     @Setter
     private WeaponType weaponType = WeaponType.Sword; // DEBUG
 
@@ -35,13 +35,13 @@ public class PlayerShootingController extends Component {
 
     @Override
     public void update() {
-        if(timeToShoot > 0){
+        if (timeToShoot > 0) {
             timeToShoot -= Time.TIME_STEP_IN_SECONDS;
             return;
         }
 
-       Vec2 projectileDir;
-        if(Input.isKeyPressed(Input.KEY_UP))
+        Vec2 projectileDir;
+        if (Input.isKeyPressed(Input.KEY_UP))
             projectileDir = new Vec2(0, 1);
         else if (Input.isKeyPressed(Input.KEY_DOWN))
             projectileDir = new Vec2(0, -1);

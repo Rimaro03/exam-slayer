@@ -5,7 +5,8 @@ import lombok.Setter;
 import org.project.componentsystem.GameObject;
 import org.project.utils.Vec2;
 
-@Getter @Setter
+@Getter
+@Setter
 public abstract class AbstractBoxCollider extends Collider {
     private Vec2 size; // (width, height)
     private boolean inside;
@@ -17,7 +18,7 @@ public abstract class AbstractBoxCollider extends Collider {
      * @param enabled    Whether this Component is enabled or not
      * @param size       The size of the box (width, height)
      * @param movable    Whether the collider is movable by others or not
-     * @param inside Whether the collider is inside the box or not
+     * @param inside     Whether the collider is inside the box or not
      */
     public AbstractBoxCollider(GameObject gameObject, boolean enabled, Vec2 size, boolean movable, boolean inside) {
         super(gameObject, enabled, movable);
@@ -31,7 +32,7 @@ public abstract class AbstractBoxCollider extends Collider {
      * @param gameObject The reference to the GameObject that this Component is attached to
      * @param size       The size of the box collider (width, height)
      * @param movable    Whether the collider is movable by others or not
-     * @param inside Whether the collider is inside the box or not
+     * @param inside     Whether the collider is inside the box or not
      */
     public AbstractBoxCollider(GameObject gameObject, Vec2 size, boolean movable, boolean inside) {
         super(gameObject, movable);
@@ -49,9 +50,9 @@ public abstract class AbstractBoxCollider extends Collider {
      * @return Whether the two colliders collide or not
      */
     public boolean collidesWith(Collider other) {
-        if(this.getIgnoreColliders().contains(other)) return false;
+        if (this.getIgnoreColliders().contains(other)) return false;
 
-        if(other instanceof AbstractBoxCollider){
+        if (other instanceof AbstractBoxCollider) {
             AbstractBoxCollider otherBox = (AbstractBoxCollider) other;
 
             float thisX = this.getGameObject().getPosition().getX();
@@ -64,31 +65,30 @@ public abstract class AbstractBoxCollider extends Collider {
             float otherHalfWidth = otherBox.getSize().getX() / 2;
             float otherHalfHeight = otherBox.getSize().getY() / 2;
 
-            if(isInside() && otherBox.isInside()) {
+            if (isInside() && otherBox.isInside()) {
                 if (Math.abs(thisX - otherX) > (thisHalfWidth + otherHalfWidth)) {
                     return false;
                 }
                 return !(Math.abs(thisY - otherY) > (thisHalfHeight + otherHalfHeight));
             }
 
-            if(!isInside() && otherBox.isInside()) {
+            if (!isInside() && otherBox.isInside()) {
                 return otherX + otherHalfWidth > thisX + thisHalfWidth ||
                         otherX - otherHalfWidth < thisX - thisHalfWidth ||
                         otherY + otherHalfHeight > thisY + thisHalfHeight ||
                         otherY - otherHalfHeight < thisY - thisHalfHeight;
             }
 
-            if(isInside()) {
+            if (isInside()) {
                 return thisX + thisHalfWidth > otherX + otherHalfWidth ||
                         thisX - thisHalfWidth < otherX - otherHalfWidth ||
                         thisY + thisHalfHeight > otherY + otherHalfHeight ||
                         thisY - thisHalfHeight < otherY - otherHalfHeight;
             }
             return true;
-        }
-        else if (other instanceof AbstractCircleCollider) {
+        } else if (other instanceof AbstractCircleCollider) {
             AbstractCircleCollider otherCircle = (AbstractCircleCollider) other;
-            if(isInside()) {
+            if (isInside()) {
                 Vec2 distance = CircleCollider.collisionDistance(otherCircle, this);
                 return distance.magnitude() < otherCircle.getRadius();
             }

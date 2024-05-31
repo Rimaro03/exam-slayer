@@ -2,29 +2,8 @@ package org.project.componentsystem.components.weapons;
 
 import lombok.extern.log4j.Log4j2;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
 @Log4j2
 public class WeaponData {
-    public final int damage;
-    public final float reloadTime;
-    public final float speed;
-    public final String imagePath;
-    public final int imageWidth;
-    public final int imageHeight;
-    public WeaponData(int damage, float reloadTime, float speed, String imagePath, int imageWidth, int imageHeight) {
-        this.damage = damage;
-        this.reloadTime = reloadTime;
-        this.speed = speed;
-        this.imagePath = imagePath;
-        this.imageWidth = imageWidth;
-        this.imageHeight = imageHeight;
-    }
-
-
     private static final WeaponData physicsBookData = new WeaponData(
             10,
             0.1f,
@@ -41,14 +20,31 @@ public class WeaponData {
             16,
             16
     );
+    public final int damage;
+    public final float reloadTime;
+    public final float speed;
+    public final String imagePath;
+    public final int imageWidth;
+    public final int imageHeight;
+    public WeaponData(int damage, float reloadTime, float speed, String imagePath, int imageWidth, int imageHeight) {
+        this.damage = damage;
+        this.reloadTime = reloadTime;
+        this.speed = speed;
+        this.imagePath = imagePath;
+        this.imageWidth = imageWidth;
+        this.imageHeight = imageHeight;
+    }
 
     public static WeaponData getWeaponData(WeaponType type) {
         switch (type) {
-            case PhysicsBook: return physicsBookData;
+            case PhysicsBook:
+                return physicsBookData;
 
-            case Sword: return swordData;
+            case Sword:
+                return swordData;
 
-            default: throw new IllegalArgumentException("Weapon type not implemented : " + type);
+            default:
+                throw new IllegalArgumentException("Weapon type not implemented : " + type);
         }
     }
 }

@@ -11,7 +11,7 @@ import org.project.utils.Vec2;
 import java.util.HashMap;
 
 @Log4j2
-public class ItemCollider extends BoxCollider{
+public class ItemCollider extends BoxCollider {
 
     /**
      * Initializes a new Component with the given GameObject, enabled status, size and movable status
@@ -44,9 +44,10 @@ public class ItemCollider extends BoxCollider{
         this.getGameObject().removeComponent(this);
         this.getGameObject().removeComponent(this.getGameObject().getComponent(AnimatedSpriteRenderer.class));
     }
+
     @Override
     public void onCollide(Collider other) {
-        if(other.getGameObject().getName().equals("Player")){
+        if (other.getGameObject().getName().equals("Player")) {
             PlayerStats playerStats = (PlayerStats) other.getGameObject().getComponent(PlayerStats.class);
             Item item = ((ItemController) this.getGameObject().getComponent(ItemController.class)).getItem();
             HashMap<Item, Integer> inventory = playerStats.getInventory();

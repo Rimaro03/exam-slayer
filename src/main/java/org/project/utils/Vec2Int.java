@@ -11,6 +11,7 @@ public class Vec2Int implements Savable<Vec2Int> {
     public Vec2Int() {
         this(0, 0);
     }
+
     public Vec2Int(int x, int y) {
         this.x = x;
         this.y = y;
@@ -29,12 +30,12 @@ public class Vec2Int implements Savable<Vec2Int> {
 
     /* ---------------- SAVABLE ------------------*/
     @Override
-    public String toSaveString(){
+    public String toSaveString() {
         return x + "," + y;
     }
 
     @Override
-    public Vec2Int fromSaveStringToObject(String s){
+    public Vec2Int fromSaveStringToObject(String s) {
         String[] values = s.split(",");
         x = Integer.parseInt(values[0]);
         y = Integer.parseInt(values[1]);

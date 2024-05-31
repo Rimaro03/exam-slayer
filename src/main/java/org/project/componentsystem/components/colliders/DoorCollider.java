@@ -1,18 +1,18 @@
 package org.project.componentsystem.components.colliders;
 
 import org.project.componentsystem.GameObject;
-import org.project.core.Physics;
 import org.project.core.Debug;
 import org.project.core.Game;
 import org.project.core.rendering.Renderer;
-import org.project.generation.wavecollapse.Direction;
 import org.project.generation.Room;
+import org.project.generation.wavecollapse.Direction;
 import org.project.utils.Vec2;
 
 import java.awt.*;
 
-public class DoorCollider extends AbstractBoxCollider{
+public class DoorCollider extends AbstractBoxCollider {
     private final int direction;
+
     /**
      * Initializes a new Component with the given GameObject, enabled status, size, movable status, inside status and direction
      *
@@ -47,7 +47,8 @@ public class DoorCollider extends AbstractBoxCollider{
      * This method is meant to be overridden by subclasses
      */
     @Override
-    public void start() { }
+    public void start() {
+    }
 
     /**
      * Runs every frame
@@ -62,7 +63,8 @@ public class DoorCollider extends AbstractBoxCollider{
      * Destory the component
      */
     @Override
-    public void destory() {  }
+    public void destory() {
+    }
 
     @Override
     public void onEnable() {
@@ -76,12 +78,13 @@ public class DoorCollider extends AbstractBoxCollider{
 
     /**
      * Runs when the collider collides with another collider
+     *
      * @param other The other collider that this collider collided with
      */
     @Override
     public void onCollide(Collider other) {
         // Change room if the player collides with the door collider
-        if(other.getGameObject().getName().equals("Player")){
+        if (other.getGameObject().getName().equals("Player")) {
             other.getGameObject().setPosition(new Vec2(
                     Direction.x(0, direction) * (2.5f - Room.SIZE / 2 + 1.5f),
                     Direction.y(0, direction) * (2.5f - Room.SIZE / 2 + 1.5f))
@@ -91,8 +94,8 @@ public class DoorCollider extends AbstractBoxCollider{
 
     }
 
-    public void draw(){
-        if(Debug.ENABLED && isEnabled())
+    public void draw() {
+        if (Debug.ENABLED && isEnabled())
             Renderer.addRectToRenderQueue(
                     getGameObject().getPosition(),
                     getSize(),

@@ -6,7 +6,8 @@ import org.project.componentsystem.GameObject;
 import org.project.componentsystem.components.Component;
 import org.project.core.Game;
 
-@Getter @Setter
+@Getter
+@Setter
 public abstract class Stats extends Component {
     protected int health;
     protected int attack;
@@ -35,9 +36,9 @@ public abstract class Stats extends Component {
         this.baseHealth = health;
     }
 
-    public void takeDamage(int damage){
+    public void takeDamage(int damage) {
         health -= damage;
-        if(health <= 0){
+        if (health <= 0) {
             Game.getCurrentLevel().destroyGameObject(getGameObject());
         }
     }

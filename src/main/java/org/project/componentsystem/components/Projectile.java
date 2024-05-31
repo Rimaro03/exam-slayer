@@ -10,6 +10,7 @@ public class Projectile extends Component {
     @Getter
     private final int damage;
     private final Vec2 step;
+
     public Projectile(GameObject gameObject, boolean enabled, int damage, Vec2 velocity) {
         super(gameObject, enabled);
         this.damage = damage;

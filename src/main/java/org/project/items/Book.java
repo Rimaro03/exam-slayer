@@ -5,7 +5,7 @@ import org.project.componentsystem.components.stats.PlayerStats;
 import org.project.componentsystem.components.weapons.PlayerShootingController;
 import org.project.componentsystem.components.weapons.WeaponType;
 
-public class Book extends Item{
+public class Book extends Item {
     /**
      * Initializes a new Item with the given name and weight
      *
@@ -22,13 +22,15 @@ public class Book extends Item{
      * Uses this Item
      */
     @Override
-    public void use() {}
+    public void use() {
+    }
 
     /**
-     *  Update this Item
+     * Update this Item
      */
     @Override
-    public void update() {}
+    public void update() {
+    }
 
     /**
      * Called when this Item is picked up
