@@ -4,7 +4,6 @@ import org.project.componentsystem.GameObject;
 import org.project.core.Game;
 import org.project.core.GameStateListener;
 import org.project.core.Input;
-import org.project.core.Time;
 import org.project.core.rendering.Renderer;
 import org.project.utils.Vec2;
 
@@ -63,7 +62,7 @@ public class EscMenu extends Component implements GameStateListener {
         if(Input.isKeyPressed(Input.KEY_ENTER) && remainingTimeToSleep <= 0){
             switch (selectedLine){
                 case 0:
-                    toggled = false;
+                    Game.setPaused(false);
                     break;
                 case 1:
                     Game.getSavingIO().flush();

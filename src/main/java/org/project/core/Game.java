@@ -145,6 +145,23 @@ public class Game implements WindowListener, KeyListener {
 
     /* ---------------------- GAME LISTENER METHODS --------------------------*/
 
+    private void updateListeners(){
+        if(paused)
+            for (GameStateListener listener : gameStateListeners)
+                listener.onGamePaused();
+        else
+            for (GameStateListener listener : gameStateListeners)
+                listener.onGameResumed();
+
+    }
+    public static void setPaused(boolean paused) {
+        if(currentGame.paused == paused)
+            return;
+
+        currentGame.paused = paused;
+        currentGame.updateListeners();
+
+    }
     public static void addGameStateListener(GameStateListener listener) {
         currentGame.gameStateListeners.add(listener);
     }
@@ -218,13 +235,8 @@ public class Game implements WindowListener, KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
-            for (GameStateListener listener : gameStateListeners) {
-                if(paused)
-                    listener.onGameResumed();
-                else
-                    listener.onGamePaused();
-            }
             paused = !paused;
+            updateListeners();
         }
     }
 

@@ -95,7 +95,7 @@ public class DoorCollider extends AbstractBoxCollider {
     }
 
     public void draw() {
-        if (Debug.ENABLED && isEnabled())
+        if (Debug.ENABLED)
             Renderer.addRectToRenderQueue(
                     getGameObject().getPosition(),
                     getSize(),

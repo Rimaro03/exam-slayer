@@ -37,9 +37,9 @@ public abstract class Component {
     }
 
     public void setEnabled(boolean enabled) {
-        if (this.enabled == enabled) {
+        if (this.enabled == enabled)// don't do anything if the state is the same
             return;
-        } // don't do anything if the state is the same
+
         this.enabled = enabled;
 
         if (enabled) {

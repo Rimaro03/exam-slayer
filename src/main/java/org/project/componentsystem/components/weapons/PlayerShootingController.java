@@ -5,11 +5,12 @@ import org.project.componentsystem.GameObject;
 import org.project.componentsystem.GameObjectFactory;
 import org.project.componentsystem.components.Component;
 import org.project.core.Game;
+import org.project.core.GameStateListener;
 import org.project.core.Input;
 import org.project.core.Time;
 import org.project.utils.Vec2;
 
-public class PlayerShootingController extends Component {
+public class PlayerShootingController extends Component implements GameStateListener {
     private final float shootInterval;
     private float timeToShoot = 0;
     @Setter
@@ -30,7 +31,7 @@ public class PlayerShootingController extends Component {
 
     @Override
     public void start() {
-
+        Game.addGameStateListener(this);
     }
 
     @Override
@@ -59,7 +60,7 @@ public class PlayerShootingController extends Component {
 
     @Override
     public void destory() {
-
+        Game.removeGameStateListener(this);
     }
 
     @Override
@@ -70,5 +71,15 @@ public class PlayerShootingController extends Component {
     @Override
     public void onDisable() {
 
+    }
+
+    @Override
+    public void onGamePaused() {
+        setEnabled(false);
+    }
+
+    @Override
+    public void onGameResumed() {
+        setEnabled(true);
     }
 }
