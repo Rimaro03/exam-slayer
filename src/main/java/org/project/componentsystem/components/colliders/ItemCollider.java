@@ -5,6 +5,7 @@ import org.project.componentsystem.GameObject;
 import org.project.componentsystem.components.AnimatedSpriteRenderer;
 import org.project.componentsystem.components.ItemController;
 import org.project.componentsystem.components.stats.PlayerStats;
+import org.project.core.Game;
 import org.project.items.Item;
 import org.project.utils.Vec2;
 
@@ -40,9 +41,7 @@ public class ItemCollider extends BoxCollider {
 
     @Override
     public void destory() {
-        this.getGameObject().getComponent(ItemController.class).destory();
-        this.getGameObject().removeComponent(this);
-        this.getGameObject().removeComponent(this.getGameObject().getComponent(AnimatedSpriteRenderer.class));
+
     }
 
     @Override
@@ -55,7 +54,7 @@ public class ItemCollider extends BoxCollider {
             log.info("Player picked up item: {}", item.getName());
 
             item.onPickUp(other.getGameObject());
-            this.destory();
+            Game.getCurrentLevel().destroyGameObject(this.getGameObject());
         }
     }
 }
