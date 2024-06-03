@@ -5,13 +5,14 @@ import org.project.componentsystem.GameObject;
 import org.project.componentsystem.components.AnimatedSpriteRenderer;
 import org.project.componentsystem.components.ItemController;
 import org.project.componentsystem.components.stats.PlayerStats;
+import org.project.core.Game;
 import org.project.items.Item;
 import org.project.utils.Vec2;
 
 import java.util.HashMap;
 
 @Log4j2
-public class ItemCollider extends BoxCollider{
+public class ItemCollider extends BoxCollider {
 
     /**
      * Initializes a new Component with the given GameObject, enabled status, size and movable status
@@ -40,19 +41,20 @@ public class ItemCollider extends BoxCollider{
 
     @Override
     public void destory() {
-        this.getGameObject().getComponent(ItemController.class).destory();
-        this.getGameObject().removeComponent(this);
-        this.getGameObject().removeComponent(this.getGameObject().getComponent(AnimatedSpriteRenderer.class));
+
     }
+
     @Override
     public void onCollide(Collider other) {
-        if(other.getGameObject().getName().equals("Player")){
+        if (other.getGameObject().getName().equals("Player")) {
             PlayerStats playerStats = (PlayerStats) other.getGameObject().getComponent(PlayerStats.class);
             Item item = ((ItemController) this.getGameObject().getComponent(ItemController.class)).getItem();
             HashMap<Item, Integer> inventory = playerStats.getInventory();
             inventory.put(item, inventory.getOrDefault(item, 0) + 1);
             log.info("Player picked up item: {}", item.getName());
-            this.destory();
+
+            item.onPickUp(other.getGameObject());
+            Game.getCurrentLevel().destroyGameObject(this.getGameObject());
         }
     }
 }

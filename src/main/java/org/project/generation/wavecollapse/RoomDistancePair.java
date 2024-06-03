@@ -5,7 +5,7 @@ import org.project.generation.Room;
 /**
  * A container of a room and a distance.
  */
-public class RoomDistancePair implements Comparable<RoomDistancePair>{
+public class RoomDistancePair implements Comparable<RoomDistancePair> {
     public final Room room;
     public final int distance;
 

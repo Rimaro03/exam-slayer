@@ -1,9 +1,12 @@
 package org.project.savingsystem;
 
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.project.utils.Vec2Int;
 
-import java.io.*;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -18,24 +21,35 @@ public class SavingIO {
     private final String path;
     private final StringBuilder text;
 
+    @Getter
+    private final BucketManager bucketManager;
+
     /**
      * Creates a new SavingIO object with the given path.
      * remember to call flush() before the program ends to save the changes.
-     * @param path
+     *
+     * @param path the path to the save file.
      */
-    public SavingIO(String path){
+    public SavingIO(String path) {
         this.path = path;
-        this.text = getText();;
+        this.bucketManager = new BucketManager(
+                "exam-slayer",
+                "exam-slayer",
+                "resources/bucket/bucket_key.json"
+        );
+        this.text = new StringBuilder(bucketManager.getFileContent(path));
     }
+
     /**
      * Flushes all the changes applied to the file.
      * if not called before the program ends, the changes will be lost.
      */
-    public void flush(){
+    public void flush() {
         try {
             PrintWriter writer = new PrintWriter(path);
             writer.print(text.toString());
             writer.close();
+            bucketManager.uploadFile(path, text.toString());
         } catch (IOException e) {
             log.error("File not found : {}", path);
         }
@@ -43,62 +57,109 @@ public class SavingIO {
 
     /* ----------------- PRIMITIVE SETTERS ------------------- */
 
-    public void setInt(String name, int value){
+    public void setInt(String name, int value) {
         set(name, String.valueOf(value));
     }
-    public void setFloat(String name, float value){
+
+    public void setFloat(String name, float value) {
         set(name, String.valueOf(value));
     }
-    public void setLong(String name, long value){
+
+    public void setLong(String name, long value) {
         set(name, String.valueOf(value));
+    }
+
+    public void setString(String name, String value) {
+        set(name, value);
     }
 
     /* ------------------------- SAVABLE SETTERS ------------------------- */
 
-    public void setVec2Int(String name, Vec2Int value){
+    public void setVec2Int(String name, Vec2Int value) {
         set(name, value.toSaveString());
     }
 
     /* --------------------------- LIST SETTERS -------------------------*/
 
-    public void setVec2IntList(String name, List<Vec2Int> list){
+    public void setVec2IntList(String name, List<Vec2Int> list) {
         set(name, listToSaveString(list));
     }
 
+    public void setStringList(String name, List<String> list) {
+        set(name, listToString(list));
+    }
+
+    public void setIntList(String name, List<Integer> list) {
+        set(name, listToString(list));
+    }
 
 
     /* -------------------------- PRIMITIVE GETTERS -------------------------*/
 
-    public Integer getInt(String name){
+    public Integer getInt(String name) {
         String value = get(name);
         return value != null ? Integer.parseInt(value) : null;
     }
-    public Float getFloat(String name){
+
+    public Float getFloat(String name) {
         String value = get(name);
         return value != null ? Float.parseFloat(value) : null;
     }
-    public Long getLong(String name){
+
+    public Long getLong(String name) {
         String value = get(name);
         return value != null ? Long.parseLong(value) : null;
     }
 
+    public String getString(String name) {
+        return get(name);
+    }
+
     /* ----------------------------- SAVABLE GETTERS ----------------------------*/
 
-    public Vec2Int getVec2Int(String name){
+    public Vec2Int getVec2Int(String name) {
         String value = get(name);
         return value != null ? new Vec2Int().fromSaveStringToObject(value) : null;
     }
 
     /* --------------------------------- LIST GETTERS ---------------------------- -*/
 
-    public List<Vec2Int> getVec2IntList(String name){
+    public List<Vec2Int> getVec2IntList(String name) {
         String value = get(name);
-        if(value != null) {
+        if (value != null) {
             int elements = elementsCount(value);
             ArrayList<Vec2Int> list = new ArrayList<>(elements);
-            for (int i = 0; i < elements; i++) { list.add(new Vec2Int()); }
+            for (int i = 0; i < elements; i++) {
+                list.add(new Vec2Int());
+            }
 
             return new ListReader<Vec2Int>(value).readList(list);
+        }
+        return null;
+    }
+
+    public List<String> getStringList(String name) {
+        String value = get(name);
+        if (value != null) {
+            List<String> list = new ArrayList<>();
+            Scanner scanner = new Scanner(value);
+
+            while (scanner.hasNext())
+                list.add(scanner.next());
+            return list;
+        }
+        return null;
+    }
+
+    public List<Integer> getIntList(String name) {
+        String value = get(name);
+        if (value != null) {
+            List<Integer> list = new ArrayList<>();
+            Scanner scanner = new Scanner(value);
+
+            while (scanner.hasNextInt())
+                list.add(scanner.nextInt());
+            return list;
         }
         return null;
     }
@@ -107,16 +168,17 @@ public class SavingIO {
     /* ----------------------------- PRIVATE METHODS -------------------------*/
 
 
-    private void set(String name, String savingString){
+    private void set(String name, String savingString) {
         int startIndex = startIndex(name);
         int endIndex = endIndex(startIndex);
 
-        if(startIndex != -1)
+        if (startIndex != -1)
             text.replace(startIndex, endIndex, savingString);
         else
             text.append(name).append(" ").append(savingString).append("\n");
     }
-    private String get(String name){
+
+    private String get(String name) {
         int startIndex = startIndex(name);
         int endIndex = endIndex(startIndex);
 
@@ -126,38 +188,40 @@ public class SavingIO {
             return text.substring(startIndex, endIndex);
     }
 
-    private String listToSaveString(List<? extends Savable<?>> list){
+    private String listToSaveString(List<? extends Savable<?>> list) {
         StringBuilder builder = new StringBuilder();
 
-        for(Savable<?> obj : list) {
+        for (Savable<?> obj : list) {
             builder.append(obj.toSaveString()).append(" ");
         }
 
         return builder.toString();
     }
-    private int elementsCount(String text){
-        return text.split(" ").length;
-    }
 
-    private StringBuilder getText() {
-        StringBuilder text = new StringBuilder();
-        try(FileReader file = new FileReader(path); Scanner scanner = new Scanner(file)){
-            while(scanner.hasNextLine())
-                text.append(scanner.nextLine()).append("\n");
-        } catch (IOException e) {
-            log.warn("File not found : {}", path);
+    private String listToString(List<?> list) {
+        StringBuilder builder = new StringBuilder();
+
+        for (Object obj : list) {
+            builder.append(obj.toString()).append(" ");
         }
 
-        return text;
+        return builder.toString();
     }
-    private int startIndex(String name){
+
+    private int elementsCount(String text) {
+        String[] tokens = text.split(" ");
+        return tokens[0].isEmpty() ? 0 : tokens.length;
+    }
+
+    private int startIndex(String name) {
         int indexOfName = text.indexOf(name);
-        if(indexOfName == -1)
+        if (indexOfName == -1)
             return -1;
         else
             return indexOfName + name.length() + 1;
     }
-    private int endIndex(int startIndex){
+
+    private int endIndex(int startIndex) {
         return text.indexOf("\n", startIndex);
     }
 }

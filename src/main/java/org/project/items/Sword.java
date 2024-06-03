@@ -2,13 +2,14 @@ package org.project.items;
 
 
 import lombok.extern.log4j.Log4j2;
+import org.project.componentsystem.GameObject;
+import org.project.componentsystem.components.stats.PlayerStats;
+import org.project.componentsystem.components.weapons.PlayerShootingController;
+import org.project.componentsystem.components.weapons.WeaponType;
 
 
 @Log4j2
-public class Sword extends Item{
-
-    // Example of a class that extends Item
-    private final int damage;
+public class Sword extends Item {
 
     /**
      * Initializes a new Item with the given name and weight
@@ -17,11 +18,9 @@ public class Sword extends Item{
      * @param weight       The weight of this Item
      * @param physicalPath The path to the physical representation of this Item (e.g. the path to the image file)
      * @param invetoryPath The path to the inventory representation of this Item (e.g. the path to the image file)
-     * @param damage       The damage of this Sword
      */
-    public Sword(String name, int weight, String physicalPath, String invetoryPath, int damage) {
+    public Sword(String name, int weight, String physicalPath, String invetoryPath) {
         super(name, weight, physicalPath, invetoryPath);
-        this.damage = damage;
     }
 
 
@@ -30,7 +29,7 @@ public class Sword extends Item{
      */
     @Override
     public void use() {
-        log.info("Sword used with damage: {}", damage);
+
     }
 
     /**
@@ -38,6 +37,18 @@ public class Sword extends Item{
      */
     @Override
     public void update() {
-        log.info("Sword updated");
+
+    }
+
+    /**
+     * Called when this Sword is picked up
+     *
+     * @param by The GameObject that picked up this Sword
+     */
+    @Override
+    public void onPickUp(GameObject by) {
+        PlayerStats playerStats = (PlayerStats) by.getComponent(PlayerStats.class);
+        playerStats.setSpeed(playerStats.getSpeed() - getWeight());
+        by.addComponent(new PlayerShootingController(by, 0.5f, WeaponType.Sword));
     }
 }

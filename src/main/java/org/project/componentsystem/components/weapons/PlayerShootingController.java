@@ -5,41 +5,44 @@ import org.project.componentsystem.GameObject;
 import org.project.componentsystem.GameObjectFactory;
 import org.project.componentsystem.components.Component;
 import org.project.core.Game;
+import org.project.core.GameStateListener;
 import org.project.core.Input;
 import org.project.core.Time;
 import org.project.utils.Vec2;
 
-public class PlayerShootingController extends Component {
-    private float timeToShoot = 0;
+public class PlayerShootingController extends Component implements GameStateListener {
     private final float shootInterval;
+    private float timeToShoot = 0;
     @Setter
     private WeaponType weaponType = WeaponType.Sword; // DEBUG
 
-    public PlayerShootingController(GameObject gameObject, boolean enabled, float shootInterval) {
+    public PlayerShootingController(GameObject gameObject, boolean enabled, float shootInterval, WeaponType weaponType) {
         super(gameObject, enabled);
         this.shootInterval = shootInterval;
+        this.weaponType = weaponType;
     }
 
 
-    public PlayerShootingController(GameObject gameObject, float shootInterval) {
+    public PlayerShootingController(GameObject gameObject, float shootInterval, WeaponType weaponType) {
         super(gameObject);
         this.shootInterval = shootInterval;
+        this.weaponType = weaponType;
     }
 
     @Override
     public void start() {
-
+        Game.addGameStateListener(this);
     }
 
     @Override
     public void update() {
-        if(timeToShoot > 0){
-            timeToShoot -= Time.TIME_STEP_IN_SECONDS;
+        if (timeToShoot > 0) {
+            timeToShoot -= Game.getTime().deltaTime();
             return;
         }
 
-       Vec2 projectileDir;
-        if(Input.isKeyPressed(Input.KEY_UP))
+        Vec2 projectileDir;
+        if (Input.isKeyPressed(Input.KEY_UP))
             projectileDir = new Vec2(0, 1);
         else if (Input.isKeyPressed(Input.KEY_DOWN))
             projectileDir = new Vec2(0, -1);
@@ -57,7 +60,7 @@ public class PlayerShootingController extends Component {
 
     @Override
     public void destory() {
-
+        Game.removeGameStateListener(this);
     }
 
     @Override
@@ -68,5 +71,15 @@ public class PlayerShootingController extends Component {
     @Override
     public void onDisable() {
 
+    }
+
+    @Override
+    public void onGamePaused() {
+        setEnabled(false);
+    }
+
+    @Override
+    public void onGameResumed() {
+        setEnabled(true);
     }
 }

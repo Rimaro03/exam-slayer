@@ -2,7 +2,6 @@ package org.project.componentsystem.components.colliders;
 
 import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
-import org.project.componentsystem.components.Component;
 import org.project.componentsystem.components.Projectile;
 import org.project.componentsystem.components.stats.Stats;
 import org.project.core.Game;
@@ -10,7 +9,9 @@ import org.project.utils.Vec2;
 
 @Log4j2
 public class ProjectileCollider extends AbstractBoxCollider {
+
     private final GameObject parent;
+
     public ProjectileCollider(GameObject gameObject, boolean enabled, Vec2 size, boolean movable, boolean inside, GameObject parent) {
         super(gameObject, enabled, size, movable, inside);
         this.parent = parent;
@@ -23,13 +24,13 @@ public class ProjectileCollider extends AbstractBoxCollider {
 
     @Override
     public void onCollide(Collider other) {
-        if(other.getGameObject() != parent) {
+        if (other.getGameObject() != parent && !(other instanceof ProjectileCollider)) {
             Game.getCurrentLevel().destroyGameObject(this.getGameObject());
-           log.info("Projectile collided with {}", other.getGameObject().getName());
+            log.info("Projectile collided with {}", other.getGameObject().getName());
 
             Stats stats = (Stats) other.getGameObject().getComponent(Stats.class);
-            if(stats != null){
-                Projectile projectile = (Projectile)this.getGameObject().getComponent(Projectile.class);
+            if (stats != null) {
+                Projectile projectile = (Projectile) this.getGameObject().getComponent(Projectile.class);
                 stats.takeDamage(projectile.getDamage());
             }
 

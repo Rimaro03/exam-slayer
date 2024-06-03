@@ -5,17 +5,19 @@ import lombok.Setter;
 import org.project.componentsystem.GameObject;
 import org.project.items.Item;
 
-@Getter @Setter
-public class ItemController extends Component{
+@Getter
+@Setter
+public class ItemController extends Component {
     // This class works as a mediator between the Item and the GameObject
 
     private Item item;
+
     /**
      * Initializes a new Component with the given GameObject and enabled status
      *
      * @param gameObject The reference to the GameObject that this Component is attached to
      * @param enabled    Whether this Component is enabled or
-     * @param item The item that this ItemController is attached to
+     * @param item       The item that this ItemController is attached to
      */
     public ItemController(GameObject gameObject, boolean enabled, Item item) {
         super(gameObject, enabled);
@@ -26,7 +28,7 @@ public class ItemController extends Component{
      * Initializes a new Component with the given GameObject
      *
      * @param gameObject The reference to the GameObject that this Component is attached to
-     * @param item The item that this ItemController is attached to
+     * @param item       The item that this ItemController is attached to
      */
     public ItemController(GameObject gameObject, Item item) {
         super(gameObject);

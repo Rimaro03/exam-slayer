@@ -13,14 +13,17 @@ import java.io.IOException;
 
 @Log4j2
 public class AnimatedSpriteRenderer extends Component {
-    private BufferedImage spriteSheet;
-    private BufferedImage currentFrame;
     private final int frameWidth;
     private final int frameHeight;
-    public AnimatedSpriteRenderer(GameObject gameObject, String spriteSheetPath, int frameWidth, int frameHeight) {
+    private BufferedImage spriteSheet;
+    private BufferedImage currentFrame;
+    private final int priority;
+
+    public AnimatedSpriteRenderer(GameObject gameObject, String spriteSheetPath, int frameWidth, int frameHeight, int priority) {
         super(gameObject);
         this.frameWidth = frameWidth;
         this.frameHeight = frameHeight;
+        this.priority = priority;
         try {
             spriteSheet = ImageIO.read(new File(spriteSheetPath));
             this.currentFrame = spriteSheet.getSubimage(0, 0, frameWidth, frameHeight);
@@ -35,15 +38,18 @@ public class AnimatedSpriteRenderer extends Component {
         currentFrame = spriteSheet.getSubimage(x * frameWidth, y * frameHeight, frameWidth, frameHeight);
     }
 
-    public void start() {}
-    public void update(){
+    public void start() {
+    }
+
+    public void update() {
         if (isEnabled()) {
-            Renderer.addImageToRenderQueue(getGameObject().getPosition(), currentFrame, 0);
+            Renderer.addImageToRenderQueue(getGameObject().getPosition(), currentFrame, priority);
         }
     }
 
     /**
      * Rotate the current frame
+     *
      * @param degrees The degrees to rotate
      */
     public void rotate(int degrees) {
@@ -54,6 +60,7 @@ public class AnimatedSpriteRenderer extends Component {
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
         currentFrame = op.filter(currentFrame, null);
     }
+
     /**
      * Destory the component
      */

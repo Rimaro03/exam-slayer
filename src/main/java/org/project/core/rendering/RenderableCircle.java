@@ -9,6 +9,7 @@ import java.awt.*;
 public class RenderableCircle extends Renderable {
     private final float radius;
     private final Color color;
+
     public RenderableCircle(float radius, Color color, Vec2 position, int priority) {
         super(position, priority);
         this.radius = radius;

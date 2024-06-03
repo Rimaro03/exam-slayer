@@ -2,13 +2,24 @@ package org.project.componentsystem.components.weapons;
 
 import lombok.extern.log4j.Log4j2;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
 @Log4j2
 public class WeaponData {
+    private static final WeaponData physicsBookData = new WeaponData(
+            10,
+            0.1f,
+            10.0f,
+            "resources/textures/touchable/book.png",
+            16,
+            16
+    );
+    private static final WeaponData swordData = new WeaponData(
+            20,
+            0.12f,
+            15.0f,
+            "resources/textures/touchable/sword.png",
+            16,
+            16
+    );
     public final int damage;
     public final float reloadTime;
     public final float speed;
@@ -24,17 +35,16 @@ public class WeaponData {
         this.imageHeight = imageHeight;
     }
 
-
-    private static final WeaponData physicsBookData = new WeaponData(10, 0.1f, 10.0f, "resources/textures/touchable/book.png", 16, 16);
-    private static final WeaponData swordData = new WeaponData(20, 0.12f, 15.0f, "resources/textures/touchable/sword.png", 16, 16);
-
     public static WeaponData getWeaponData(WeaponType type) {
         switch (type) {
-            case PhysicsBook: return physicsBookData;
+            case PhysicsBook:
+                return physicsBookData;
 
-            case Sword: return swordData;
+            case Sword:
+                return swordData;
 
-            default: throw new IllegalArgumentException("Weapon type not implemented : " + type);
+            default:
+                throw new IllegalArgumentException("Weapon type not implemented : " + type);
         }
     }
 }

@@ -15,12 +15,12 @@ public abstract class Renderable {
         this.priority = priority;
     }
 
+    public abstract void draw(Graphics g);
+
     public static class Comparator implements java.util.Comparator<Renderable> {
         @Override
         public int compare(Renderable o1, Renderable o2) {
             return o1.getPriority() - o2.getPriority();
         }
     }
-
-    public abstract void draw(Graphics g);
 }

@@ -1,16 +1,15 @@
 package org.project.componentsystem.components.colliders;
 
 import org.project.componentsystem.GameObject;
-import org.project.core.Game;
-import org.project.core.Physics;
 import org.project.core.Debug;
+import org.project.core.Game;
 import org.project.core.rendering.Renderer;
 import org.project.utils.Vec2;
 
 import java.awt.*;
 
 public class BoxCollider extends AbstractBoxCollider {
-    
+
     /**
      * Initializes a new Component with the given GameObject, enabled status, size and movable status
      *
@@ -36,11 +35,37 @@ public class BoxCollider extends AbstractBoxCollider {
         super(gameObject, size, movable, inside);
     }
 
+    /**
+     * Repels two colliders from each other (A box and an any type collider)
+     *
+     * @param collider1 The first collider
+     * @param collider2 The second collider
+     * @param xMove     The amount to move in the x direction
+     * @param yMove     The amount to move in the y direction
+     * @param repel     The amount to repel by
+     */
+    public static void repulsion(Collider collider1, Collider collider2, float xMove, float yMove, float repel) {
+        if (collider1.isMovable()) {
+            collider1.getGameObject().setPosition(
+                    collider1.getGameObject().getPosition().add(
+                            new Vec2(xMove / (1 / repel), yMove / (1 / repel))
+                    )
+            );
+        }
+        if (collider2.isMovable()) {
+            collider2.getGameObject().setPosition(
+                    collider2.getGameObject().getPosition().add(
+                            new Vec2(-xMove / (1 / repel), -yMove / (1 / repel))
+                    )
+            );
+        }
+    }
+
     @Override
     public void onCollide(Collider other) {
-        if(other instanceof BoxCollider){
+        if (other instanceof BoxCollider) {
             BoxCollider otherBox = (BoxCollider) other;
-            if(this.isInside() && otherBox.isInside()) {
+            if (this.isInside() && otherBox.isInside()) {
                 float repel = 0.02f;
                 float xDistance = this.getGameObject().getPosition().getX() - otherBox.getGameObject().getPosition().getX();
                 float yDistance = this.getGameObject().getPosition().getY() - otherBox.getGameObject().getPosition().getY();
@@ -49,7 +74,7 @@ public class BoxCollider extends AbstractBoxCollider {
                 BoxCollider.repulsion(this, otherBox, xMove, yMove, repel);
                 return;
             }
-            if(otherBox.isMovable()) {
+            if (otherBox.isMovable()) {
                 float x = otherBox.getGameObject().getPosition().getX();
                 float y = otherBox.getGameObject().getPosition().getY();
                 float x1 = this.getGameObject().getPosition().getX() - this.getSize().getX() / 2;
@@ -59,7 +84,7 @@ public class BoxCollider extends AbstractBoxCollider {
                 y = Math.max(y1 + otherBox.getSize().getY() / 2, Math.min(y1 + this.getSize().getY() - otherBox.getSize().getY() / 2, y));
                 otherBox.getGameObject().setPosition(new Vec2(x, y));
             }
-            if(this.isMovable()) {
+            if (this.isMovable()) {
                 float x = this.getGameObject().getPosition().getX();
                 float y = this.getGameObject().getPosition().getY();
                 float x1 = otherBox.getGameObject().getPosition().getX() - otherBox.getSize().getX() / 2;
@@ -72,7 +97,7 @@ public class BoxCollider extends AbstractBoxCollider {
         }
         if (other instanceof CircleCollider) {
             CircleCollider otherCircle = (CircleCollider) other;
-            if(this.isInside()) {
+            if (this.isInside()) {
                 CircleCollider.circleBoxCollision(this, otherCircle);
                 return;
             }
@@ -114,44 +139,23 @@ public class BoxCollider extends AbstractBoxCollider {
     }
 
     @Override
-    public void onEnable() { Game.getCurrentLevel().getPhysicsEngine().addCollider(this); }
+    public void onEnable() {
+        Game.getCurrentLevel().getPhysicsEngine().addCollider(this);
+    }
 
     @Override
-    public void onDisable() { Game.getCurrentLevel().getPhysicsEngine().removeCollider(this); }
+    public void onDisable() {
+        Game.getCurrentLevel().getPhysicsEngine().removeCollider(this);
+    }
 
-    public void draw(){
-        if(Debug.ENABLED && isEnabled())
+    public void draw() {
+        if (Debug.ENABLED)
             Renderer.addRectToRenderQueue(
                     getGameObject().getPosition(),
                     getSize(),
                     Color.RED,
-                    2
+                    2,
+                    false
             );
-    }
-
-    /**
-     * Repels two colliders from each other (A box and an any type collider)
-     *
-     * @param collider1 The first collider
-     * @param collider2 The second collider
-     * @param xMove     The amount to move in the x direction
-     * @param yMove     The amount to move in the y direction
-     * @param repel     The amount to repel by
-     */
-    public static void repulsion(Collider collider1, Collider collider2, float xMove, float yMove, float repel){
-        if(collider1.isMovable()){
-                collider1.getGameObject().setPosition(
-                        collider1.getGameObject().getPosition().add(
-                                new Vec2(xMove / (1 / repel), yMove / (1 / repel))
-                        )
-                );
-            }
-        if(collider2.isMovable()){
-            collider2.getGameObject().setPosition(
-                    collider2.getGameObject().getPosition().add(
-                            new Vec2(-xMove / (1 / repel), -yMove / (1 / repel))
-                    )
-            );
-        }
     }
 }

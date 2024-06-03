@@ -2,10 +2,14 @@ package org.project.items;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.project.componentsystem.GameObject;
+import org.project.componentsystem.components.stats.PlayerStats;
 
-@Getter @Setter
-public class Heart extends Item{
+@Getter
+@Setter
+public class Heart extends Item {
     private final int health;
+
     /**
      * Initializes a new Item with the given name and weight and health value
      * This item is used to increase the health of the player when picked up
@@ -36,4 +40,18 @@ public class Heart extends Item{
     public void update() {
 
     }
+
+    /**
+     * Called when this Item is picked up
+     *
+     * @param by The GameObject that picked up this Item
+     */
+    @Override
+    public void onPickUp(GameObject by) {
+        PlayerStats playerStats = (PlayerStats) by.getComponent(PlayerStats.class);
+        playerStats.setSpeed(playerStats.getSpeed() - getWeight());
+        playerStats.setHealth(playerStats.getHealth() + health);
+    }
+
+
 }

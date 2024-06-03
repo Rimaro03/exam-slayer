@@ -10,7 +10,7 @@ import org.project.componentsystem.components.colliders.Collider;
 import org.project.core.Game;
 import org.project.generation.wavecollapse.Direction;
 import org.project.generation.wavecollapse.InvalidDirectionException;
-import org.project.generation.wavecollapse.RoomState;
+import org.project.items.Item;
 import org.project.utils.Vec2;
 
 import java.util.ArrayList;
@@ -25,13 +25,15 @@ public class Room {
     public static final float SIZE = 15.75f;
     private final ArrayList<GameObject> gameObjects;
     private final Room[] adjacentRooms;
+    @Getter
+    private final int x, y;
     private boolean initialized;
-    @Getter @Setter
+    @Getter
+    @Setter
     private boolean cleared;
     @Setter
     private InitType initType;
-    @Getter
-    private final int x, y;
+
     public Room(int x, int y) {
         gameObjects = new ArrayList<>();
         adjacentRooms = new Room[4];
@@ -43,18 +45,23 @@ public class Room {
 
     /**
      * @param direction The direction of the adjacent room. {@link Direction}
-     * @param room The room to set as adjacent.
+     * @param room      The room to set as adjacent.
      */
     public void setAdjacentRoom(int direction, Room room) {
-        if(direction < 0 || direction >= 4) { throw new InvalidDirectionException(); }
+        if (direction < 0 || direction >= 4) {
+            throw new InvalidDirectionException();
+        }
         adjacentRooms[direction] = room;
     }
+
     /**
      * @param direction The direction of the adjacent room. {@link Direction}
      * @return The adjacent room in the specified direction, null if there isn't.
      */
     public Room getAdjacentRoom(int direction) {
-        if(direction < 0 || direction >= 4) { throw new InvalidDirectionException(); }
+        if (direction < 0 || direction >= 4) {
+            throw new InvalidDirectionException();
+        }
         return adjacentRooms[direction];
     }
 
@@ -70,46 +77,57 @@ public class Room {
         }
         return null;
     }
+    public GameObject[] getGameObjects(String name) {
+        ArrayList<GameObject> list = new ArrayList<>();
+        for (GameObject gameObject : gameObjects) {
+            if (gameObject.getName().equals(name)) {
+                list.add(gameObject);
+            }
+        }
+        return list.toArray(new GameObject[list.size()]);
+    }
+
     /**
      * Adds a new GameObject to the room and starts it
+     *
      * @param gameObject The GameObject to add
      */
     public void addGameObject(GameObject gameObject) {
         gameObjects.add(gameObject);
-        gameObject.setEnabled(true);
-        gameObject.start();
     }
+
     /**
      * Removes a GameObject from the room and destroys it
+     *
      * @param gameObject The GameObject to remove
      */
     public void removeGameObject(GameObject gameObject) {
         gameObjects.remove(gameObject);
-        gameObject.setEnabled(false);
-        gameObject.destroy();
     }
 
 
     /**
      * sets the room enabled status to the specified and applies
      * it to all the game objects of the room.
+     *
      * @param enabled the status to set the room to.
      */
-    public void setEnabled(boolean enabled){
-        for(GameObject go : gameObjects){
+    public void setEnabled(boolean enabled) {
+        for (GameObject go : gameObjects) {
             go.setEnabled(enabled);
         }
 
-        if(!initialized)
+        if (!initialized)
             init();
     }
+
     /**
      * Spawns all the starting objects of the room like walls and doors,
      * plus all the game objects specified by its InitType
      * (boss if is a boss room, player if is the start room, etc...)
      */
-    public void init(){
-        if(initialized)
+    public void init() {
+        if (initialized)
             throw new RuntimeException("Room already initialized");
 
         // Create room collider-sprite game object
@@ -119,7 +137,9 @@ public class Room {
         // Create room door collider game objects
         for (int direction = 0; direction < 4; direction++) {
             // direction 0 = up, 1 = right, 2 = down, 3 = left
-            if(adjacentRooms[direction] == null) { continue; }
+            if (adjacentRooms[direction] == null) {
+                continue;
+            }
 
             GameObject door = GameObjectFactory.createDoorGameObject(direction, (Collider) roomGameObject.getComponent(BoxCollider.class));
             door.setPosition(door.getPosition().add(new Vec2(Direction.x(0, direction) * (SIZE * .5f - 1.5f), Direction.y(0, direction) * (SIZE * 0.5f - 1.5f))));
@@ -127,77 +147,93 @@ public class Room {
         }
 
         // IF YOU NEED TO ADD MORE GAME OBJECTS, ADD THEM HERE!!!
-        switch (initType){
+        switch (initType) {
             case Start:
-                gameObjects.add(GameObjectFactory.createPlayer("Player"));
+                gameObjects.add(GameObjectFactory.createPlayer());
                 break;
             case Boss:
-                gameObjects.add(GameObjectFactory.createBoss(0));
+                Integer bossId = Game.popBossId();
+                // NULL CHECK IS TEMPORARY UNTIL ALL BOSSES ARE IMPLEMENTED
+                gameObjects.add(GameObjectFactory.createBoss(bossId != null ? bossId : 0));
                 break;
             case Normal:
                 GameObject[] enemies = GameObjectFactory.createEnemies(new Random().nextInt(2) + 4);
                 gameObjects.addAll(Arrays.asList(enemies));
-                break;
             case Item:
-                 if(!Game.all_items.isEmpty()) {
-                    GameObject item = GameObjectFactory.createPhysicalItem(
+                Item item = Game.popItem();
+                if (item != null) {
+                    GameObject itemGO = GameObjectFactory.createPhysicalItem(
                             new Vec2(1, 1),
-                            Game.all_items.get(0)
+                            item
                     );
-                    gameObjects.add(item);
-                    Game.all_items.remove(0);
-                 }
-                 break;
-            case Empty: break;
+                    gameObjects.add(itemGO);
+                }
+                break;
+
+            case Empty:
+                break;
             default:
                 throw new RuntimeException("Invalid init type");
         }
 
 
-        for(GameObject go : gameObjects)
+        for (GameObject go : gameObjects) {
+            if(go.getName().equals("Player") && initType != InitType.Start)
+                continue;
             go.start();
+        }
 
         initialized = true;
     }
+
     /**
      * Updates all the game objects of the room
      */
     public void updateGameObjects() {
         for (int i = 0; i < gameObjects.size(); i++) {
-            gameObjects.get(i).update();
+            if(gameObjects.get(i).isEnabled())
+                gameObjects.get(i).update();
         }
     }
 
-    public String toString(){
-        if(adjacentRooms[0] != null && adjacentRooms[2] != null && adjacentRooms[3] != null && adjacentRooms[1] != null){
+    public void destroyGameObjects() {
+        while (!gameObjects.isEmpty()) {
+            GameObject go = gameObjects.get(gameObjects.size() - 1);
+            gameObjects.remove(go);
+            go.destroy();
+        }
+    }
+
+    public String toString() {
+        if (adjacentRooms[0] != null && adjacentRooms[2] != null && adjacentRooms[3] != null && adjacentRooms[1] != null) {
             return "┼─";
-        } else if(adjacentRooms[0] != null && adjacentRooms[2] != null && adjacentRooms[3] != null){
+        } else if (adjacentRooms[0] != null && adjacentRooms[2] != null && adjacentRooms[3] != null) {
             return "┤ ";
-        } else if(adjacentRooms[0] != null && adjacentRooms[2] != null && adjacentRooms[1] != null){
+        } else if (adjacentRooms[0] != null && adjacentRooms[2] != null && adjacentRooms[1] != null) {
             return "├─";
-        } else if(adjacentRooms[0] != null && adjacentRooms[3] != null && adjacentRooms[1] != null){
+        } else if (adjacentRooms[0] != null && adjacentRooms[3] != null && adjacentRooms[1] != null) {
             return "┬─";
-        } else if(adjacentRooms[2] != null && adjacentRooms[3] != null && adjacentRooms[1] != null){
+        } else if (adjacentRooms[2] != null && adjacentRooms[3] != null && adjacentRooms[1] != null) {
             return "┴─";
-        } else if(adjacentRooms[0] != null && adjacentRooms[1] != null){
+        } else if (adjacentRooms[0] != null && adjacentRooms[1] != null) {
             return "┌─";
-        } else if(adjacentRooms[0] != null && adjacentRooms[3] != null){
+        } else if (adjacentRooms[0] != null && adjacentRooms[3] != null) {
             return "┐ ";
-        } else if(adjacentRooms[2] != null && adjacentRooms[1] != null){
+        } else if (adjacentRooms[2] != null && adjacentRooms[1] != null) {
             return "└─";
-        } else if(adjacentRooms[2] != null && adjacentRooms[3] != null){
+        } else if (adjacentRooms[2] != null && adjacentRooms[3] != null) {
             return "┘ ";
-        } else if(adjacentRooms[0] != null && adjacentRooms[2] != null){
+        } else if (adjacentRooms[0] != null && adjacentRooms[2] != null) {
             return "│ ";
-        } else if(adjacentRooms[3] != null && adjacentRooms[1] != null){
+        } else if (adjacentRooms[3] != null && adjacentRooms[1] != null) {
             return "──";
-        } else if(adjacentRooms[0] != null){
+        } else if (adjacentRooms[0] != null) {
             return "│ ";
-        } else if(adjacentRooms[2] != null){
+        } else if (adjacentRooms[2] != null) {
             return "│ ";
-        } else if(adjacentRooms[3] != null){
+        } else if (adjacentRooms[3] != null) {
             return "──";
-        } else if(adjacentRooms[1] != null) {
+        } else if (adjacentRooms[1] != null) {
             return "──";
         } else {
             return "  ";

@@ -5,9 +5,11 @@ import lombok.Setter;
 import org.project.componentsystem.GameObject;
 import org.project.utils.Vec2;
 
-@Getter @Setter
+@Getter
+@Setter
 public abstract class AbstractCircleCollider extends Collider {
     private float radius;
+
     /**
      * Initializes a new Component with the given GameObject, enabled status, radius and movable status
      *
@@ -33,8 +35,18 @@ public abstract class AbstractCircleCollider extends Collider {
         this.radius = radius;
     }
 
+    protected static Vec2 collisionDistance(AbstractCircleCollider circle, AbstractBoxCollider box) {
+        Vec2 circlePos = circle.getGameObject().getPosition();
+        Vec2 boxPos = box.getGameObject().getPosition();
+        Vec2 halfSize = box.getSize().divide(2);
+        Vec2 distance = circlePos.subtract(boxPos);
+        Vec2 clamp = Vec2.clamp(distance, new Vec2(-halfSize.getX(), -halfSize.getY()), halfSize);
+        Vec2 closest = boxPos.add(clamp);
+        return closest.subtract(circlePos);
+    }
+
     public boolean collidesWith(Collider other) {
-        if(this.getIgnoreColliders().contains(other)) return false;
+        if (this.getIgnoreColliders().contains(other)) return false;
         if (other instanceof AbstractCircleCollider) {
             AbstractCircleCollider otherCircle = (AbstractCircleCollider) other;
             float distance = this.getGameObject().getPosition().distance(otherCircle.getGameObject().getPosition());
@@ -44,7 +56,7 @@ public abstract class AbstractCircleCollider extends Collider {
         if (other instanceof AbstractBoxCollider) {
             AbstractBoxCollider otherBox = (AbstractBoxCollider) other;
             if (otherBox.isInside()) {
-               Vec2 distance = collisionDistance(this, otherBox);
+                Vec2 distance = collisionDistance(this, otherBox);
                 return distance.magnitude() < this.getRadius();
             }
             float x = this.getGameObject().getPosition().getX();
@@ -61,15 +73,4 @@ public abstract class AbstractCircleCollider extends Collider {
     }
 
     public abstract void onCollide(Collider other);
-
-
-    protected static Vec2 collisionDistance(AbstractCircleCollider circle, AbstractBoxCollider box) {
-        Vec2 circlePos = circle.getGameObject().getPosition();
-        Vec2 boxPos = box.getGameObject().getPosition();
-        Vec2 halfSize = box.getSize().divide(2);
-        Vec2 distance = circlePos.subtract(boxPos);
-        Vec2 clamp = Vec2.clamp(distance, new Vec2(-halfSize.getX(), -halfSize.getY()), halfSize);
-        Vec2 closest = boxPos.add(clamp);
-        return closest.subtract(circlePos);
-    }
 }

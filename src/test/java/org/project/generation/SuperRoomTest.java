@@ -1,8 +1,8 @@
 package org.project.generation;
 
 import org.junit.jupiter.api.Test;
-import org.project.generation.wavecollapse.SuperRoom;
 import org.project.generation.wavecollapse.RoomState;
+import org.project.generation.wavecollapse.SuperRoom;
 
 import java.util.Random;
 
@@ -14,7 +14,7 @@ class SuperRoomTest {
 
         superRoom.removeState(new RoomState((byte) 0));
 
-        assert(!superRoom.getPossibleStates().contains(new RoomState((byte) 0)));
+        assert (!superRoom.getPossibleStates().contains(new RoomState((byte) 0)));
     }
 
     @Test
@@ -23,8 +23,8 @@ class SuperRoomTest {
 
         superRoom.collapse(new Random());
 
-        assert(superRoom.isCollapsed());
-        assert(superRoom.entropy() == 1);
+        assert (superRoom.isCollapsed());
+        assert (superRoom.entropy() == 1);
     }
 
     @Test
@@ -58,8 +58,8 @@ class SuperRoomTest {
     void testCollapse() {
         SuperRoom superRoom = new SuperRoom(0, 0);
         superRoom.collapse(new RoomState((byte) 0));
-        assert(superRoom.isCollapsed());
-        assert(superRoom.entropy() == 1);
-        assert(superRoom.getState().equals(new RoomState((byte) 0)));
+        assert (superRoom.isCollapsed());
+        assert (superRoom.entropy() == 1);
+        assert (superRoom.getState().equals(new RoomState((byte) 0)));
     }
 }
