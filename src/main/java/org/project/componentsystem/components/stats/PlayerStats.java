@@ -54,14 +54,14 @@ public class PlayerStats extends Stats {
         ArrayList<String> items = (ArrayList<String>) Game.getSavingIO().getStringList("inventory");
         if (items != null) {
             for (String item : items) {
-                Item loadedItem = Game.getItemByName(item);
+                Item loadedItem = Game.getCurrentLevel().getItemByName(item);
                 if (loadedItem != null) {
                     this.addItem(loadedItem);
                     if (!(loadedItem instanceof Heart)) {
                         loadedItem.onPickUp(getGameObject());
                     }
                 }
-                Game.removeItem(loadedItem);
+                Game.getCurrentLevel().removeItem(loadedItem);
             }
         }
 

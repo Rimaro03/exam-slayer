@@ -152,7 +152,7 @@ public class Room {
                 gameObjects.add(GameObjectFactory.createPlayer());
                 break;
             case Boss:
-                Integer bossId = Game.popBossId();
+                Integer bossId = Game.getCurrentLevel().popBossId();
                 // NULL CHECK IS TEMPORARY UNTIL ALL BOSSES ARE IMPLEMENTED
                 gameObjects.add(GameObjectFactory.createBoss(bossId != null ? bossId : 0));
                 break;
@@ -160,7 +160,7 @@ public class Room {
                 GameObject[] enemies = GameObjectFactory.createEnemies(new Random().nextInt(2) + 4);
                 gameObjects.addAll(Arrays.asList(enemies));
             case Item:
-                Item item = Game.popItem();
+                Item item = Game.getCurrentLevel().popItem();
                 if (item != null) {
                     GameObject itemGO = GameObjectFactory.createPhysicalItem(
                             new Vec2(1, 1),

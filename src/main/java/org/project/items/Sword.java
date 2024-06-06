@@ -6,6 +6,7 @@ import org.project.componentsystem.GameObject;
 import org.project.componentsystem.components.stats.PlayerStats;
 import org.project.componentsystem.components.weapons.PlayerShootingController;
 import org.project.componentsystem.components.weapons.WeaponType;
+import org.project.core.Game;
 
 
 @Log4j2
@@ -49,6 +50,6 @@ public class Sword extends Item {
     public void onPickUp(GameObject by) {
         PlayerStats playerStats = (PlayerStats) by.getComponent(PlayerStats.class);
         playerStats.setSpeed(playerStats.getSpeed() - getWeight());
-        by.addComponent(new PlayerShootingController(by, 0.5f, WeaponType.Sword));
+        Game.getCurrentLevel().addComponentToGameObject(by, new PlayerShootingController(by,  WeaponType.Sword));
     }
 }

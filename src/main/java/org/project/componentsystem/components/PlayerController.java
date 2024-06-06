@@ -4,12 +4,13 @@ import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.components.stats.PlayerStats;
 import org.project.core.Game;
+import org.project.core.GameStateListener;
 import org.project.core.Input;
 import org.project.core.Time;
 import org.project.utils.Vec2;
 
 @Log4j2
-public class PlayerController extends Component {
+public class PlayerController extends Component implements GameStateListener {
     AnimatedSpriteRenderer spriteRenderer;
     float animationSpeed = 10.f;
 
@@ -19,6 +20,7 @@ public class PlayerController extends Component {
 
     public void start() {
         spriteRenderer = (AnimatedSpriteRenderer) getGameObject().getComponent(AnimatedSpriteRenderer.class);
+        Game.addGameStateListener(this);
     }
 
     @Override
@@ -69,6 +71,7 @@ public class PlayerController extends Component {
      */
     @Override
     public void destory() {
+        Game.removeGameStateListener(this);
     }
 
     @Override
@@ -79,5 +82,15 @@ public class PlayerController extends Component {
     @Override
     public void onDisable() {
 
+    }
+
+    @Override
+    public void onGamePaused() {
+        setEnabled(false);
+    }
+
+    @Override
+    public void onGameResumed() {
+        setEnabled(true);
     }
 }

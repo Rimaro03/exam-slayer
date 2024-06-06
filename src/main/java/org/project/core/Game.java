@@ -2,6 +2,7 @@ package org.project.core;
 
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import org.project.componentsystem.GameObjectFactory;
 import org.project.componentsystem.components.bosses.BossesInfo;
 import org.project.generation.Level;
 import org.project.generation.wavecollapse.GenerationSettings;
@@ -11,6 +12,7 @@ import org.project.items.Heart;
 import org.project.items.Item;
 import org.project.items.Sword;
 import org.project.savingsystem.SavingIO;
+import org.project.utils.Vec2;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -21,90 +23,45 @@ import java.util.*;
 
 @Log4j2
 @Getter
-public class Game implements WindowListener, KeyListener {
+public class Game implements WindowListener {
     private static Game currentGame;
-    private final Level currentLevel;
-    private final SavingIO savingIO;
+    private Level currentLevel;
+    private SavingIO savingIO;
     private final Time time;
-
-    private final LinkedList<Item> itemsQueue;
-    private final LinkedList<Integer> bossesIdsQueue;
 
     private boolean paused;
     private final ArrayList<GameStateListener> gameStateListeners;
 
-    private Game(String saveFilePath) {
-        savingIO = new SavingIO(saveFilePath);
+    private Game() {
+        savingIO = new SavingIO();
 
         gameStateListeners = new ArrayList<>();
         paused = false;
 
         time = new Time();
-        gameStateListeners.add(time);
 
-        Long levelSeed = savingIO.getLong("LevelSeed");
-        if (levelSeed == null)
-            levelSeed = new Random().nextLong();
-
-        currentLevel = new LevelGenerator(levelSeed).build();
+        currentLevel = new LevelGenerator(new Random().nextLong()).build();
 
 
         /* -------------------- TMP ------------------------*/
 
-        // TODO : Load all items from a file (sword is a test item)
-        // Loop is just for testing
-        itemsQueue = new LinkedList<>();
-        Sword sword = new Sword(
-                "DiamondSword",
-                2,
-                "resources/textures/touchable/sword.png",
-                "resources/textures/stats/items/sword.png"
-        );
-        Heart heart = new Heart(
-                "Heart",
-                0,
-                "resources/textures/touchable/heart.png",
-                "resources/textures/stats/items/heart.png",
-                10
-        );
-        Book book = new Book(
-                "PhysicsBook",
-                1,
-                "resources/textures/touchable/book.png",
-                "resources/textures/stats/items/book.png"
-        );
-        for (int i = 0; i < GenerationSettings.ITEM_ROOM_COUNT * 10; i++) {
-            itemsQueue.add(heart);
-            itemsQueue.add(sword);
-            itemsQueue.add(book);
-        }
 
-        Collections.shuffle(itemsQueue);
-
-        bossesIdsQueue = new LinkedList<>();
-        List<Integer> savedBossesIds = savingIO.getIntList("BossesIds");
-
-        if (savedBossesIds != null) {
-            for (Integer id : savedBossesIds) {
-                bossesIdsQueue.add(id);
-            }
-        } else {
-            for (int id = 0; id < BossesInfo.IMPLEMENTED_BOSSES; id++) {
-                bossesIdsQueue.add(id);
-            }
-            Collections.shuffle(bossesIdsQueue);
-        }
     }
 
-    public static Game loadNewGame(String saveFilePath) {
-        if (saveFilePath == null) {
-            throw new IllegalArgumentException("The save file path is null");
-        }
-
-        currentGame = new Game(saveFilePath);
-        currentGame.currentLevel.loadMapData();
-
+    public static Game loadNewGame() {
+        currentGame = new Game();
         return currentGame;
+    }
+
+    public static void load(String saveFilePath){
+        currentGame.savingIO.setPath(saveFilePath);
+
+        Long seed = currentGame.savingIO.getLong("LevelSeed");
+        if(seed == null)
+            seed = new Random().nextLong();
+        currentGame.currentLevel = new LevelGenerator(seed).build();
+        currentGame.currentLevel.loadMapData();
+        currentGame.currentLevel.init();
     }
 
     public static Time getTime() {
@@ -119,29 +76,6 @@ public class Game implements WindowListener, KeyListener {
     }
 
 
-    /* ------------------------- QUEUE METHODS ------------------------- */
-
-    public static Integer popBossId() {
-        return currentGame.bossesIdsQueue.poll();
-    }
-
-    public static Item popItem() {
-        return currentGame.itemsQueue.poll();
-    }
-
-    public static Item getItemByName(String name) {
-        for (Item item : currentGame.itemsQueue) {
-            if (item.getName().equals(name))
-                return item;
-        }
-        return null;
-    }
-
-    public static Item removeItem(Item item) {
-        currentGame.itemsQueue.remove(item);
-        return item;
-    }
-
 
     /* ---------------------- GAME LISTENER METHODS --------------------------*/
 
@@ -154,6 +88,7 @@ public class Game implements WindowListener, KeyListener {
                 listener.onGameResumed();
 
     }
+    public static boolean isPaused(){ return currentGame.paused; }
     public static void setPaused(boolean paused) {
         if(currentGame.paused == paused)
             return;
@@ -174,20 +109,22 @@ public class Game implements WindowListener, KeyListener {
 
     public void start() {
         currentLevel.init();
-
+        currentLevel.instantiateGameObject(GameObjectFactory.createMainMenu(), new Vec2(0, 0));
     }
 
     public void update() {
         currentLevel.update();
     }
 
-    private void exit() {
-        currentLevel.saveMapData();
-        currentLevel.destroyAllGameObjects();
+    public static void exit() {
+        save();
+        currentGame = null;
+    }
+    public static void save(){
+        currentGame.currentLevel.saveMapData();
+        currentGame.currentLevel.destroyAllGameObjects();
 
-        savingIO.setIntList("BossesIds", bossesIdsQueue);
-
-        savingIO.flush();
+        currentGame.savingIO.flush();
     }
 
     /* ---------------------- WINDOW LISTENER METHODS ---------------------- */
@@ -224,24 +161,6 @@ public class Game implements WindowListener, KeyListener {
 
     @Override
     public void windowDeactivated(WindowEvent e) {
-
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
-            paused = !paused;
-            updateListeners();
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
 
     }
 }

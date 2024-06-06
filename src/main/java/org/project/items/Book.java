@@ -4,6 +4,7 @@ import org.project.componentsystem.GameObject;
 import org.project.componentsystem.components.stats.PlayerStats;
 import org.project.componentsystem.components.weapons.PlayerShootingController;
 import org.project.componentsystem.components.weapons.WeaponType;
+import org.project.core.Game;
 
 public class Book extends Item {
     /**
@@ -41,7 +42,7 @@ public class Book extends Item {
     public void onPickUp(GameObject by) {
         PlayerStats playerStats = (PlayerStats) by.getComponent(PlayerStats.class);
         playerStats.setSpeed(playerStats.getSpeed() - getWeight());
-        by.addComponent(new PlayerShootingController(by, 0.2f, WeaponType.PhysicsBook));
+        Game.getCurrentLevel().addComponentToGameObject(by, new PlayerShootingController(by, WeaponType.PhysicsBook));
     }
 
 

@@ -42,9 +42,7 @@ public class AnimatedSpriteRenderer extends Component {
     }
 
     public void update() {
-        if (isEnabled()) {
-            Renderer.addImageToRenderQueue(getGameObject().getPosition(), currentFrame, priority);
-        }
+        Renderer.addImageToRenderQueue(getGameObject().getPosition(), currentFrame, priority);
     }
 
     /**

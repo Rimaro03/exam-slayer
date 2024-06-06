@@ -5,10 +5,10 @@ import org.project.componentsystem.components.Component;
 import org.project.componentsystem.components.stats.EntityStats;
 import org.project.componentsystem.components.stats.Stats;
 import org.project.core.Game;
-import org.project.core.Time;
+import org.project.core.GameStateListener;
 import org.project.utils.Vec2;
 
-public class EnemyAI extends Component {
+public class EnemyAI extends Component implements GameStateListener {
     private EntityStats stats;
     private GameObject target;
     private float timeToAttack;
@@ -29,6 +29,8 @@ public class EnemyAI extends Component {
 
         RoomLocker roomLocker = (RoomLocker) Game.getCurrentLevel().findGameObject("Room").getComponent(RoomLocker.class);
         roomLocker.addEntity(this);
+
+        Game.addGameStateListener(this);
     }
 
     @Override
@@ -48,6 +50,8 @@ public class EnemyAI extends Component {
     public void destory() {
         RoomLocker roomLocker = (RoomLocker) Game.getCurrentLevel().findGameObject("Room").getComponent(RoomLocker.class);
         roomLocker.removeEntity(this);
+
+        Game.removeGameStateListener(this);
     }
 
     @Override
@@ -58,5 +62,15 @@ public class EnemyAI extends Component {
     @Override
     public void onDisable() {
 
+    }
+
+    @Override
+    public void onGamePaused() {
+        setEnabled(false);
+    }
+
+    @Override
+    public void onGameResumed() {
+        setEnabled(true);
     }
 }

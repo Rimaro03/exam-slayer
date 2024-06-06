@@ -43,27 +43,9 @@ public class Application extends JFrame {
 
     private void runInternal() {
         // GAME INITIALIZATION HERE!
-        String path = "saved/saved_game.txt";
-        boolean shouldDelete = JOptionPane.showConfirmDialog(
-                null,
-                "Do you want to delete the saved data?",
-                "Delete Data",
-                JOptionPane.YES_NO_OPTION
-        ) == JOptionPane.YES_OPTION;
-        Game game = Game.loadNewGame(path);
-        if (shouldDelete) {
-            File file = new File(path);
-            if (file.exists() && !file.delete()) {
-                log.warn("Failed to delete the file: {}", path);
-            }
-            Game.getSavingIO().getBucketManager().deleteFile(path);
-
-            game = Game.loadNewGame(path);
-        }
-
+        Game game = Game.loadNewGame();
 
         addWindowListener(game);
-        window.addKeyListener(game);
         game.start();
 
         while (true) {
