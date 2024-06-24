@@ -70,9 +70,11 @@ public class SavingIO {
 
         try {
             PrintWriter writer = new PrintWriter(path);
-            writer.println(text.toString());
+            String textString = text.toString();
+
+            writer.println(textString);
             writer.close();
-            bucketManager.uploadFile(path, text.toString());
+            bucketManager.uploadFile(path, textString);
 
             log.info("File saved : {}", path);
         } catch (IOException e) {
@@ -166,6 +168,7 @@ public class SavingIO {
 
     public List<String> getStringList(String name) {
         String value = get(name);
+        System.out.println(value);
         if (value != null) {
             List<String> list = new ArrayList<>();
             Scanner scanner = new Scanner(value);

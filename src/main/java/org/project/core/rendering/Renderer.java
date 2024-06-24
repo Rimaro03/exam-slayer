@@ -1,5 +1,6 @@
 package org.project.core.rendering;
 
+import lombok.extern.log4j.Log4j2;
 import org.project.core.Application;
 import org.project.utils.Vec2;
 
@@ -9,6 +10,7 @@ import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
 import java.util.PriorityQueue;
 
+@Log4j2
 public class Renderer implements ComponentListener {
     public static final Color BACKGROUND_COLOR = new Color(41, 41, 60);
     private static final int VERTICAL_RESOLUTION = 256;
@@ -48,6 +50,9 @@ public class Renderer implements ComponentListener {
      */
     public static void clear(Color color) {
         getInstance().clearInternal(color);
+    }
+    public static void clearRenderQueue() {
+        getInstance().renderQueue.clear();
     }
 
     /**

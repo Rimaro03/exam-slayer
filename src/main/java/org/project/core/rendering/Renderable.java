@@ -6,7 +6,7 @@ import org.project.utils.Vec2;
 import java.awt.*;
 
 @Getter
-public abstract class Renderable {
+public abstract class Renderable{
     protected final Vec2 position;
     private final int priority;
 
@@ -23,4 +23,5 @@ public abstract class Renderable {
             return o1.getPriority() - o2.getPriority();
         }
     }
+
 }

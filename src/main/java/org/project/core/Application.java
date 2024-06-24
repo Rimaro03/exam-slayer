@@ -6,7 +6,6 @@ import org.project.core.rendering.Renderer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 
 
 @Log4j2
@@ -57,13 +56,7 @@ public class Application extends JFrame {
             game.update();
             window.update();
 
-            long delta = System.currentTimeMillis() - startTime;
-            try {
-                long sleepTime = Time.TIME_STEP_IN_MILLIS - delta;
-                if (sleepTime > 0) {
-                    Thread.sleep(sleepTime);
-                }
-            } catch (Exception ignore) { }
+            while(System.currentTimeMillis() - startTime < Time.TIME_STEP_IN_MILLIS && !window.isFinishedPainting());
         }
     }
 

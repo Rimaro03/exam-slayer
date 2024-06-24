@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObjectFactory;
 import org.project.componentsystem.components.bosses.BossesInfo;
+import org.project.core.rendering.Renderer;
 import org.project.generation.Level;
 import org.project.generation.wavecollapse.GenerationSettings;
 import org.project.generation.wavecollapse.LevelGenerator;
@@ -54,15 +55,17 @@ public class Game implements WindowListener {
     }
 
     public static void load(String saveFilePath){
+        if(currentGame.currentLevel != null)
+            currentGame.currentLevel.destroyAllGameObjects();
+
         currentGame.savingIO.setPath(saveFilePath);
 
         Long seed = currentGame.savingIO.getLong("LevelSeed");
         if(seed == null)
             seed = new Random().nextLong();
 
-        if(currentGame.currentLevel != null)
-            currentGame.currentLevel.destroyAllGameObjects();
-        
+        Renderer.clearRenderQueue();
+
         currentGame.currentLevel = new LevelGenerator(seed).build();
         currentGame.currentLevel.loadMapData();
         currentGame.currentLevel.init();

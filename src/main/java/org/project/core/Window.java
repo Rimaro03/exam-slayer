@@ -14,10 +14,13 @@ import java.awt.event.ComponentListener;
 @Getter
 public class Window extends JPanel implements ComponentListener {
     private int width, height;
+    /** Gets used as a semaphore by the Application to check if the swing thread has finished. */
+    private boolean finishedPainting;
 
     public Window(int width, int height) {
         this.width = width;
         this.height = height;
+        finishedPainting = false;
         setup();
 
         Application.getInstance().addComponentListener(this);
@@ -27,12 +30,14 @@ public class Window extends JPanel implements ComponentListener {
      * Updates the window and draws the frame.
      */
     public void update() {
+        finishedPainting = false;
         repaint();
     }
 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Renderer.present(g);
+        finishedPainting = true;
     }
 
     private void setup() {

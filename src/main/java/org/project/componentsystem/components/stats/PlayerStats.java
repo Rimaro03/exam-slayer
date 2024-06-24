@@ -12,6 +12,7 @@ import org.project.items.Item;
 import org.project.utils.Vec2;
 
 import java.awt.*;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -51,7 +52,8 @@ public class PlayerStats extends Stats {
     public void start() {
         if (isStarted) return;
         isStarted = true;
-        ArrayList<String> items = (ArrayList<String>) Game.getSavingIO().getStringList("inventory");
+        List<String> items = Game.getSavingIO().getStringList("inventory");
+
         if (items != null) {
             for (String item : items) {
                 Item loadedItem = Game.getCurrentLevel().getItemByName(item);

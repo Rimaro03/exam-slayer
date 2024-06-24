@@ -81,10 +81,6 @@ public class Level {
         for (int id = 0; id < BossesInfo.IMPLEMENTED_BOSSES; id++)
             bossesIdsQueue.add(id);
         Collections.shuffle(bossesIdsQueue);
-
-        for(int i : bossesIdsQueue){
-            log.info("BossesIdsQueue: {}", i);
-        }
     }
 
     public void loadMapData() {
