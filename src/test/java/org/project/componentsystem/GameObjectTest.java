@@ -1,77 +1,62 @@
 package org.project.componentsystem;
 
 import org.junit.jupiter.api.Test;
+import org.project.componentsystem.components.Component;
 import org.project.componentsystem.components.stats.PlayerStats;
 import org.project.utils.Vec2;
+
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameObjectTest {
 
     @Test
-    void addComponent() {
+    void addComponentToGameObject() {
         GameObject gameObject = new GameObject("Test");
-        gameObject.addComponent(new PlayerStats(gameObject, 100, 5));
-        assertNotNull(gameObject.getComponent(PlayerStats.class));
+        Component component = new PlayerStats(gameObject, 100, 5);
+        gameObject.addComponent(component);
+        assertEquals(component, gameObject.getComponent(PlayerStats.class));
     }
 
     @Test
-    void removeComponent() {
+    void removeComponentFromGameObject() {
         GameObject gameObject = new GameObject("Test");
-        PlayerStats playerStats = new PlayerStats(gameObject, 100, 5);
-        gameObject.addComponent(playerStats);
-        gameObject.removeComponent(playerStats);
+        Component component = new PlayerStats(gameObject, 100, 5);
+        gameObject.addComponent(component);
+        gameObject.removeComponent(component);
         assertNull(gameObject.getComponent(PlayerStats.class));
     }
 
     @Test
-    void getComponent() {
+    void getComponentFromGameObject() {
         GameObject gameObject = new GameObject("Test");
-        PlayerStats playerStats = new PlayerStats(gameObject, 100, 5);
-        gameObject.addComponent(playerStats);
-        assertEquals(playerStats, gameObject.getComponent(PlayerStats.class));
+        Component component = new PlayerStats(gameObject, 100, 5);
+        gameObject.addComponent(component);
+        assertEquals(component, gameObject.getComponent(PlayerStats.class));
     }
 
     @Test
-    void getName() {
-        GameObject gameObject = new GameObject("Test");
-        assertEquals("Test", gameObject.getName());
-    }
-
-    @Test
-    void getComponents() {
-        GameObject gameObject = new GameObject("Test");
-        PlayerStats playerStats = new PlayerStats(gameObject, 100, 5);
-        gameObject.addComponent(playerStats);
-        assertEquals(1, gameObject.getComponents().size());
-    }
-
-    @Test
-    void getPosition() {
-        GameObject gameObject = new GameObject("Test");
-        assertEquals(0, gameObject.getPosition().getX());
-        assertEquals(0, gameObject.getPosition().getY());
-    }
-
-    @Test
-    void setName() {
+    void setAndGetNameOfGameObject() {
         GameObject gameObject = new GameObject("Test");
         gameObject.setName("New Name");
         assertEquals("New Name", gameObject.getName());
     }
 
     @Test
-    void setComponents() {
+    void setAndGetComponentsOfGameObject() {
         GameObject gameObject = new GameObject("Test");
-        gameObject.setComponents(null);
-        assertNull(gameObject.getComponents());
+        ArrayList<Component> components = new ArrayList<>();
+        components.add(new PlayerStats(gameObject, 100, 5));
+        gameObject.setComponents(components);
+        assertEquals(components, gameObject.getComponents());
     }
 
     @Test
-    void setPosition() {
+    void setAndGetPositionOfGameObject() {
         GameObject gameObject = new GameObject("Test");
-        gameObject.setPosition(new Vec2(1, 1));
-        assertEquals(1, gameObject.getPosition().getX());
-        assertEquals(1, gameObject.getPosition().getY());
+        Vec2 newPosition = new Vec2(1, 1);
+        gameObject.setPosition(newPosition);
+        assertEquals(newPosition, gameObject.getPosition());
     }
 }

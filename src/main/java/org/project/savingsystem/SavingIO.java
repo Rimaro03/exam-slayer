@@ -1,6 +1,7 @@
 package org.project.savingsystem;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.project.utils.Vec2Int;
 
@@ -18,6 +19,7 @@ import java.util.Scanner;
 public class SavingIO {
     @Getter
     private String path;
+    @Setter
     private StringBuilder text;
 
     @Getter

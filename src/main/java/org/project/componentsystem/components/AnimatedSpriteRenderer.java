@@ -1,5 +1,6 @@
 package org.project.componentsystem.components;
 
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
 import org.project.core.rendering.Renderable;
@@ -12,7 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-@Log4j2
+@Log4j2 @Getter
 public class AnimatedSpriteRenderer extends Component {
     private final int frameWidth;
     private final int frameHeight;

@@ -114,9 +114,9 @@ public class GameObject {
     }
 
     public void destroy() {
-        for (int i = 0; i < components.size(); i++) {
-            log.info("Destroyed component: {} on GameObject: {}", components.get(i).getClass().getSimpleName(), name);
-            components.get(i).destory();
+        for (Component component : components) {
+            log.info("Destroyed component: {} on GameObject: {}", component.getClass().getSimpleName(), name);
+            component.destory();
         }
     }
 

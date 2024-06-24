@@ -1,6 +1,7 @@
 package org.project.core;
 
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObjectFactory;
 import org.project.componentsystem.components.bosses.BossesInfo;
@@ -78,6 +79,7 @@ public class Game implements WindowListener {
         return currentGame.savingIO;
     }
 
+    @SneakyThrows
     public static Level getCurrentLevel() {
         return currentGame.currentLevel;
     }

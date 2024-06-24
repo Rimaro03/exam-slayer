@@ -1,6 +1,7 @@
 package org.project.core;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.project.core.rendering.Renderer;
 
 import javax.swing.*;
@@ -11,7 +12,7 @@ import java.awt.event.ComponentListener;
 /**
  * Represent the application window.
  */
-@Getter
+@Getter @Setter
 public class Window extends JPanel implements ComponentListener {
     private int width, height;
     /** Gets used as a semaphore by the Application to check if the swing thread has finished. */

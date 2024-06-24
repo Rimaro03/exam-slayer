@@ -1,5 +1,6 @@
 package org.project.core.rendering;
 
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.project.core.Application;
 import org.project.utils.Vec2;
@@ -38,6 +39,7 @@ public class Renderer implements ComponentListener {
 
     /* --------------- SINGLETON METHODS --------------- */
 
+    @SneakyThrows
     public static Renderer getInstance() {
         if (instance == null) {
             instance = new Renderer();

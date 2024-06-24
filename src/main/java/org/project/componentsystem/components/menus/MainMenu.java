@@ -1,5 +1,6 @@
 package org.project.componentsystem.components.menus;
 
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.components.Component;
@@ -13,6 +14,7 @@ import java.awt.*;
 import java.util.List;
 
 @Log4j2
+@Getter
 public class MainMenu extends Component implements InputListener {
     private static final Color SELECTED_COLOR = new Color(255, 255, 255);
     private static final Color UNSELECTED_COLOR = new Color(190, 190, 190);
