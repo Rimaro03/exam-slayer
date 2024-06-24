@@ -78,6 +78,13 @@ public class Level {
         Collections.shuffle(itemsQueue);
 
         bossesIdsQueue = new LinkedList<>();
+        for (int id = 0; id < BossesInfo.IMPLEMENTED_BOSSES; id++)
+            bossesIdsQueue.add(id);
+        Collections.shuffle(bossesIdsQueue);
+
+        for(int i : bossesIdsQueue){
+            log.info("BossesIdsQueue: {}", i);
+        }
     }
 
     public void loadMapData() {
@@ -105,14 +112,9 @@ public class Level {
         List<Integer> savedBossesIds = Game.getSavingIO().getIntList("BossesIds");
 
         if (savedBossesIds != null) {
-            for (Integer id : savedBossesIds) {
+            bossesIdsQueue.clear();
+            for (Integer id : savedBossesIds)
                 bossesIdsQueue.add(id);
-            }
-        } else {
-            for (int id = 0; id < BossesInfo.IMPLEMENTED_BOSSES; id++) {
-                bossesIdsQueue.add(id);
-            }
-            Collections.shuffle(bossesIdsQueue);
         }
     }
 

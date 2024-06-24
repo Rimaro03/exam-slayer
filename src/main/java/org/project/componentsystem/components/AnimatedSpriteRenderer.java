@@ -31,10 +31,23 @@ public class AnimatedSpriteRenderer extends Component {
             log.error("Failed to load sprite sheet: {}", spriteSheetPath);
         }
         currentFrame = spriteSheet.getSubimage(0, 0, frameWidth, frameHeight);
+
+        if(spriteSheet.getWidth() % frameWidth != 0 || spriteSheet.getHeight() % frameHeight != 0)
+            log.error(
+                    "The sprite sheet is not a multiple of the frame size! " +
+                            "[SpriteSheetWidth={}, SpriteSheetHeight={}, FrameWidth={}, FrameHeight={}]",
+                    spriteSheet.getWidth(),
+                    spriteSheet.getHeight(),
+                    frameWidth,
+                    frameHeight
+            );
     }
 
 
     public void setSheetState(int x, int y) {
+        if(x * frameWidth >= spriteSheet.getWidth() || y * frameHeight >= spriteSheet.getHeight() || x < 0 || y < 0)
+            throw new IllegalArgumentException("Invalid frame position");
+
         currentFrame = spriteSheet.getSubimage(x * frameWidth, y * frameHeight, frameWidth, frameHeight);
     }
 

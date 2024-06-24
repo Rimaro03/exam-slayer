@@ -99,17 +99,6 @@ public class MainMenu extends Component implements InputListener {
         selectedFile = Math.min(selectedFile, saveFiles.size() - 1);
         selectedFile = Math.max(selectedFile, 0);
 
-        for (int i = 0; i < saveFiles.size(); i++) {
-            String saveFile = saveFiles.get(i);
-            Renderer.addTextToRenderQueue(
-                    new Vec2(-2, (saveFiles.size() / 2 - i) * 1.4f),
-                    saveFile.substring(saveFile.lastIndexOf('/') + 1).replace(".esd", ""),
-                    i == selectedFile ? SELECTED_COLOR : UNSELECTED_COLOR,
-                    18,
-                    15
-            );
-        }
-
         if(Input.isKeyPressed(Input.KEY_UP) && remainingSleepTime <= 0){
             selectedFile = Math.max(0, selectedFile - 1);
             updated = true;
@@ -135,6 +124,16 @@ public class MainMenu extends Component implements InputListener {
             saveFiles = Game.getSavingIO().allFiles();
         }
 
+        for (int i = 0; i < saveFiles.size(); i++) {
+            String saveFile = saveFiles.get(i);
+            Renderer.addTextToRenderQueue(
+                    new Vec2(-2, (saveFiles.size() / 2 - i) * 1.4f),
+                    saveFile.substring(saveFile.lastIndexOf('/') + 1).replace(".esd", ""),
+                    i == selectedFile ? SELECTED_COLOR : UNSELECTED_COLOR,
+                    18,
+                    15
+            );
+        }
 
         return updated;
     }
