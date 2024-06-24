@@ -1,12 +1,12 @@
-package org.project.componentsystem.components;
+package org.project.componentsystem.components.menus;
 
 import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
+import org.project.componentsystem.components.Component;
 import org.project.core.Game;
 import org.project.core.Input;
 import org.project.core.InputListener;
 import org.project.core.rendering.Renderer;
-import org.project.savingsystem.SavingIO;
 import org.project.utils.Vec2;
 
 import java.awt.*;
@@ -50,7 +50,6 @@ public class MainMenu extends Component implements InputListener {
     @Override
     public void update() {
         Renderer.addRectToRenderQueue(getPosition(), new Vec2(100, 100), Color.black, 5, true);
-
 
         boolean updated;
         if(loadMenu)

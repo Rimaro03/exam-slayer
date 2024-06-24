@@ -20,7 +20,10 @@ public abstract class Renderable{
     public static class Comparator implements java.util.Comparator<Renderable> {
         @Override
         public int compare(Renderable o1, Renderable o2) {
-            return o1.getPriority() - o2.getPriority();
+            int o1Priority = o1 != null ? o1.getPriority() : 0;
+            int o2Priority = o2 != null ? o2.getPriority() : 0;
+
+            return o1Priority - o2Priority;
         }
     }
 

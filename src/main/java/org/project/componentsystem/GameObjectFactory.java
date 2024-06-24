@@ -6,6 +6,9 @@ import org.project.componentsystem.components.colliders.*;
 import org.project.componentsystem.components.enemies.EnemyAI;
 import org.project.componentsystem.components.enemies.EnemyInfo;
 import org.project.componentsystem.components.enemies.RoomLocker;
+import org.project.componentsystem.components.menus.EscMenu;
+import org.project.componentsystem.components.menus.GameOverMenu;
+import org.project.componentsystem.components.menus.MainMenu;
 import org.project.componentsystem.components.stats.EntityStats;
 import org.project.componentsystem.components.stats.PlayerStats;
 import org.project.componentsystem.components.weapons.PlayerShootingController;
@@ -46,7 +49,8 @@ public class GameObjectFactory {
                 new PlayerController(player),
                 new PlayerShootingController(player, WeaponType.PhysicsBook),
                 new BoxCollider(player, new Vec2(1.2f, 2), true, true),
-                new EscMenu(player)
+                new EscMenu(player),
+                new GameOverMenu(player)
         );
     }
 
@@ -99,7 +103,7 @@ public class GameObjectFactory {
                     enemy,
                     new AnimatedSpriteRenderer(enemy, EnemyInfo.getTexturePath(enemyId), EnemyInfo.getTextureWidth(enemyId), EnemyInfo.getTextureHeight(enemyId), 0),
                     new BoxCollider(enemy, new Vec2(1f, 1.5f), true, true),
-                    new EntityStats(enemy, 50, 3, 3, 2.0f, 1),
+                    new EntityStats(enemy, 50, 3, 10, 2.0f, 1.5f),
                     new EnemyAI(enemy)
             );
             enemy.setPosition(new Vec2((.5f - rand.nextFloat()) * (Room.SIZE - 2), (.5f - rand.nextFloat()) * (Room.SIZE - 2)));

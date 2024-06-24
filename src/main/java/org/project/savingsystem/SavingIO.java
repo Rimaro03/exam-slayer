@@ -16,6 +16,7 @@ import java.util.Scanner;
  */
 @Log4j2
 public class SavingIO {
+    @Getter
     private String path;
     private StringBuilder text;
 
@@ -168,7 +169,6 @@ public class SavingIO {
 
     public List<String> getStringList(String name) {
         String value = get(name);
-        System.out.println(value);
         if (value != null) {
             List<String> list = new ArrayList<>();
             Scanner scanner = new Scanner(value);

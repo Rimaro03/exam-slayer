@@ -144,7 +144,11 @@ public class Renderer implements ComponentListener {
         Graphics bufferGraphics = buffer.getGraphics();
 
         while (!renderQueue.isEmpty()) {
-            renderQueue.poll().draw(bufferGraphics);
+            Renderable r = renderQueue.poll();
+            if(r == null)
+                continue;
+
+            r.draw(bufferGraphics);
         }
 
         // Render buffer
