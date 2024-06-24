@@ -59,6 +59,10 @@ public class Game implements WindowListener {
         Long seed = currentGame.savingIO.getLong("LevelSeed");
         if(seed == null)
             seed = new Random().nextLong();
+
+        if(currentGame.currentLevel != null)
+            currentGame.currentLevel.destroyAllGameObjects();
+        
         currentGame.currentLevel = new LevelGenerator(seed).build();
         currentGame.currentLevel.loadMapData();
         currentGame.currentLevel.init();
@@ -118,7 +122,6 @@ public class Game implements WindowListener {
 
     public static void exit() {
         save();
-        currentGame = null;
     }
     public static void save(){
         currentGame.currentLevel.saveMapData();

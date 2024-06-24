@@ -1,5 +1,6 @@
 package org.project.savingsystem;
 
+import com.google.api.gax.paging.Page;
 import com.google.auth.Credentials;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.*;
@@ -8,6 +9,8 @@ import lombok.SneakyThrows;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 public class BucketManager {
@@ -40,6 +43,15 @@ public class BucketManager {
         Blob blob = bucket.get(fileName);
         if (blob == null) return "";
         return new String(blob.getContent());
+    }
+
+    public List<String> getAllFileNames() {
+        List<String> files = new ArrayList<>();
+        Page<Blob> blobs = bucket.list();
+        for (Blob blob : blobs.iterateAll()) {
+            files.add(blob.getName());
+        }
+        return files;
     }
 
     public void uploadFile(String fileName, String content) {

@@ -50,23 +50,15 @@ public class SavingIO {
         this.text = new StringBuilder(bucketManager.getFileContent(path));
     }
 
-    public static List<String> allFiles(String folderPath){
-        List<String> list = new ArrayList<>();
-
-        File folder = new File(folderPath);
-        File[] listOfFiles = folder.listFiles();
-
-        if(listOfFiles == null)
-            return list;
-
-        for (File file : listOfFiles) {
-            if (file.isFile()) {
-                list.add(file.getName());
-            }
-        }
-
-        return list;
+    public List<String> allFiles(){
+        return bucketManager.getAllFileNames();
     }
+    public void deleteFile(String fileName){
+        bucketManager.deleteFile(fileName);
+
+        new File(fileName).delete();
+    }
+
 
     /**
      * Flushes all the changes applied to the file.

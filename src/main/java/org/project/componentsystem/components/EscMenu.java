@@ -10,7 +10,7 @@ import org.project.savingsystem.SavingIO;
 import org.project.utils.Vec2;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.List;
 
 public class EscMenu extends Component implements GameStateListener, InputListener {
     private static final Color SELECTED_COLOR = new Color(255, 255, 255);
@@ -18,6 +18,7 @@ public class EscMenu extends Component implements GameStateListener, InputListen
     private static final String[] lines = { "Resume", "Load", "Save and exit" };
     private float remainingTimeToSleep;
     private String saveFileName;
+    private List<String> saveFiles;
 
     private boolean pauseMenu;
     private boolean loadMenu;
@@ -43,6 +44,7 @@ public class EscMenu extends Component implements GameStateListener, InputListen
     public void start() {
         Game.addGameStateListener(this);
         Input.addInputListener(this);
+        saveFiles = Game.getSavingIO().allFiles();
     }
 
     @Override
@@ -59,8 +61,9 @@ public class EscMenu extends Component implements GameStateListener, InputListen
         if(pauseMenu || loadMenu || loadNewGame)
             Renderer.addRectToRenderQueue(new Vec2(-100, 100), new Vec2(400, 400), new Color(0, 0, 0, 0.5f), 2, true);
 
-        if(updated)
+        if(updated) {
             remainingTimeToSleep = 0.1f;
+        }
         remainingTimeToSleep -= Game.getTime().deltaTime();
     }
 
@@ -109,13 +112,11 @@ public class EscMenu extends Component implements GameStateListener, InputListen
     private boolean loadMenuLogic(){
         boolean updated = false;
 
-        java.util.List<String> saveFiles = SavingIO.allFiles("saved");
-
-        saveFiles.add("New Game");
         for (int i = 0; i < saveFiles.size(); i++) {
+            String saveFile = saveFiles.get(i);
             Renderer.addTextToRenderQueue(
                     new Vec2(-2, (saveFiles.size() / 2 - i) * 1.4f),
-                    saveFiles.get(i).replace(".esd", ""),
+                    saveFile.substring(saveFile.lastIndexOf('/') + 1).replace(".esd", ""),
                     i == selectedFile ? SELECTED_COLOR : UNSELECTED_COLOR,
                     18,
                     3
@@ -135,13 +136,8 @@ public class EscMenu extends Component implements GameStateListener, InputListen
             String loadFileName = saveFiles.get(selectedFile);
             updated = true;
 
-            if(loadFileName.equals("New Game")){
-                loadNewGame = true;
-                loadMenu = false;
-                saveFileName = "";
-            }
-            else
-                Game.load("saved/" + loadFileName);
+            Game.load(loadFileName);
+            Game.setPaused(false);
         }
 
 

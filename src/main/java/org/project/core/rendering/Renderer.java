@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 import java.util.PriorityQueue;
 
 public class Renderer implements ComponentListener {
-    private static final Color BACKGROUND_COLOR = new Color(41, 41, 60);
+    public static final Color BACKGROUND_COLOR = new Color(41, 41, 60);
     private static final int VERTICAL_RESOLUTION = 256;
     private static final int PIXEL_PER_UNIT_SPACE = 16;
 
@@ -137,6 +137,7 @@ public class Renderer implements ComponentListener {
     private void presentInternal(Graphics g) {
         // Draw all renderables
         Graphics bufferGraphics = buffer.getGraphics();
+
         while (!renderQueue.isEmpty()) {
             renderQueue.poll().draw(bufferGraphics);
         }
@@ -149,7 +150,8 @@ public class Renderer implements ComponentListener {
                 Application.getWindow().getHeight(),
                 null
         );
-        clear(BACKGROUND_COLOR);
+
+        //clear(BACKGROUND_COLOR);
     }
 
     /* -------------- HELPER METHODS ----------------- */

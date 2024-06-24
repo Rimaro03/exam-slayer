@@ -2,6 +2,7 @@ package org.project.core;
 
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import org.project.core.rendering.Renderer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,6 +52,8 @@ public class Application extends JFrame {
         while (true) {
             long startTime = System.currentTimeMillis();
 
+            Renderer.clear(Renderer.BACKGROUND_COLOR);
+
             game.update();
             window.update();
 
@@ -60,8 +63,7 @@ public class Application extends JFrame {
                 if (sleepTime > 0) {
                     Thread.sleep(sleepTime);
                 }
-            } catch (Exception ignore) {
-            }
+            } catch (Exception ignore) { }
         }
     }
 

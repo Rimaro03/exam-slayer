@@ -10,6 +10,7 @@ import org.project.savingsystem.SavingIO;
 import org.project.utils.Vec2;
 
 import java.awt.*;
+import java.util.List;
 
 @Log4j2
 public class MainMenu extends Component implements InputListener {
@@ -22,6 +23,7 @@ public class MainMenu extends Component implements InputListener {
     private int selectedMenu;
     private int selectedFile;
     private String saveFileName;
+    private List<String> saveFiles;
 
     public MainMenu(GameObject gameObject, boolean enabled) {
         super(gameObject, enabled);
@@ -42,11 +44,13 @@ public class MainMenu extends Component implements InputListener {
         Input.addInputListener(this);
 
         Game.getCurrentLevel().findGameObject("Player").setEnabled(false);
+        saveFiles = Game.getSavingIO().allFiles();
     }
 
     @Override
     public void update() {
         Renderer.addRectToRenderQueue(getPosition(), new Vec2(100, 100), Color.black, 5, true);
+
 
         boolean updated;
         if(loadMenu)
@@ -92,13 +96,14 @@ public class MainMenu extends Component implements InputListener {
     }
     private boolean loadMenuLogic() {
         boolean updated = false;
-
-        java.util.List<String> saveFiles = SavingIO.allFiles("saved");
+        selectedFile = Math.min(selectedFile, saveFiles.size() - 1);
+        selectedFile = Math.max(selectedFile, 0);
 
         for (int i = 0; i < saveFiles.size(); i++) {
+            String saveFile = saveFiles.get(i);
             Renderer.addTextToRenderQueue(
                     new Vec2(-2, (saveFiles.size() / 2 - i) * 1.4f),
-                    saveFiles.get(i).replace(".esd", ""),
+                    saveFile.substring(saveFile.lastIndexOf('/') + 1).replace(".esd", ""),
                     i == selectedFile ? SELECTED_COLOR : UNSELECTED_COLOR,
                     18,
                     15
@@ -119,7 +124,15 @@ public class MainMenu extends Component implements InputListener {
             updated = true;
             Game.setPaused(false);
             log.info("Loading game from: {}", loadFileName);
-            Game.load("saved/" + loadFileName);
+            Game.load(loadFileName);
+        }
+
+        if(Input.isKeyPressed(Input.KEY_BACK_SPACE) && remainingSleepTime <= 0 && !saveFiles.isEmpty()){
+            String loadFileName = saveFiles.get(selectedFile);
+            Game.getSavingIO().deleteFile(loadFileName);
+            updated = true;
+            log.info("Deleting game from: {}", loadFileName);
+            saveFiles = Game.getSavingIO().allFiles();
         }
 
 
@@ -140,7 +153,7 @@ public class MainMenu extends Component implements InputListener {
                 18,
                 15
         );
-        if(Input.isKeyPressed(Input.KEY_ENTER) && remainingSleepTime <= 0){
+        if(Input.isKeyPressed(Input.KEY_ENTER) && remainingSleepTime <= 0 && !saveFileName.isEmpty()){
             Game.setPaused(false);
             Game.getSavingIO().setPath("saved/" + saveFileName + ".esd");
             log.info("Saving game to: {}.esd", saveFileName);
