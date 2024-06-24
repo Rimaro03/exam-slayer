@@ -3,18 +3,18 @@ package org.project.componentsystem.components.weapons;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
-public class WeaponData {
-    private static final WeaponData physicsBookData = new WeaponData(
+public class WeaponInfo {
+    private static final WeaponInfo physicsBookData = new WeaponInfo(
             10,
-            0.1f,
+            0.2f,
             10.0f,
             "resources/textures/touchable/book.png",
             16,
             16
     );
-    private static final WeaponData swordData = new WeaponData(
+    private static final WeaponInfo swordData = new WeaponInfo(
             20,
-            0.12f,
+            0.5f,
             15.0f,
             "resources/textures/touchable/sword.png",
             16,
@@ -26,7 +26,7 @@ public class WeaponData {
     public final String imagePath;
     public final int imageWidth;
     public final int imageHeight;
-    public WeaponData(int damage, float reloadTime, float speed, String imagePath, int imageWidth, int imageHeight) {
+    public WeaponInfo(int damage, float reloadTime, float speed, String imagePath, int imageWidth, int imageHeight) {
         this.damage = damage;
         this.reloadTime = reloadTime;
         this.speed = speed;
@@ -35,7 +35,7 @@ public class WeaponData {
         this.imageHeight = imageHeight;
     }
 
-    public static WeaponData getWeaponData(WeaponType type) {
+    public static WeaponInfo getWeaponData(WeaponType type) {
         switch (type) {
             case PhysicsBook:
                 return physicsBookData;

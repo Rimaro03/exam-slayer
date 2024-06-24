@@ -1,0 +1,7 @@
+LevelClearedRooms 
+LevelStartRoomPosition 5,4
+LevelSeed 2207811682835312780
+BossesIds 2 0 1 
+inventory PhysicsBook DefaultPhysicsBook DiamondSword 
+health 88
+

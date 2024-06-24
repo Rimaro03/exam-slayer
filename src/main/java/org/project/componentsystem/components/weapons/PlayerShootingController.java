@@ -7,7 +7,6 @@ import org.project.componentsystem.components.Component;
 import org.project.core.Game;
 import org.project.core.GameStateListener;
 import org.project.core.Input;
-import org.project.core.Time;
 import org.project.utils.Vec2;
 
 public class PlayerShootingController extends Component implements GameStateListener {
@@ -16,16 +15,16 @@ public class PlayerShootingController extends Component implements GameStateList
     @Setter
     private WeaponType weaponType = WeaponType.Sword; // DEBUG
 
-    public PlayerShootingController(GameObject gameObject, boolean enabled, float shootInterval, WeaponType weaponType) {
+    public PlayerShootingController(GameObject gameObject, boolean enabled, WeaponType weaponType) {
         super(gameObject, enabled);
-        this.shootInterval = shootInterval;
+        this.shootInterval = WeaponInfo.getWeaponData(weaponType).reloadTime;
         this.weaponType = weaponType;
     }
 
 
-    public PlayerShootingController(GameObject gameObject, float shootInterval, WeaponType weaponType) {
+    public PlayerShootingController(GameObject gameObject,WeaponType weaponType) {
         super(gameObject);
-        this.shootInterval = shootInterval;
+        this.shootInterval = WeaponInfo.getWeaponData(weaponType).reloadTime;
         this.weaponType = weaponType;
     }
 
@@ -53,7 +52,7 @@ public class PlayerShootingController extends Component implements GameStateList
         else
             return;
 
-        GameObject bullet = GameObjectFactory.createProjectile(WeaponData.getWeaponData(weaponType), projectileDir, getGameObject());
+        GameObject bullet = GameObjectFactory.createProjectile(WeaponInfo.getWeaponData(weaponType), projectileDir, getGameObject());
         Game.getCurrentLevel().instantiateGameObject(bullet, getGameObject().getPosition());
         timeToShoot = shootInterval;
     }

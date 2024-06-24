@@ -9,7 +9,7 @@ import org.project.componentsystem.components.enemies.RoomLocker;
 import org.project.componentsystem.components.stats.EntityStats;
 import org.project.componentsystem.components.stats.PlayerStats;
 import org.project.componentsystem.components.weapons.PlayerShootingController;
-import org.project.componentsystem.components.weapons.WeaponData;
+import org.project.componentsystem.components.weapons.WeaponInfo;
 import org.project.componentsystem.components.weapons.WeaponType;
 import org.project.generation.Room;
 import org.project.items.Book;
@@ -44,7 +44,7 @@ public class GameObjectFactory {
                         )),
                 new AnimatedSpriteRenderer(player, "resources/textures/characters/MainCharacter.png", 32, 32, 1),
                 new PlayerController(player),
-                new PlayerShootingController(player, 0.2f, WeaponType.PhysicsBook),
+                new PlayerShootingController(player, WeaponType.PhysicsBook),
                 new BoxCollider(player, new Vec2(1.2f, 2), true, true),
                 new EscMenu(player)
         );
@@ -58,6 +58,15 @@ public class GameObjectFactory {
                 new AnimatedSpriteRenderer(room, "resources/textures/map/room.png", 256, 256, -1),
                 new BoxCollider(room, new Vec2(Room.SIZE - 5.f, Room.SIZE - 5.f), false, false),
                 new RoomLocker(room)
+        );
+    }
+
+    public static GameObject createMainMenu(){
+        GameObject mainMenu = createGameObject("MainMenu");
+
+        return createGameObject(
+                mainMenu,
+                new MainMenu(mainMenu)
         );
     }
 
@@ -109,7 +118,7 @@ public class GameObjectFactory {
         );
     }
 
-    public static GameObject createProjectile(WeaponData weaponData, Vec2 direction, GameObject parent) {
+    public static GameObject createProjectile(WeaponInfo weaponInfo, Vec2 direction, GameObject parent) {
         GameObject projectile = createGameObject("Projectile");
         return createGameObject(
                 projectile,
@@ -120,8 +129,8 @@ public class GameObjectFactory {
                         true,
                         parent
                 ),
-                new Projectile(projectile, weaponData.damage, direction.multiply(weaponData.speed)),
-                new AnimatedSpriteRenderer(projectile, weaponData.imagePath, weaponData.imageWidth, weaponData.imageHeight, 0)
+                new Projectile(projectile, weaponInfo.damage, direction.multiply(weaponInfo.speed)),
+                new AnimatedSpriteRenderer(projectile, weaponInfo.imagePath, weaponInfo.imageWidth, weaponInfo.imageHeight, 0)
         );
     }
 

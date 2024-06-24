@@ -4,9 +4,7 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.project.utils.Vec2Int;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -18,8 +16,8 @@ import java.util.Scanner;
  */
 @Log4j2
 public class SavingIO {
-    private final String path;
-    private final StringBuilder text;
+    private String path;
+    private StringBuilder text;
 
     @Getter
     private final BucketManager bucketManager;
@@ -31,27 +29,57 @@ public class SavingIO {
      * @param path the path to the save file.
      */
     public SavingIO(String path) {
-        this.path = path;
         this.bucketManager = new BucketManager(
                 "exam-slayer",
                 "exam-slayer",
                 "resources/bucket/bucket_key.json"
         );
+
+        if(path != null)
+            this.text = new StringBuilder(bucketManager.getFileContent(path));
+        else
+            this.text = new StringBuilder();
+        this.path = path;
+    }
+    public SavingIO(){
+        this(null);
+    }
+
+    public void setPath(String path){
+        this.path = path;
         this.text = new StringBuilder(bucketManager.getFileContent(path));
     }
+
+    public List<String> allFiles(){
+        return bucketManager.getAllFileNames();
+    }
+    public void deleteFile(String fileName){
+        bucketManager.deleteFile(fileName);
+
+        new File(fileName).delete();
+    }
+
 
     /**
      * Flushes all the changes applied to the file.
      * if not called before the program ends, the changes will be lost.
      */
     public void flush() {
+        if(path == null)
+            return;
+
         try {
             PrintWriter writer = new PrintWriter(path);
-            writer.print(text.toString());
+            String textString = text.toString();
+
+            writer.println(textString);
             writer.close();
-            bucketManager.uploadFile(path, text.toString());
+            bucketManager.uploadFile(path, textString);
+
+            log.info("File saved : {}", path);
         } catch (IOException e) {
-            log.error("File not found : {}", path);
+            log.warn("File not found : {}", path);
+            log.error(e);
         }
     }
 
@@ -140,6 +168,7 @@ public class SavingIO {
 
     public List<String> getStringList(String name) {
         String value = get(name);
+        System.out.println(value);
         if (value != null) {
             List<String> list = new ArrayList<>();
             Scanner scanner = new Scanner(value);

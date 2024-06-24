@@ -3,16 +3,22 @@ package org.project.generation;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
+import org.project.componentsystem.components.Component;
+import org.project.componentsystem.components.bosses.BossesInfo;
+import org.project.core.Debug;
 import org.project.core.Game;
 import org.project.core.Physics;
 import org.project.generation.wavecollapse.Algorithm;
+import org.project.generation.wavecollapse.GenerationSettings;
+import org.project.items.Book;
+import org.project.items.Heart;
+import org.project.items.Item;
+import org.project.items.Sword;
 import org.project.savingsystem.SavingIO;
 import org.project.utils.Vec2;
 import org.project.utils.Vec2Int;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A class representing a playable level, it contains all the rooms as a linked graph of rooms.
@@ -27,6 +33,9 @@ public class Level {
     private Room currentRoom;
     private Room previousRoom;
 
+    private final LinkedList<Item> itemsQueue;
+    private final LinkedList<Integer> bossesIdsQueue;
+
     /**
      * This constructor get as input the start room of the map,
      * all other room are supposed to be linked to each other forming a graph of rooms.
@@ -37,6 +46,41 @@ public class Level {
         this.bossRooms = bossRooms;
         this.physicsEngine = new Physics();
         this.seed = seed;
+
+        // TODO : Load all items from a file (sword is a test item)
+        // Loop is just for testing
+        itemsQueue = new LinkedList<>();
+        Sword sword = new Sword(
+                "DiamondSword",
+                2,
+                "resources/textures/touchable/sword.png",
+                "resources/textures/stats/items/sword.png"
+        );
+        Heart heart = new Heart(
+                "Heart",
+                0,
+                "resources/textures/touchable/heart.png",
+                "resources/textures/stats/items/heart.png",
+                10
+        );
+        Book book = new Book(
+                "PhysicsBook",
+                1,
+                "resources/textures/touchable/book.png",
+                "resources/textures/stats/items/book.png"
+        );
+        for (int i = 0; i < GenerationSettings.ITEM_ROOM_COUNT * 10; i++) {
+            itemsQueue.add(heart);
+            itemsQueue.add(sword);
+            itemsQueue.add(book);
+        }
+
+        Collections.shuffle(itemsQueue);
+
+        bossesIdsQueue = new LinkedList<>();
+        for (int id = 0; id < BossesInfo.IMPLEMENTED_BOSSES; id++)
+            bossesIdsQueue.add(id);
+        Collections.shuffle(bossesIdsQueue);
     }
 
     public void loadMapData() {
@@ -60,7 +104,17 @@ public class Level {
                 room.setInitType(Room.InitType.Empty);
             }
         }
+
+        List<Integer> savedBossesIds = Game.getSavingIO().getIntList("BossesIds");
+
+        if (savedBossesIds != null) {
+            bossesIdsQueue.clear();
+            for (Integer id : savedBossesIds)
+                bossesIdsQueue.add(id);
+        }
     }
+
+
     public void saveMapData() {
         Set<Room> allRooms = Algorithm.getConnectedRooms(currentRoom);
 
@@ -78,8 +132,9 @@ public class Level {
         savingIO.setVec2IntList("LevelClearedRooms", clearedRooms);
         savingIO.setVec2Int("LevelStartRoomPosition", startRoomPosition);
         savingIO.setLong("LevelSeed", seed);
-    }
 
+        savingIO.setIntList("BossesIds", bossesIdsQueue);
+    }
     public void destroyAllGameObjects() {
         Set<Room> allRooms = Algorithm.getConnectedRooms(currentRoom);
         for (Room room : allRooms) {
@@ -142,6 +197,14 @@ public class Level {
         gameObject.destroy();
     }
 
+    public void addComponentToGameObject(GameObject gameObject, Component component) {
+        if(Debug.ENABLED && findGameObject(gameObject.getName()) == null)
+            log.warn("GameObject not found in the current room! {}", gameObject.getName());
+
+        gameObject.addComponent(component);
+        component.start();
+    }
+
     /**
      * Initialize the level by enabling the start room.
      */
@@ -155,5 +218,28 @@ public class Level {
     public void update() {
         currentRoom.updateGameObjects();
         physicsEngine.update();
+    }
+
+    /* ------------------------- QUEUE METHODS ------------------------- */
+
+    public Integer popBossId() {
+        return bossesIdsQueue.poll();
+    }
+
+    public Item popItem() {
+        return itemsQueue.poll();
+    }
+
+    public Item getItemByName(String name) {
+        for (Item item : itemsQueue) {
+            if (item.getName().equals(name))
+                return item;
+        }
+        return null;
+    }
+
+    public Item removeItem(Item item) {
+        itemsQueue.remove(item);
+        return item;
     }
 }

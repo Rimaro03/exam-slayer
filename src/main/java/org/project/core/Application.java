@@ -2,10 +2,10 @@ package org.project.core;
 
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import org.project.core.rendering.Renderer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 
 
 @Log4j2
@@ -43,43 +43,20 @@ public class Application extends JFrame {
 
     private void runInternal() {
         // GAME INITIALIZATION HERE!
-        String path = "saved/saved_game.txt";
-        boolean shouldDelete = JOptionPane.showConfirmDialog(
-                null,
-                "Do you want to delete the saved data?",
-                "Delete Data",
-                JOptionPane.YES_NO_OPTION
-        ) == JOptionPane.YES_OPTION;
-        Game game = Game.loadNewGame(path);
-        if (shouldDelete) {
-            File file = new File(path);
-            if (file.exists() && !file.delete()) {
-                log.warn("Failed to delete the file: {}", path);
-            }
-            Game.getSavingIO().getBucketManager().deleteFile(path);
-
-            game = Game.loadNewGame(path);
-        }
-
+        Game game = Game.loadNewGame();
 
         addWindowListener(game);
-        window.addKeyListener(game);
         game.start();
 
         while (true) {
             long startTime = System.currentTimeMillis();
 
+            Renderer.clear(Renderer.BACKGROUND_COLOR);
+
             game.update();
             window.update();
 
-            long delta = System.currentTimeMillis() - startTime;
-            try {
-                long sleepTime = Time.TIME_STEP_IN_MILLIS - delta;
-                if (sleepTime > 0) {
-                    Thread.sleep(sleepTime);
-                }
-            } catch (Exception ignore) {
-            }
+            while(System.currentTimeMillis() - startTime < Time.TIME_STEP_IN_MILLIS && !window.isFinishedPainting());
         }
     }
 
