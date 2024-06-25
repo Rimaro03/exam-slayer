@@ -21,7 +21,6 @@ public class Renderer implements ComponentListener {
     private final PriorityQueue<Renderable> renderQueue;
     private BufferedImage buffer;
 
-
     private Renderer() {
         renderQueue = new PriorityQueue<>(new Renderable.Comparator());
 
