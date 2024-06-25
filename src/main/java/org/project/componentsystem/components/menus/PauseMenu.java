@@ -42,7 +42,6 @@ public class PauseMenu extends Component implements GameStateListener, InputList
 
     @Override
     public void start() {
-        setEnabled(false);
         Game.addGameStateListener(this);
         Input.addInputListener(this);
         saveFiles = Game.getSavingIO().allFiles();
@@ -182,7 +181,7 @@ public class PauseMenu extends Component implements GameStateListener, InputList
 
     @Override
     public void onDisable() {
-
+        System.out.println("Pause menu disabled");
     }
 
     @Override

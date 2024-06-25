@@ -199,10 +199,13 @@ public class Room {
     }
 
     public void destroyGameObjects() {
-        while (!gameObjects.isEmpty()) {
-            GameObject go = gameObjects.get(gameObjects.size() - 1);
-            gameObjects.remove(go);
+        for (GameObject go : gameObjects) {
+            go.setEnabled(false);
             go.destroy();
+        }
+
+        while (!gameObjects.isEmpty()) {
+            gameObjects.remove(0);
         }
     }
 

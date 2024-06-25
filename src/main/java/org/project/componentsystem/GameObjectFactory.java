@@ -2,6 +2,7 @@ package org.project.componentsystem;
 
 import org.project.componentsystem.components.*;
 import org.project.componentsystem.components.bosses.BossAI;
+import org.project.componentsystem.components.bosses.BossKillCounter;
 import org.project.componentsystem.components.bosses.BossesInfo;
 import org.project.componentsystem.components.colliders.*;
 import org.project.componentsystem.components.enemies.EnemyAI;
@@ -51,7 +52,8 @@ public class GameObjectFactory {
                 new PlayerController(player),
                 new PlayerShootingController(player, WeaponType.PhysicsBook),
                 new BoxCollider(player, new Vec2(1.2f, 2), true, true),
-                new PauseMenu(player)
+                new PauseMenu(player),
+                new BossKillCounter(player)
         );
     }
 

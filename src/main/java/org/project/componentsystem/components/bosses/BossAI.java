@@ -68,6 +68,9 @@ public class BossAI extends Component implements GameStateListener {
 
         RoomLocker roomLocker = (RoomLocker) Game.getCurrentLevel().findGameObject("Room").getComponent(RoomLocker.class);
         roomLocker.removeEntity(this);
+
+        BossKillCounter bossKillCounter = (BossKillCounter) Game.getCurrentLevel().findGameObject("Player").getComponent(BossKillCounter.class);
+        bossKillCounter.addKill();
     }
 
     @Override

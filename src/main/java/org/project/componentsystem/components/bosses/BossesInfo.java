@@ -79,7 +79,7 @@ public class BossesInfo {
             case ATOM_ID:
                 return WeaponType.PhysicsBook;
             case INTEGRAL_ID:
-                return WeaponType.PhysicsBook;
+                return WeaponType.Sword;
             case MATRIX_ID:
                 return WeaponType.PhysicsBook;
             default:

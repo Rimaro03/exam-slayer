@@ -50,7 +50,7 @@ public class SavingIO {
 
     public void setPath(String path){
         this.path = path;
-        this.text = new StringBuilder(bucketManager.getFileContent(path));
+        this.text = new StringBuilder( path != null ? bucketManager.getFileContent(path) : "");
     }
 
     public List<String> allFiles(){

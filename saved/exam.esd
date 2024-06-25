@@ -1,0 +1,8 @@
+LevelClearedRooms 5,4 4,5 4,6 3,6 2,6 5,5 5,6 6,5 3,5 6,6 
+LevelStartRoomPosition 4,5
+LevelSeed -719992892310288749
+BossesIds 1 0 
+inventory Heart Heart DefaultPhysicsBook PhysicsBook 
+health 45
+BossKilled 0
+

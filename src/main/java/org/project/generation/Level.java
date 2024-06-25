@@ -192,9 +192,9 @@ public class Level {
      * @param gameObject The game object to destroy.
      */
     public void destroyGameObject(GameObject gameObject) {
-        currentRoom.removeGameObject(gameObject);
         gameObject.setEnabled(false);
         gameObject.destroy();
+        currentRoom.removeGameObject(gameObject);
     }
 
     public void addComponentToGameObject(GameObject gameObject, Component component) {

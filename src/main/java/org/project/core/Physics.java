@@ -9,8 +9,13 @@ import java.util.ArrayList;
 public class Physics {
     private final ArrayList<Collider> colliders;
 
+    private boolean colliderRemoved;
+    private int indexOfRemove;
+    private int amountRemoved;
+
     public Physics() {
         colliders = new ArrayList<>();
+        colliderRemoved = false;
     }
 
     public void addCollider(Collider collider) {
@@ -18,14 +23,18 @@ public class Physics {
     }
 
     public void removeCollider(Collider collider) {
-        colliders.remove(collider);
+        indexOfRemove = colliders.indexOf(collider);
+        colliders.remove(indexOfRemove);
+        colliderRemoved = true;
     }
 
     public void update() {
-        ArrayList<Collider> collidersCopy = new ArrayList<>(colliders);
-        for (Collider collider : collidersCopy) {
-            for (Collider other : collidersCopy) {
-                if (collider != other && collider.collidesWith(other)) {
+        for (int i = 0; i < colliders.size(); i++) {
+            Collider collider = colliders.get(i);
+            for (int j = 0; j < colliders.size() && i < colliders.size(); j++) {
+                Collider other = colliders.get(j);
+
+                if(i != j && collider.collidesWith(other)){
                     collider.onCollide(other);
                 }
             }

@@ -48,7 +48,10 @@ public class GameOverMenu extends Component implements InputListener {
         else
             message = "You lost!";
 
-        Game.getSavingIO().deleteFile(Game.getSavingIO().getPath());
+        String savePath = Game.getSavingIO().getPath();
+        Game.getSavingIO().deleteFile(savePath);
+        Game.getSavingIO().setPath(null);
+
         saveFiles = Game.getSavingIO().allFiles();
         toggled = true;
     }
