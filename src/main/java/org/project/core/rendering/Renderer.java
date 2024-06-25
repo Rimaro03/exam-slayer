@@ -17,7 +17,7 @@ public class Renderer implements ComponentListener {
     private static final int VERTICAL_RESOLUTION = 256;
     private static final int PIXEL_PER_UNIT_SPACE = 16;
 
-    private static Renderer instance;
+    private volatile static Renderer instance;
     private final PriorityQueue<Renderable> renderQueue;
     private BufferedImage buffer;
 

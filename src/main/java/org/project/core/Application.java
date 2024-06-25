@@ -54,7 +54,7 @@ public class Application extends JFrame {
             game.update();
             window.update();
 
-            while(System.currentTimeMillis() - startTime < Time.TIME_STEP_IN_MILLIS && !window.isFinishedPainting());
+            while(System.currentTimeMillis() - startTime < Time.TIME_STEP_IN_MILLIS || !window.isFinishedPainting());
         }
     }
 

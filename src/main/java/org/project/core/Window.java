@@ -16,7 +16,7 @@ import java.awt.event.ComponentListener;
 public class Window extends JPanel implements ComponentListener {
     private int width, height;
     /** Gets used as a semaphore by the Application to check if the swing thread has finished. */
-    private boolean finishedPainting;
+    private volatile boolean finishedPainting;
 
     public Window(int width, int height) {
         this.width = width;
