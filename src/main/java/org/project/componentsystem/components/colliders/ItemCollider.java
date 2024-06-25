@@ -2,7 +2,6 @@ package org.project.componentsystem.components.colliders;
 
 import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
-import org.project.componentsystem.components.AnimatedSpriteRenderer;
 import org.project.componentsystem.components.ItemController;
 import org.project.componentsystem.components.stats.PlayerStats;
 import org.project.core.Game;
@@ -37,11 +36,6 @@ public class ItemCollider extends BoxCollider {
      */
     public ItemCollider(GameObject gameObject, Vec2 size, boolean movable, boolean inside) {
         super(gameObject, size, movable, inside);
-    }
-
-    @Override
-    public void destory() {
-
     }
 
     @Override

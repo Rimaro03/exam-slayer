@@ -5,7 +5,9 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.project.utils.Vec2Int;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;

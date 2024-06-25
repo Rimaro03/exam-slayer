@@ -1,14 +1,13 @@
 package org.project.componentsystem.components.bosses;
+
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.GameObjectFactory;
 import org.project.componentsystem.components.Component;
 import org.project.componentsystem.components.enemies.RoomLocker;
 import org.project.componentsystem.components.stats.BossStats;
-import org.project.componentsystem.components.stats.EntityStats;
 import org.project.componentsystem.components.weapons.WeaponInfo;
-import org.project.componentsystem.components.weapons.WeaponType;
-import org.project.core.GameStateListener;
 import org.project.core.Game;
+import org.project.core.GameStateListener;
 import org.project.generation.Room;
 import org.project.generation.wavecollapse.Direction;
 import org.project.utils.Vec2;

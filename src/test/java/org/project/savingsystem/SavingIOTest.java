@@ -1,7 +1,6 @@
 package org.project.savingsystem;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.project.utils.Vec2Int;
 
 import java.util.Arrays;
@@ -68,6 +67,7 @@ class SavingIOTest {
     void getVec2IntList() {
         SavingIO savingIO = new SavingIO("saved/saving_test.txt");
         Vec2Int[] v = {new Vec2Int(1, 2), new Vec2Int(3, 4)};
+        savingIO.setVec2IntList("testVec2IntList", Arrays.asList(v));
         assertEquals(Arrays.asList(v), savingIO.getVec2IntList("testVec2IntList"));
     }
 

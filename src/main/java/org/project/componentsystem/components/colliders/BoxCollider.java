@@ -95,24 +95,6 @@ public class BoxCollider extends AbstractBoxCollider {
                 this.getGameObject().setPosition(new Vec2(x, y));
             }
         }
-        if (other instanceof CircleCollider) {
-            CircleCollider otherCircle = (CircleCollider) other;
-            if (this.isInside()) {
-                CircleCollider.circleBoxCollision(this, otherCircle);
-                return;
-            }
-            float x = otherCircle.getGameObject().getPosition().getX();
-            float y = otherCircle.getGameObject().getPosition().getY();
-            float r = otherCircle.getRadius();
-            float x1 = this.getGameObject().getPosition().getX() - this.getSize().getX() / 2;
-            float y1 = this.getGameObject().getPosition().getY() - this.getSize().getY() / 2;
-            float w = this.getSize().getX();
-            float h = this.getSize().getY();
-
-            x = Math.max(x1 + r, Math.min(x1 + w - r, x));
-            y = Math.max(y1 + r, Math.min(y1 + h - r, y));
-            otherCircle.getGameObject().setPosition(new Vec2(x, y));
-        }
     }
 
     /**

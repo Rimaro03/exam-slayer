@@ -6,7 +6,8 @@ import org.project.componentsystem.GameObject;
 
 import java.awt.image.BufferedImage;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AnimatedSpriteRendererTest {
 

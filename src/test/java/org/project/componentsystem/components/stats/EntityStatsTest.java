@@ -4,7 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.project.componentsystem.GameObject;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class EntityStatsTest {
 

@@ -3,7 +3,6 @@ package org.project.componentsystem.components;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
-import org.project.core.rendering.Renderable;
 import org.project.core.rendering.Renderer;
 
 import javax.imageio.ImageIO;

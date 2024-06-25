@@ -4,9 +4,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.project.componentsystem.GameObject;
-import org.project.core.*;
+import org.project.core.Application;
+import org.project.core.Game;
+import org.project.core.Time;
+import org.project.core.Window;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PlayerShootingControllerTest {
 

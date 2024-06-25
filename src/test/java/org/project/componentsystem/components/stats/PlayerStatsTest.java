@@ -5,7 +5,8 @@ import org.mockito.Mockito;
 import org.project.componentsystem.GameObject;
 import org.project.items.Item;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PlayerStatsTest {
 

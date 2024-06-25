@@ -1,5 +1,6 @@
 package org.project.componentsystem.components.colliders;
 
+import lombok.Getter;
 import org.project.componentsystem.GameObject;
 import org.project.core.Debug;
 import org.project.core.Game;
@@ -10,6 +11,7 @@ import org.project.utils.Vec2;
 
 import java.awt.*;
 
+@Getter
 public class DoorCollider extends AbstractBoxCollider {
     private final int direction;
 

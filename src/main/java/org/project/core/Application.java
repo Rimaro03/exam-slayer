@@ -2,7 +2,6 @@ package org.project.core;
 
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import org.project.core.rendering.Renderer;
 
 import javax.swing.*;
 import java.awt.*;

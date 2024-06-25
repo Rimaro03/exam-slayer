@@ -4,23 +4,16 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObjectFactory;
-import org.project.componentsystem.components.bosses.BossesInfo;
 import org.project.core.rendering.Renderer;
 import org.project.generation.Level;
-import org.project.generation.wavecollapse.GenerationSettings;
 import org.project.generation.wavecollapse.LevelGenerator;
-import org.project.items.Book;
-import org.project.items.Heart;
-import org.project.items.Item;
-import org.project.items.Sword;
 import org.project.savingsystem.SavingIO;
 import org.project.utils.Vec2;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 
 @Log4j2

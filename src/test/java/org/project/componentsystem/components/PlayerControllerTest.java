@@ -30,7 +30,7 @@ class PlayerControllerTest {
         GameObject player = GameObjectFactory.createPlayer();
         PlayerController playerController = (PlayerController) player.getComponent(PlayerController.class);
 
-        Mockito.when(playerStats.getSpeed()).thenReturn(5);
+        Mockito.when(playerStats.getSpeed()).thenReturn(5f);
         Mockito.when(Input.isKeyPressed(Input.KEY_A)).thenReturn(true);
         Mockito.when(Game.getTime()).thenReturn(mockedTime);
         Mockito.when(mockedTime.deltaTime()).thenReturn(0.1f);

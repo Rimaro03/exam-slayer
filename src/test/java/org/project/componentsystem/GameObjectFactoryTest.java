@@ -5,7 +5,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.project.componentsystem.components.*;
+import org.project.componentsystem.components.AnimatedSpriteRenderer;
+import org.project.componentsystem.components.ItemController;
+import org.project.componentsystem.components.Projectile;
 import org.project.componentsystem.components.colliders.BoxCollider;
 import org.project.componentsystem.components.colliders.DoorCollider;
 import org.project.componentsystem.components.colliders.ItemCollider;
@@ -15,11 +17,12 @@ import org.project.componentsystem.components.weapons.WeaponInfo;
 import org.project.core.Game;
 import org.project.core.Physics;
 import org.project.generation.Level;
-import org.project.items.Item;
 import org.project.items.Book;
+import org.project.items.Item;
 import org.project.utils.Vec2;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 class GameObjectFactoryTest {
 
@@ -87,7 +90,7 @@ class GameObjectFactoryTest {
     @Test
     void createPhysicalItem_hasExpectedComponents() {
 
-        Item item = new Book("Test", 1, "resources/textures/touchable/book.png", "resources/textures/test.png");
+        Item item = new Book("Test", 1, "resources/textures/touchable/book.png", "resources/textures/touchable/book.png");
         GameObject physicalItem = GameObjectFactory.createPhysicalItem(new Vec2(1, 1), item);
         assertInstanceOf(ItemController.class, physicalItem.getComponent(ItemController.class));
         assertInstanceOf(ItemCollider.class, physicalItem.getComponent(ItemCollider.class));

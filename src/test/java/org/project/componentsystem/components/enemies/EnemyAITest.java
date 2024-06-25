@@ -8,7 +8,6 @@ import org.project.componentsystem.components.stats.EntityStats;
 import org.project.core.Game;
 import org.project.core.Time;
 import org.project.generation.Level;
-import org.project.generation.Room;
 import org.project.utils.Vec2;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,7 +32,7 @@ class EnemyAITest {
         Mockito.when(Game.getCurrentLevel().findGameObject("Player")).thenReturn(target);
         Mockito.when(Game.getTime()).thenReturn(time);
         Mockito.when(time.deltaTime()).thenReturn(0.1f);
-        Mockito.when(stats.getSpeed()).thenReturn(10);
+        Mockito.when(stats.getSpeed()).thenReturn(10.f);
         Mockito.when(target.getPosition()).thenReturn(new Vec2(10, 10));
         Mockito.when(gameObject.getPosition()).thenReturn(new Vec2(0, 0));
 

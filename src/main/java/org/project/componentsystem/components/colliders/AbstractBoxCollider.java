@@ -86,22 +86,6 @@ public abstract class AbstractBoxCollider extends Collider {
                         thisY - thisHalfHeight < otherY - otherHalfHeight;
             }
             return true;
-        } else if (other instanceof AbstractCircleCollider) {
-            AbstractCircleCollider otherCircle = (AbstractCircleCollider) other;
-            if (isInside()) {
-                Vec2 distance = CircleCollider.collisionDistance(otherCircle, this);
-                return distance.magnitude() < otherCircle.getRadius();
-            }
-
-            float x = otherCircle.getGameObject().getPosition().getX();
-            float y = otherCircle.getGameObject().getPosition().getY();
-            float r = otherCircle.getRadius();
-            float x1 = this.getGameObject().getPosition().getX() - this.getSize().getX() / 2;
-            float x2 = this.getGameObject().getPosition().getX() + this.getSize().getX() / 2;
-            float y1 = this.getGameObject().getPosition().getY() - this.getSize().getY() / 2;
-            float y2 = this.getGameObject().getPosition().getY() + this.getSize().getY() / 2;
-
-            return x - r < x1 || x + r > x2 || y - r < y1 || y + r > y2;
         }
         return false;
     }
