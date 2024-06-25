@@ -12,7 +12,7 @@ import org.project.utils.Vec2;
 import java.awt.*;
 import java.util.List;
 
-public class EscMenu extends Component implements GameStateListener, InputListener {
+public class PauseMenu extends Component implements GameStateListener, InputListener {
     private static final Color SELECTED_COLOR = new Color(255, 255, 255);
     private static final Color UNSELECTED_COLOR = new Color(190, 190, 190);
     private static final String[] lines = { "Resume", "Load", "Exit" };
@@ -28,11 +28,11 @@ public class EscMenu extends Component implements GameStateListener, InputListen
     private int selectedLine = 0;
     private int selectedFile = 0;
 
-    public EscMenu(GameObject gameObject, boolean enabled) {
+    public PauseMenu(GameObject gameObject, boolean enabled) {
         super(gameObject, enabled);
     }
 
-    public EscMenu(GameObject gameObject) {
+    public PauseMenu(GameObject gameObject) {
         this(gameObject, true);
         pauseMenu = false;
         loadMenu = false;
@@ -42,6 +42,7 @@ public class EscMenu extends Component implements GameStateListener, InputListen
 
     @Override
     public void start() {
+        setEnabled(false);
         Game.addGameStateListener(this);
         Input.addInputListener(this);
         saveFiles = Game.getSavingIO().allFiles();

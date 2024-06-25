@@ -162,7 +162,7 @@ public class Renderer implements ComponentListener {
                 null
         );
 
-        //clear(BACKGROUND_COLOR);
+        clear(BACKGROUND_COLOR);
     }
 
     /* -------------- HELPER METHODS ----------------- */

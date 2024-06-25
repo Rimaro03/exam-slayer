@@ -13,12 +13,13 @@ import java.util.List;
 public class GameOverMenu extends Component implements InputListener {
     private static final Color SELECTED_COLOR = new Color(255, 255, 255);
     private static final Color UNSELECTED_COLOR = new Color(190, 190, 190);
-    private static final String[] lines = { "Load Existing", "Load New", "Exit" };
+    private static final String[] lines = { "Load", "New Game", "Exit" };
     private float remainingTimeToSleep;
     private String saveFileName;
     private String message;
     private List<String> saveFiles;
 
+    private boolean toggled;
     private boolean pauseMenu;
     private boolean loadMenu;
     private boolean loadNewGame;
@@ -31,20 +32,25 @@ public class GameOverMenu extends Component implements InputListener {
         this.pauseMenu = true;
         this.loadMenu = false;
         this.loadNewGame = false;
+        this.toggled = false;
         this.remainingTimeToSleep = 0;
+        message = "";
+        saveFileName = "";
     }
 
     public GameOverMenu(GameObject gameObject) {
         this(gameObject, true);
     }
 
-    public void setState(boolean win){
+    public void enable(boolean win){
         if(win)
             message = "You won!";
         else
             message = "You lost!";
+
         Game.getSavingIO().deleteFile(Game.getSavingIO().getPath());
         saveFiles = Game.getSavingIO().allFiles();
+        toggled = true;
     }
 
     @Override
@@ -55,6 +61,9 @@ public class GameOverMenu extends Component implements InputListener {
 
     @Override
     public void update() {
+        if(!toggled)
+            return;
+
         boolean updated = false;
 
         if(pauseMenu)
@@ -187,12 +196,10 @@ public class GameOverMenu extends Component implements InputListener {
 
     @Override
     public void onEnable() {
-
     }
 
     @Override
     public void onDisable() {
-
     }
 
     @Override

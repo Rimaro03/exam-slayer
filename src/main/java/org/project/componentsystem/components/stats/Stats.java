@@ -10,11 +10,11 @@ import org.project.core.Game;
 @Setter
 public abstract class Stats extends Component {
     protected int health;
-    protected int speed;
-    protected int baseSpeed;
+    protected float speed;
+    protected float baseSpeed;
     protected int baseHealth;
 
-    public Stats(GameObject gameObject, boolean enabled, int health, int speed) {
+    public Stats(GameObject gameObject, boolean enabled, int health, float speed) {
         super(gameObject, enabled);
         this.health = health;
         this.speed = speed;

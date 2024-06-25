@@ -145,6 +145,7 @@ public class Room {
             door.setPosition(door.getPosition().add(new Vec2(Direction.x(0, direction) * (SIZE * .5f - 1.5f), Direction.y(0, direction) * (SIZE * 0.5f - 1.5f))));
             gameObjects.add(door);
         }
+        gameObjects.add(GameObjectFactory.createGameOverMenu());
 
         // IF YOU NEED TO ADD MORE GAME OBJECTS, ADD THEM HERE!!!
         switch (initType) {
@@ -159,6 +160,7 @@ public class Room {
             case Normal:
                 GameObject[] enemies = GameObjectFactory.createEnemies(new Random().nextInt(2) + 4);
                 gameObjects.addAll(Arrays.asList(enemies));
+                break;
             case Item:
                 Item item = Game.getCurrentLevel().popItem();
                 if (item != null) {

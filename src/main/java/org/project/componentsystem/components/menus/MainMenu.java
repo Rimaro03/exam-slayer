@@ -74,7 +74,7 @@ public class MainMenu extends Component implements InputListener {
             updated = true;
         }
         else if(Input.isKeyPressed(Input.KEY_DOWN) && remainingSleepTime <= 0){
-            selectedMenu = Math.min(1, selectedMenu + 1);
+            selectedMenu = Math.min(2, selectedMenu + 1);
             updated = true;
         }
         else if(Input.isKeyPressed(Input.KEY_ENTER) && remainingSleepTime <= 0){
@@ -86,12 +86,17 @@ public class MainMenu extends Component implements InputListener {
                     loadNewGame = true;
                     saveFileName = "";
                     break;
+                case 2:
+                    Game.exit();
+                    System.exit(0);
+                    break;
             }
             updated = true;
         }
 
-        Renderer.addTextToRenderQueue(new Vec2(-2, 1), "Load Game", selectedMenu == 0 ? SELECTED_COLOR : UNSELECTED_COLOR, 18, 15);
-        Renderer.addTextToRenderQueue(new Vec2(-2, -1), "New Game", selectedMenu == 1 ? SELECTED_COLOR : UNSELECTED_COLOR, 18, 15);
+        Renderer.addTextToRenderQueue(new Vec2(-2f, 2), "Load", selectedMenu == 0 ? SELECTED_COLOR : UNSELECTED_COLOR, 18, 15);
+        Renderer.addTextToRenderQueue(new Vec2(-3.5f, 0), "New Game", selectedMenu == 1 ? SELECTED_COLOR : UNSELECTED_COLOR, 18, 15);
+        Renderer.addTextToRenderQueue(new Vec2(-2f, -2), "Exit", selectedMenu == 2 ? SELECTED_COLOR : UNSELECTED_COLOR, 18, 15);
 
         return updated;
     }
@@ -147,7 +152,7 @@ public class MainMenu extends Component implements InputListener {
                 15
         );
         Renderer.addTextToRenderQueue(
-                new Vec2(-5, 2),
+                new Vec2(-7, 2),
                 "Enter the name of the save file",
                 SELECTED_COLOR,
                 18,
@@ -158,6 +163,7 @@ public class MainMenu extends Component implements InputListener {
             Game.getSavingIO().setPath("saved/" + saveFileName + ".esd");
             log.info("Saving game to: {}.esd", saveFileName);
 
+            //Renderer.clearRenderQueue();
             Game.getCurrentLevel().destroyGameObject(this.getGameObject());
         }
         return false;

@@ -8,7 +8,7 @@ package org.project.generation.wavecollapse;
 public class GenerationSettings {
     public static final int MAP_SIZE = 8;
     public static final int BOSS_ROOM_COUNT = 3;
-    public static final int ITEM_ROOM_COUNT = 5;
+    public static final int ITEM_ROOM_COUNT = 8;
     private static final int NO_DOOR_WEIGHTS = 1;
     private static final int FOUR_DOORS_WEIGHTS = 3;
     private static final int ONE_DOOR_WEIGHTS = 1;

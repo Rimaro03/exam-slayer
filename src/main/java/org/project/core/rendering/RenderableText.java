@@ -25,6 +25,11 @@ public class RenderableText extends Renderable {
         if (currentFont.getSize() != size) {
             g.setFont(new Font(currentFont.getFontName(), currentFont.getStyle(), size));
         }
+
+        if(text == null){
+            return;
+        }
+
         g.drawString(text, Renderer.worldToScreenX(position.getX()), Renderer.worldToScreenY(position.getY()));
     }
 }

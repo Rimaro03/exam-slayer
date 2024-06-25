@@ -29,7 +29,7 @@ public class PlayerController extends Component implements GameStateListener {
         int animationStep = (int) (Game.getTime().seconds() * animationSpeed) % 4;
         Vec2 delta = new Vec2(0, 0);
         PlayerStats playerStats = (PlayerStats) getGameObject().getComponent(PlayerStats.class);
-        int speed = playerStats.getSpeed();
+        float speed = playerStats.getSpeed();
         if (Input.isKeyPressed(Input.KEY_A)) {
             delta = delta.add(new Vec2(-1, 0));
             isMoving = true;

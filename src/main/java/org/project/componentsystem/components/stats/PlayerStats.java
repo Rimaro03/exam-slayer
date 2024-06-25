@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
-import org.project.componentsystem.components.menus.EscMenu;
+import org.project.componentsystem.components.menus.PauseMenu;
 import org.project.componentsystem.components.menus.GameOverMenu;
 import org.project.core.Game;
 import org.project.core.rendering.Renderer;
@@ -56,10 +56,9 @@ public class PlayerStats extends Stats {
         if (health <= 0) {
             Game.setPaused(true);
 
-            getGameObject().getComponent(EscMenu.class).setEnabled(false);
-            GameOverMenu gm = (GameOverMenu) getGameObject().getComponent(GameOverMenu.class);
-            gm.setEnabled(true);
-            gm.setState(false);
+            getGameObject().getComponent(PauseMenu.class).setEnabled(false);
+            GameOverMenu gom = (GameOverMenu) Game.getCurrentLevel().findGameObject("GameOverMenu").getComponent(GameOverMenu.class);
+            gom.enable(false);
         }
     }
 
@@ -86,8 +85,6 @@ public class PlayerStats extends Stats {
         if (health != null) {
             this.health = health;
         }
-
-        getGameObject().getComponent(GameOverMenu.class).setEnabled(false);
     }
 
     @Override

@@ -51,8 +51,6 @@ public class Application extends JFrame {
         while (true) {
             long startTime = System.currentTimeMillis();
 
-            Renderer.clear(Renderer.BACKGROUND_COLOR);
-
             game.update();
             window.update();
 
