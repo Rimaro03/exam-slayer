@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "exam-slayer",
+  "private_key_id": "7f978897e30575f3162cc3f452cc825da5ae2030",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDCEoAPvxj18eUJ\nd2i/dkrv4jAfxqD9JTc4g99Fq3N9tVMaOPBwkrN5g0MzBj11FFFLbYlvxFOuEVJ8\nb6AdYv5PILMJA+llExH95LUPl7yMZ71GHqrN5LKyfLZ4XqGWGongec7liRkN3a0Y\njtA4com214X9y/LpVNGIU4uXng5sV4hoipRgAL6ubQYk9eMCwhLc2EDZPa4ggPyQ\n4L+qoZy91eX6EOeOxpDBrT863hFngle8dlJZvcw4hypfAoMX5Eq9Ucq7BOjc7SMA\n1gqn2t7eZbSN6iWBHK+imhYzKkGDze7TeTyIR5kenK+ktO8yc/HLeeID1aJtJAkB\nLmXktS4LAgMBAAECggEADNNCKUg8swwwUabVgkmj/CRbf84Vl4UdGBwG5kjFUhpo\nioQWx6m6OJ6HE1knOJSGJtDvUzaLPSah591MnISNP9duXXsnsmlHOBskKAqkCDdW\n18pxCThC4u7A9EV0skHAuNfz51FfGX570PKnKgPPvAiUL0iKHgdf7X1v7S4hz+D/\nhOuHEmEvInrE9V2FyTAM3K4EOtFRUwWwufSiOHoIyzFoMqeshtlYbJeAtRE48Ins\n6JjaNwbp5en+0t0dg9alpz4gOU5NePYQnlPQaigc9oJdBhkeJM8/0o7CVjVtHkpc\nuzOhRYvVX/rJoD8jsY0b3OVz3X6Dmd1teDx8Dj6jyQKBgQDnHjRsruwQYv+iVegX\n41IDovC5k5JnKf2at0Bu9S+PpDaWORUaamJY+aZfcYamN/nIb7KHaTOoOz0ihGM0\nJuhJ9Yekq5bzoOWcLE8XeRrt5Zz9kHkAdxx4Kv4VqiRQg0uYGgyZXoYViohChKoi\nlDlSYh2T6VEiXKOY3aNLFgQYHwKBgQDW90k18UH8ojRiFjE/8FZ2Yw0gfeiBZsKG\ndZfLDq9FmDis9vUcfoo1a7QLjWjL17SwA+XZuVMOP2EKG8OFB1Fi2S5AVpC6HDJ2\n6CAs0LxUHpgnruDJbL+SzTk80/yzfIzMuy0gZ3WQW2KIQQnqi58VRiwWIXhRduBa\nDVI5j1hclQKBgHsSf5I8l+KmBUEaBAzsdVkQZKY96mFbX/wKh5pOoHQaWyMl5JH7\ngsGkt67tkmljN3U/3c7z+5kjaou9+eHksh/oSsIqyaiUzpCam8eBKxDyC+aPD5Bq\n3VM0ebdpsgrZz+CARqNJTZec/LCHWt4tFlVDgEKqpRTqRgf6RqGOaMG7AoGAPG6Y\nbkm8u0D+aPTEM61lITMHZbL/wiEZXqOAYN1n+LCqfjWPAsuwHwSAQR8n7uZdLX5r\nB6JJ7x9yMF1NwgAkqR1VG1E6rpduuG7ZXL/xsdRIAh/vobCoyqRXCvqtd+fzzTpx\nnUJ4knSeZp+iIgXOWzS3ACG4qW459Bb6nqPlu2ECgYADQVu0CNiCYEMns43qRgYM\nb5i6WWRgMBRNN/OKFiXTFtbGr7BWVtoLy4VKX8I3huyjN4UEXOY7ckpf+XnJxuwd\nybWJfAshTCUovCAQYvjK/Ov6GhV+XCO+dqIABhWknlg5d2ZmGP7vECm7ErNSz1Z/\n9VxrPEmLsjKNPDwyeRf3YQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "exam-slayer-service@exam-slayer.iam.gserviceaccount.com",
+  "client_id": "105240114590109232129",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/exam-slayer-service%40exam-slayer.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

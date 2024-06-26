@@ -1,7 +1,10 @@
 package org.project;
 
-class Main{
+import org.project.core.Application;
+
+class Main {
     public static void main(String[] args) {
-        System.out.println("Hello");
+        Application.init();
+        Application.run();
     }
 }
