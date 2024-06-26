@@ -14,6 +14,9 @@ import org.project.utils.Vec2;
 
 import java.util.Random;
 
+/**
+ * A component that contains the Boss AI logic.
+ */
 public class BossAI extends Component implements GameStateListener {
     private float attackCooldown;
     private float moveCooldown;

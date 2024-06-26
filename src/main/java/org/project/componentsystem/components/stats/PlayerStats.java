@@ -21,6 +21,9 @@ import java.util.List;
 @Setter
 @Getter
 @Log4j2
+/**
+ * A component that keeps track of the health and speed of the Player game object.
+ */
 public class PlayerStats extends Stats {
     private HashMap<Item, Integer> inventory = new HashMap<>();
     private Vec2 position = new Vec2(-12.5f, 7);

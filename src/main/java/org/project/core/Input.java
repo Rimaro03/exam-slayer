@@ -6,6 +6,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
+/**
+ * The Input class is a singleton class that represents the input system of the game.
+ * It contains information about the keys and mouse buttons that are currently pressed.
+ */
 public class Input {
     private static Input instance;
     private final KeyInput keyInput;

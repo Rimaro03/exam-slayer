@@ -5,6 +5,10 @@ import org.project.componentsystem.components.colliders.Collider;
 
 import java.util.ArrayList;
 
+/**
+ * The Physics class is a singleton class that represents the physics engine of the game.
+ * It contains information about the colliders in the game and updates them.
+ */
 @Getter
 public class Physics {
     private final ArrayList<Collider> colliders;

@@ -2,6 +2,10 @@ package org.project.componentsystem.components.bosses;
 
 import org.project.componentsystem.components.weapons.WeaponType;
 
+/**
+ * A class that contains static methods
+ * to get information about bosses via their id.
+ */
 public class BossesInfo {
     public static final int BOSS_RESOLUTION = 64;
     public static final int IMPLEMENTED_BOSSES = 3;

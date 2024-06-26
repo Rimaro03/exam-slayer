@@ -8,6 +8,10 @@ import java.awt.*;
 
 
 @Log4j2
+/**
+ * The main application class of the game.
+ * This class is a singleton and is responsible for initializing the game and managing the application loop.
+ */
 public class Application extends JFrame {
     @Getter
     private static Application instance;

@@ -42,6 +42,11 @@ public class GameOverMenu extends Component implements InputListener {
         this(gameObject, true);
     }
 
+    /**
+     * Enables the game over menu when the player wins or loses.
+     * The current game is deleted and the player can choose to load a save file, start a new game or exit the game.
+     * @param win if the player won or lost
+     */
     public void enable(boolean win){
         if(win)
             message = "You won!";

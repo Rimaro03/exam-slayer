@@ -15,6 +15,10 @@ import java.util.List;
 
 @Log4j2
 @Getter
+/*
+ * A class representing the main menu at the start of the game.
+ * The player can choose to load a save file, start a new game or exit the game.
+ */
 public class MainMenu extends Component implements InputListener {
     private static final Color SELECTED_COLOR = new Color(255, 255, 255);
     private static final Color UNSELECTED_COLOR = new Color(190, 190, 190);

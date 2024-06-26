@@ -5,7 +5,6 @@ import lombok.extern.log4j.Log4j2;
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.components.Component;
 import org.project.componentsystem.components.bosses.BossesInfo;
-import org.project.core.Debug;
 import org.project.core.Game;
 import org.project.core.Physics;
 import org.project.generation.wavecollapse.Algorithm;
@@ -198,7 +197,7 @@ public class Level {
     }
 
     public void addComponentToGameObject(GameObject gameObject, Component component) {
-        if(Debug.ENABLED && findGameObject(gameObject.getName()) == null)
+        if(findGameObject(gameObject.getName()) == null)
             log.warn("GameObject not found in the current room! {}", gameObject.getName());
 
         gameObject.addComponent(component);

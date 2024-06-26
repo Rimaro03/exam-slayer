@@ -43,8 +43,8 @@ class GameObjectFactoryTest {
     }
 
     @Test
-    void createRoomGameObject_hasExpectedComponents() {
-        GameObject room = GameObjectFactory.createRoomGameObject();
+    void createRoom_hasExpectedComponents() {
+        GameObject room = GameObjectFactory.createRoom();
         assertInstanceOf(AnimatedSpriteRenderer.class, room.getComponent(AnimatedSpriteRenderer.class));
         assertInstanceOf(BoxCollider.class, room.getComponent(BoxCollider.class));
         assertInstanceOf(RoomLocker.class, room.getComponent(RoomLocker.class));
@@ -52,8 +52,8 @@ class GameObjectFactoryTest {
     }
 
     @Test
-    void createDoorGameObject_hasExpectedComponents() {
-        GameObject door = GameObjectFactory.createDoorGameObject(0, new BoxCollider(new GameObject("Test"), new Vec2(1, 1), false, false));
+    void createDoor_hasExpectedComponents() {
+        GameObject door = GameObjectFactory.createDoor(0, new BoxCollider(new GameObject("Test"), new Vec2(1, 1), false, false));
         assertInstanceOf(DoorCollider.class, door.getComponent(DoorCollider.class));
         assertInstanceOf(AnimatedSpriteRenderer.class, door.getComponent(AnimatedSpriteRenderer.class));
     }

@@ -18,6 +18,10 @@ import java.util.Random;
 
 @Log4j2
 @Getter
+/**
+ * The Game class is a singleton class that represents the currently game played.
+ * It contains information about the state, the current level, the time, and the saving system.
+ */
 public class Game implements WindowListener {
     private static Game currentGame;
     private Level currentLevel;

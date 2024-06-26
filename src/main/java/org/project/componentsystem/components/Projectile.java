@@ -6,7 +6,9 @@ import org.project.core.Game;
 import org.project.core.GameStateListener;
 import org.project.utils.Vec2;
 
-
+/**
+ * A component that contains the projectile movement behavior, and damage data.
+ */
 public class Projectile extends Component implements GameStateListener {
     @Getter
     private final int damage;

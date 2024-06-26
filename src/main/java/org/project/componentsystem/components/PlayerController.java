@@ -9,6 +9,9 @@ import org.project.core.Input;
 import org.project.utils.Vec2;
 
 @Log4j2
+/**
+ * A component that controls the player's movement.
+ */
 public class PlayerController extends Component implements GameStateListener {
     AnimatedSpriteRenderer spriteRenderer;
     float animationSpeed = 10.f;

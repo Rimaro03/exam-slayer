@@ -13,6 +13,9 @@ import java.io.File;
 import java.io.IOException;
 
 @Log4j2 @Getter
+/**
+ * A component that renders an animated sprite.
+ */
 public class AnimatedSpriteRenderer extends Component {
     private final int frameWidth;
     private final int frameHeight;
@@ -45,6 +48,11 @@ public class AnimatedSpriteRenderer extends Component {
     }
 
 
+    /**
+     * Set the current frame of the sprite sheet, this is used to create animations.
+     * @param x The x position of the frame
+     * @param y The y position of the frame
+     */
     public void setSheetState(int x, int y) {
         if(x * frameWidth >= spriteSheet.getWidth() || y * frameHeight >= spriteSheet.getHeight() || x < 0 || y < 0)
             throw new IllegalArgumentException("Invalid frame position");

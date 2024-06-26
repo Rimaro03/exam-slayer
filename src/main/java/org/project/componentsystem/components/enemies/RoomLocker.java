@@ -7,6 +7,9 @@ import org.project.core.Game;
 
 import java.util.ArrayList;
 
+/**
+ * A component that locks the room until all entities are dead.
+ */
 public class RoomLocker extends Component {
 
     private ArrayList<Object> entities;
