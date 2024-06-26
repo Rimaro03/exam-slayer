@@ -1,10 +1,11 @@
 package org.project.componentsystem.components.stats;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.components.weapons.WeaponType;
 
-@Getter
+@Getter @Setter
 public class BossStats extends Stats {
     private WeaponType weapon;
     private float attackCooldown;
