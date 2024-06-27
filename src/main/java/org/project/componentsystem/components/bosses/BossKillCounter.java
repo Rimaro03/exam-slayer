@@ -25,7 +25,7 @@ public class BossKillCounter extends Component {
         if(bossKilled == GenerationSettings.BOSS_ROOM_COUNT){
             GameOverMenu gameOverMenu = (GameOverMenu) Game.getCurrentLevel().findGameObject("GameOverMenu").getComponent(GameOverMenu.class);
             gameOverMenu.enable(true);
-            Game.getCurrentLevel().findGameObject("Player").getComponent(PlayerController.class).setEnabled(false);
+            Game.getCurrentLevel().findGameObject("Player").setEnabled(false);
         }
     }
 
