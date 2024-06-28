@@ -1,8 +1,15 @@
 package org.project.generation;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.components.stats.EntityStats;
+import org.project.core.Application;
+import org.project.core.Game;
+import org.project.core.Window;
+import org.project.savingsystem.SavingIO;
 import org.project.utils.Vec2;
 
 import java.util.ArrayList;
@@ -98,12 +105,23 @@ class LevelTest {
 
     @Test
     void init() {
-        // NEED GAME RUNNING
-
         Room room = new Room(0, 0);
         Level level = new Level(room, null, 0);
+        room.setInitType(Room.InitType.Item);
+
+        MockedStatic<Game> game = Mockito.mockStatic(Game.class);
+        Window window = Mockito.mock(Window.class);
+        SavingIO savingIO = Mockito.mock(SavingIO.class);
+        MockedStatic<Application> application = Mockito.mockStatic(Application.class);
+
+        game.when(Game::getCurrentLevel).thenReturn(level);
+        game.when(Game::getSavingIO).thenReturn(savingIO);
+        application.when(Application::getWindow).thenReturn(window);
+
 
         level.init();
+        game.close();
+        application.close();
 
         assertTrue(level.getCurrentRoom().isInitialized());
     }
