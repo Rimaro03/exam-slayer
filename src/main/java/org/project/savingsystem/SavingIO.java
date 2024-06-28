@@ -14,7 +14,7 @@ import java.util.Scanner;
 
 /**
  * Class to save and load values from a file
- * Supports int, float, Vec2Int and List<Vec2Int> save and load.
+ * Supports int, float, strings Vec2Int and Lists save and load.
  * Every value is saved with a name, to get and set the value you need to use the same name.
  */
 @Log4j2
