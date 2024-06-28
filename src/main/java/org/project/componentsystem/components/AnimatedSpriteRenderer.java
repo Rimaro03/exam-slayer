@@ -81,6 +81,22 @@ public class AnimatedSpriteRenderer extends Component {
         currentFrame = op.filter(currentFrame, null);
     }
 
+    public void setSpriteSheet(String spriteSheetPath) {
+        int previousWidth = spriteSheet.getWidth();
+        int previousHeight = spriteSheet.getHeight();
+
+        try {
+            spriteSheet = ImageIO.read(new File(spriteSheetPath));
+        } catch (IOException e) {
+            log.error("Failed to load sprite sheet: {}", spriteSheetPath);
+        }
+
+        if(spriteSheet.getWidth() != previousWidth || spriteSheet.getHeight() != previousHeight)
+            log.warn("Sprite sheet dimension changed!");
+
+        currentFrame = spriteSheet.getSubimage(0, 0, frameWidth, frameHeight);
+    }
+
     /**
      * Destory the component
      */

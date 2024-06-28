@@ -86,7 +86,7 @@ public class GameObjectFactory {
         DoorCollider doorCollider = new DoorCollider(door, new Vec2(2, 2), false, true, direction);
         AnimatedSpriteRenderer renderer = new AnimatedSpriteRenderer(
                 door,
-                "resources/textures/map/open_door.png",
+                "resources/textures/map/closed_door.png",
                 25,
                 25,
                 0

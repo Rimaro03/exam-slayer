@@ -2,6 +2,7 @@ package org.project.componentsystem.components.colliders;
 
 import lombok.Getter;
 import org.project.componentsystem.GameObject;
+import org.project.componentsystem.components.AnimatedSpriteRenderer;
 import org.project.core.Game;
 import org.project.core.rendering.Renderer;
 import org.project.generation.Room;
@@ -70,6 +71,12 @@ public class DoorCollider extends AbstractBoxCollider {
     @Override
     public void onEnable() {
         Game.getCurrentLevel().getPhysicsEngine().addCollider(this);
+    }
+
+    public void open(){
+        AnimatedSpriteRenderer renderer = (AnimatedSpriteRenderer) getGameObject().getComponent(AnimatedSpriteRenderer.class);
+        renderer.setSpriteSheet("resources/textures/map/open_door.png");
+        renderer.rotate(direction * 90);
     }
 
     @Override

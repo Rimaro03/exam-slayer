@@ -49,9 +49,9 @@ class BossesInfoTest {
 
     @Test
     void getWeaponReturnsCorrectWeapon() {
-        assertEquals(WeaponType.PhysicsBook, BossesInfo.getWeapon(0));
-        assertEquals(WeaponType.Sword, BossesInfo.getWeapon(1));
-        assertEquals(WeaponType.PhysicsBook, BossesInfo.getWeapon(2));
+        assertEquals(WeaponType.Proton, BossesInfo.getWeapon(0));
+        assertEquals(WeaponType.Function, BossesInfo.getWeapon(1));
+        assertEquals(WeaponType.Number, BossesInfo.getWeapon(2));
         assertEquals(WeaponType.PhysicsBook, BossesInfo.getWeapon(3));
     }
 

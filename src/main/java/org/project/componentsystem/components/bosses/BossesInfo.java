@@ -81,11 +81,11 @@ public class BossesInfo {
     public static WeaponType getWeapon(int id) {
         switch (id) {
             case ATOM_ID:
-                return WeaponType.PhysicsBook;
+                return WeaponType.Proton;
             case INTEGRAL_ID:
-                return WeaponType.Sword;
+                return WeaponType.Function;
             case MATRIX_ID:
-                return WeaponType.PhysicsBook;
+                return WeaponType.Number;
             default:
                 return WeaponType.PhysicsBook;
         }

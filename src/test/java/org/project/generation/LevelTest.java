@@ -157,13 +157,13 @@ class LevelTest {
     void getItemByName() {
         Level level = new Level(null, null, 0);
 
-        assertNotNull(level.getItemByName("PhysicsBook"));
+        assertNotNull(level.getItemByName("Pencil"));
     }
 
     @Test
     void removeItem() {
         Level level = new Level(null, null, 0);
 
-        assertNotNull(level.removeItem(level.getItemByName("PhysicsBook")));
+        assertNotNull(level.removeItem(level.getItemByName("Pencil")));
     }
 }

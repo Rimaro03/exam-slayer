@@ -2,6 +2,10 @@ package org.project.componentsystem.components.weapons;
 
 public enum WeaponType {
     PhysicsBook,
-    Sword
+    Pencil,
+    Sword,
+    Proton,
+    Function,
+    Number
     // Add more weapon types here
 }

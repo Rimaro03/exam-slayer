@@ -9,10 +9,7 @@ import org.project.core.Game;
 import org.project.core.Physics;
 import org.project.generation.wavecollapse.Algorithm;
 import org.project.generation.wavecollapse.GenerationSettings;
-import org.project.items.Book;
-import org.project.items.Heart;
-import org.project.items.Item;
-import org.project.items.Sword;
+import org.project.items.*;
 import org.project.savingsystem.SavingIO;
 import org.project.utils.Vec2;
 import org.project.utils.Vec2Int;
@@ -46,8 +43,6 @@ public class Level {
         this.physicsEngine = new Physics();
         this.seed = seed;
 
-        // TODO : Load all items from a file (sword is a test item)
-        // Loop is just for testing
         itemsQueue = new LinkedList<>();
         Sword sword = new Sword(
                 "DiamondSword",
@@ -62,16 +57,18 @@ public class Level {
                 "resources/textures/stats/items/heart.png",
                 10
         );
-        Book book = new Book(
-                "PhysicsBook",
+        Pencil pencil = new Pencil(
+                "Pencil",
                 1,
-                "resources/textures/touchable/book.png",
-                "resources/textures/stats/items/book.png"
+                "resources/textures/touchable/pencil.png",
+                "resources/textures/stats/items/pencil.png"
         );
+
+
         for (int i = 0; i < GenerationSettings.ITEM_ROOM_COUNT * 10; i++) {
             itemsQueue.add(heart);
             itemsQueue.add(sword);
-            itemsQueue.add(book);
+            itemsQueue.add(pencil);
         }
 
         Collections.shuffle(itemsQueue);
