@@ -1,0 +1,8 @@
+LevelClearedRooms 5,4 
+LevelStartRoomPosition 5,4
+LevelSeed 5687869709154851925
+BossesIds 0 1 2 
+inventory DefaultPhysicsBook 
+health 90
+BossKilled 0
+

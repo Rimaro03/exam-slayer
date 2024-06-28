@@ -76,7 +76,8 @@ public class GameObjectFactory {
 
         return createGameObject(
                 mainMenu,
-                new MainMenu(mainMenu)
+                new MainMenu(mainMenu),
+                new AnimatedSpriteRenderer(mainMenu, "resources/textures/main_menu_background.png", 256, 256, 5)
         );
     }
 

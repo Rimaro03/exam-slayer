@@ -53,9 +53,11 @@ public class MainMenu extends Component implements InputListener {
         saveFiles = Game.getSavingIO().allFiles();
     }
 
+
+    private static final Color BACKGROUND_COLOR = new Color(11, 9, 18, 200);
     @Override
     public void update() {
-        Renderer.addRectToRenderQueue(getPosition(), new Vec2(100, 100), Color.black, 5, true);
+        Renderer.addRectToRenderQueue(getPosition(), new Vec2(100, 100), BACKGROUND_COLOR, 4, true);
 
         boolean updated;
         if(loadMenu)
@@ -98,9 +100,9 @@ public class MainMenu extends Component implements InputListener {
             updated = true;
         }
 
-        Renderer.addTextToRenderQueue(new Vec2(-2f, 2), "Load", selectedMenu == 0 ? SELECTED_COLOR : UNSELECTED_COLOR, 18, 15);
-        Renderer.addTextToRenderQueue(new Vec2(-3.5f, 0), "New Game", selectedMenu == 1 ? SELECTED_COLOR : UNSELECTED_COLOR, 18, 15);
-        Renderer.addTextToRenderQueue(new Vec2(-2f, -2), "Exit", selectedMenu == 2 ? SELECTED_COLOR : UNSELECTED_COLOR, 18, 15);
+        Renderer.addTextToRenderQueue(new Vec2(-1.3f, 2), "Load", selectedMenu == 0 ? SELECTED_COLOR : UNSELECTED_COLOR, 18, 15);
+        Renderer.addTextToRenderQueue(new Vec2(-2.7f, 0), "New Game", selectedMenu == 1 ? SELECTED_COLOR : UNSELECTED_COLOR, 18, 15);
+        Renderer.addTextToRenderQueue(new Vec2(-0.9f, -2), "Exit", selectedMenu == 2 ? SELECTED_COLOR : UNSELECTED_COLOR, 18, 15);
 
         return updated;
     }
