@@ -8,6 +8,10 @@ import org.project.core.Game;
 
 @Getter
 @Setter
+/**
+ * A component that keeps track of the health and speed of a game object.
+ * Its used as a base class for other stats components.
+ */
 public abstract class Stats extends Component {
     protected int health;
     protected float speed;

@@ -21,17 +21,14 @@ import java.util.Random;
  * A room is a container of game objects that can be enabled and disabled.
  * It also contains 4 pointers to his neighbour rooms.
  */
+@Getter @Setter
 public class Room {
     public static final float SIZE = 15.75f;
     private final ArrayList<GameObject> gameObjects;
     private final Room[] adjacentRooms;
-    @Getter
     private final int x, y;
     private boolean initialized;
-    @Getter
-    @Setter
     private boolean cleared;
-    @Setter
     private InitType initType;
 
     public Room(int x, int y) {
@@ -131,7 +128,7 @@ public class Room {
             throw new RuntimeException("Room already initialized");
 
         // Create room collider-sprite game object
-        GameObject roomGameObject = GameObjectFactory.createRoomGameObject();
+        GameObject roomGameObject = GameObjectFactory.createRoom();
         gameObjects.add(roomGameObject);
 
         // Create room door collider game objects
@@ -141,7 +138,7 @@ public class Room {
                 continue;
             }
 
-            GameObject door = GameObjectFactory.createDoorGameObject(direction, (Collider) roomGameObject.getComponent(BoxCollider.class));
+            GameObject door = GameObjectFactory.createDoor(direction, (Collider) roomGameObject.getComponent(BoxCollider.class));
             door.setPosition(door.getPosition().add(new Vec2(Direction.x(0, direction) * (SIZE * .5f - 1.5f), Direction.y(0, direction) * (SIZE * 0.5f - 1.5f))));
             gameObjects.add(door);
         }

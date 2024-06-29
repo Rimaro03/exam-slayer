@@ -1,7 +1,6 @@
 package org.project.componentsystem.components.colliders;
 
 import org.project.componentsystem.GameObject;
-import org.project.core.Debug;
 import org.project.core.Game;
 import org.project.core.rendering.Renderer;
 import org.project.utils.Vec2;
@@ -109,9 +108,7 @@ public class BoxCollider extends AbstractBoxCollider {
      * Runs every frame
      */
     @Override
-    public void update() {
-        draw();
-    }
+    public void update() { }
 
     /**
      * Destroy the component
@@ -128,16 +125,5 @@ public class BoxCollider extends AbstractBoxCollider {
     @Override
     public void onDisable() {
         Game.getCurrentLevel().getPhysicsEngine().removeCollider(this);
-    }
-
-    public void draw() {
-        if (Debug.ENABLED)
-            Renderer.addRectToRenderQueue(
-                    getGameObject().getPosition(),
-                    getSize(),
-                    Color.RED,
-                    2,
-                    false
-            );
     }
 }

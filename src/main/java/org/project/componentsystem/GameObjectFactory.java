@@ -24,6 +24,9 @@ import org.project.utils.Vec2;
 
 import java.util.Random;
 
+/**
+ * A static factory class that creates GameObjects prefabs.
+ */
 public class GameObjectFactory {
     public static GameObject createGameObject(String name) {
         return new GameObject(name);
@@ -57,7 +60,7 @@ public class GameObjectFactory {
         );
     }
 
-    public static GameObject createRoomGameObject() {
+    public static GameObject createRoom() {
         GameObject room = createGameObject("Room");
 
         return createGameObject(
@@ -73,16 +76,17 @@ public class GameObjectFactory {
 
         return createGameObject(
                 mainMenu,
-                new MainMenu(mainMenu)
+                new MainMenu(mainMenu),
+                new AnimatedSpriteRenderer(mainMenu, "resources/textures/main_menu_background.png", 256, 256, 5)
         );
     }
 
-    public static GameObject createDoorGameObject(int direction, Collider roomCollider) {
+    public static GameObject createDoor(int direction, Collider roomCollider) {
         GameObject door = createGameObject("Door");
         DoorCollider doorCollider = new DoorCollider(door, new Vec2(2, 2), false, true, direction);
         AnimatedSpriteRenderer renderer = new AnimatedSpriteRenderer(
                 door,
-                "resources/textures/map/open_door.png",
+                "resources/textures/map/closed_door.png",
                 25,
                 25,
                 0

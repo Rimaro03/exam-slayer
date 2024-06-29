@@ -15,7 +15,7 @@ import java.awt.event.ComponentListener;
 @Getter @Setter
 public class Window extends JPanel implements ComponentListener {
     private int width, height;
-    /** Gets used as a semaphore by the Application to check if the swing thread has finished. */
+    /** Gets used as a binary semaphore by the Application to check if the swing thread has finished. */
     private volatile boolean finishedPainting;
 
     public Window(int width, int height) {

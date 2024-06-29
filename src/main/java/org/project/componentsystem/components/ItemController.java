@@ -7,6 +7,9 @@ import org.project.items.Item;
 
 @Getter
 @Setter
+/**
+ * A component that contains the Item data of an Item in the scene.
+ */
 public class ItemController extends Component {
     // This class works as a mediator between the Item and the GameObject
 

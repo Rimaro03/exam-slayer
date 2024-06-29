@@ -47,7 +47,7 @@ class BossKillCounterTest {
 
         Mockito.when(level.findGameObject("GameOverMenu")).thenReturn(gameObject);
         Mockito.when(gameObject.getComponent(GameOverMenu.class)).thenReturn(gameOverMenu);
-
+        Mockito.when(level.findGameObject("Player")).thenReturn(gameObject);
         for (int i = 0; i < GenerationSettings.BOSS_ROOM_COUNT; i++) {
             bossKillCounter.addKill();
         }

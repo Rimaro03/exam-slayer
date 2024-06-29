@@ -12,6 +12,10 @@ import org.project.utils.Vec2;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * A class representing the pause menu in the game.
+ * The player can choose to resume the game, load a save file or exit the game.
+ */
 public class PauseMenu extends Component implements GameStateListener, InputListener {
     private static final Color SELECTED_COLOR = new Color(255, 255, 255);
     private static final Color UNSELECTED_COLOR = new Color(190, 190, 190);
@@ -23,7 +27,6 @@ public class PauseMenu extends Component implements GameStateListener, InputList
     private boolean pauseMenu;
     private boolean loadMenu;
     private boolean loadNewGame;
-
 
     private int selectedLine = 0;
     private int selectedFile = 0;

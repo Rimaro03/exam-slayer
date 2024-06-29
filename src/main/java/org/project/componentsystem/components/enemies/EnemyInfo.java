@@ -5,12 +5,16 @@ import lombok.extern.log4j.Log4j2;
 import java.util.Random;
 
 @Log4j2
+/**
+ A class that contains static methods
+ * to get information about enemies via their id.
+ */
 public class EnemyInfo {
     private static final int DX_ID = 0;
     private static final int DY_ID = 1;
     private static final int INTEGRAL_ID = 2;
     private static final int DOUBLE_INTEGRAL_ID = 3;
-    private static final int IMPLEMENTED_BOSSES = 4;
+    private static final int IMPLEMENTED_ENEMIES = 4;
 
     public static String getName(int id) {
         switch (id) {
@@ -72,7 +76,7 @@ public class EnemyInfo {
     }
 
     public static int getRandomEnemyId(Random rand) {
-        return rand.nextInt(IMPLEMENTED_BOSSES);
+        return rand.nextInt(IMPLEMENTED_ENEMIES);
     }
 
 

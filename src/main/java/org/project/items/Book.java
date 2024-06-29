@@ -44,6 +44,4 @@ public class Book extends Item {
         playerStats.setSpeed(playerStats.getSpeed() - getWeight());
         Game.getCurrentLevel().addComponentToGameObject(by, new PlayerShootingController(by, WeaponType.PhysicsBook));
     }
-
-
 }

@@ -1,6 +1,7 @@
 package org.project.componentsystem.components.bosses;
 import org.project.componentsystem.GameObject;
 import org.project.componentsystem.components.Component;
+import org.project.componentsystem.components.PlayerController;
 import org.project.componentsystem.components.menus.GameOverMenu;
 import org.project.core.Game;
 import org.project.generation.wavecollapse.GenerationSettings;
@@ -24,6 +25,7 @@ public class BossKillCounter extends Component {
         if(bossKilled == GenerationSettings.BOSS_ROOM_COUNT){
             GameOverMenu gameOverMenu = (GameOverMenu) Game.getCurrentLevel().findGameObject("GameOverMenu").getComponent(GameOverMenu.class);
             gameOverMenu.enable(true);
+            Game.getCurrentLevel().findGameObject("Player").setEnabled(false);
         }
     }
 

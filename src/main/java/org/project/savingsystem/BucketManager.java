@@ -39,12 +39,19 @@ public class BucketManager {
         bucket = tmpBucket;
     }
 
+    /**
+     * @param fileName The name of the file to get the content of
+     * @return The content of the file
+     */
     public String getFileContent(String fileName) {
         Blob blob = bucket.get(fileName);
         if (blob == null) return "";
         return new String(blob.getContent());
     }
 
+    /**
+     * @return A list of all the file names in the bucket
+     */
     public List<String> getAllFileNames() {
         List<String> files = new ArrayList<>();
         Page<Blob> blobs = bucket.list();
@@ -54,10 +61,21 @@ public class BucketManager {
         return files;
     }
 
+    /**
+     * Uploads a file to the bucket.
+     *
+     * @param fileName The name of the file
+     * @param content  The content of the file
+     */
     public void uploadFile(String fileName, String content) {
         bucket.create(fileName, content.getBytes());
     }
 
+    /**
+     * Deletes a file from the bucket.
+     *
+     * @param fileName The name of the file to delete.
+     */
     public void deleteFile(String fileName) {
         Blob blob = bucket.get(fileName);
         if (blob != null) blob.delete();

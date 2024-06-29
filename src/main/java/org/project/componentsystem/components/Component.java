@@ -7,6 +7,10 @@ import org.project.utils.Vec2;
 
 @Setter
 @Getter
+/**
+ * A component that keeps track of the health and speed of a game object.
+ * Its used as a base class for other stats components.
+ */
 public abstract class Component {
     private GameObject gameObject;
     private boolean enabled;

@@ -1,7 +1,6 @@
 package org.project.generation.wavecollapse;
 
 import lombok.extern.log4j.Log4j2;
-import org.project.core.Debug;
 import org.project.generation.Level;
 import org.project.generation.Room;
 
@@ -48,10 +47,6 @@ public class LevelGenerator {
         Room startRoom = generateRooms();
         List<Room> bossRooms = getBossRooms(startRoom);
         List<Room> itemRooms = getItemRooms(startRoom, bossRooms);
-        if (Debug.ENABLED) {
-            printMap(startRoom, bossRooms, itemRooms);
-            log.info("Start room : [{}, {}]", startRoom.getX(), startRoom.getY());
-        }
 
         setRoomsInitType(startRoom, bossRooms, itemRooms);
 

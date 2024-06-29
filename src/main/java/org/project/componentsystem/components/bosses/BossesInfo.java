@@ -2,6 +2,10 @@ package org.project.componentsystem.components.bosses;
 
 import org.project.componentsystem.components.weapons.WeaponType;
 
+/**
+ * A class that contains static methods
+ * to get information about bosses via their id.
+ */
 public class BossesInfo {
     public static final int BOSS_RESOLUTION = 64;
     public static final int IMPLEMENTED_BOSSES = 3;
@@ -77,11 +81,11 @@ public class BossesInfo {
     public static WeaponType getWeapon(int id) {
         switch (id) {
             case ATOM_ID:
-                return WeaponType.PhysicsBook;
+                return WeaponType.Proton;
             case INTEGRAL_ID:
-                return WeaponType.Sword;
+                return WeaponType.Function;
             case MATRIX_ID:
-                return WeaponType.PhysicsBook;
+                return WeaponType.Number;
             default:
                 return WeaponType.PhysicsBook;
         }
